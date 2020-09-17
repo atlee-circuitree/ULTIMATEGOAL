@@ -60,7 +60,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  */
 @Disabled
 public abstract class BaseAutoOpMode extends BaseOpMode {
-
+/*
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
     private static final boolean PHONE_IS_PORTRAIT = false;
     private static final String VUFORIA_KEY =
@@ -109,7 +109,7 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
     private ElapsedTime craneSafetyTimer = new ElapsedTime();
 
     boolean SkystoneLocated = false;
-
+*/
 
     @Override
     public void GetHardware() {
@@ -119,97 +119,16 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
         rear_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rear_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        //webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
     }
 
-    public void UnfoldRobotBackwards() {
-
-        front_left.setPower(-.8);
-        front_right.setPower(-.8);
-        rear_left.setPower(-.8);
-        rear_right.setPower(-.8);
-
-        sleep(100);
-
-        front_left.setPower(0);
-        front_right.setPower(0);
-        rear_left.setPower(0);
-        rear_right.setPower(0);
-
-        lift_left.setPower(1);
-        lift_right.setPower(-1);
-        sleep(400);
-
-        lift_left.setPower(0);
-        lift_right.setPower(0);
-
-        Release_Servo.setPosition(1);
-        //Release_Servo2.setPosition(1);
-        //  sleep(1000);
-
-        sleep(1000);
-        feeder_motor.setPower(-1);
-        sleep(500);
-        feeder_motor.setPower(0);
-    }
-    public void UnfoldRobotNoMovement() {
-        runtime.reset();
-        while (opModeIsActive() && (runtime.milliseconds() < 400)  ) {
-            lift_left.setPower(1);
-            lift_right.setPower(-1);
-        }
-        lift_left.setPower(0);
-        lift_right.setPower(0);
-
-        //Changed Servo Position
-        Release_Servo.setPosition(1f);
-        Release_Servo2.setPosition(0f);
-        Block_Pickup.setPosition(0.4f);
-        //completely deleted sleep
-        //sleep(1000);
-
-        //sleep(1000);
-        //feeder_motor.setPower(-1);
-        //sleep(500);
-        //feeder_motor.setPower(0);
-    }
-    public void UnfoldRobot() {
-
-        //encoderDrive(DRIVE, 4, 1);
-        lift_left.setPower(1);
-        lift_right.setPower(-1);
-        sleep(400);
-
-        lift_left.setPower(0);
-        lift_right.setPower(0);
-
-        feeder_motor.setPower(1);
-        sleep(100);
-        feeder_motor.setPower(0);
-
-        Clamp_Left.setPosition(0.4);
-        Clamp_Right.setPosition(.5);
-        Release_Servo.setPosition(1);
-        Release_Servo2.setPosition(0);
-
-        //sleep(1000);
-
-
-//        top_motor.setPower(1);
-//        craneSafetyTimer.reset();
-//        while(Top_Sensor_Rear.getState() && craneSafetyTimer.milliseconds() < 2000)
-//        {
-//            top_motor.setPower(1);
-//        }
-//        top_motor.setPower(0);
-
-//        Block_Pickup.setPosition(0.4f);
-
-        feeder_motor.setPower(-1);
-        feeder_motor.setPower(0);
-
+    public void ResetEncoder(){
+        SetDriveMode(Mode.STOP_RESET_ENCODER);
+        SetDriveMode(Mode.RUN_WITHOUT_ENCODERS);
     }
 
+
+/*
     public void UnfoldRobotV2() {
 
         //encoderDrive(DRIVE, 4, 1);
@@ -243,8 +162,9 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
         feeder_motor.setPower(0);
 
     }
+*/
 
-    public void VisionTargetVuforia(int safetyTimer) {
+    //public void VisionTargetVuforia(int safetyTimer) {
 
 
         /*
@@ -252,6 +172,8 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
          * If no camera monitor is desired, use the parameter-less constructor instead (commented out below).
          */
+
+    /*
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
@@ -262,7 +184,8 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
         /**
          * We also indicate which camera on the RC we wish to use.
          */
-        parameters.cameraName = webcamName;
+
+       /* parameters.cameraName = webcamName;
 
         //  Instantiate the Vuforia engine
         if(vuforia == null)
@@ -300,8 +223,9 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
         rear2.setName("Rear Perimeter 2");
 
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
-        List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
-        allTrackables.addAll(targetsSkyStone);
+
+       // List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
+       // allTrackables.addAll(targetsSkyStone);
 
         /**
          * In order for localization to work, we need to tell the system where each target is on the field, and
@@ -320,7 +244,7 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
          * Before being transformed, each target image is conceptually located at the origin of the field's
          *  coordinate system (the center of the field), facing up.
          */
-
+/*
         // Set the position of the Stone Target.  Since it's not fixed in position, assume it's at the field origin.
         // Rotated it to to face forward, and raised it to sit on the ground correctly.
         // This can be used for generic target-centric approach algorithms
@@ -415,7 +339,7 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES, phoneYRotate, phoneZRotate, phoneXRotate));
 
         /**  Let all the trackable listeners know where the phone is.  */
-        for (VuforiaTrackable trackable : allTrackables) {
+       /* for (VuforiaTrackable trackable : allTrackables) {
             ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(robotFromCamera, parameters.cameraDirection);
         }
 
@@ -513,14 +437,14 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
             //targetsSkyStone.deactivate();
 
 
-        }
-            sleep(1);
-            loop++;
+    //    }
+   //         sleep(1);
+     //       loop++;
 
-    }
-        targetsSkyStone.deactivate();
-    }
-
+  //  }
+   //     targetsSkyStone.deactivate();
+  //  }
+/*
     public void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -534,6 +458,7 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
+/*
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
@@ -606,10 +531,10 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
         }
 
     }
-    public void ResetEncoder(){
-        SetDriveMode(Mode.STOP_RESET_ENCODER);
-        SetDriveMode(Mode.RUN_WITHOUT_ENCODERS);
-    }
+
+ */
+
+
 
 
 }
