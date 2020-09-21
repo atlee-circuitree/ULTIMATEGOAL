@@ -57,6 +57,9 @@ public abstract class BaseOpMode extends LinearOpMode {
     public DcMotor rear_right = null;
 
     public Servo REV_SERVO = null;
+    public Servo JX_SERVO  = null;
+    public Servo ECO_SERVO = null;
+    public Servo DS_SERVO  = null;
 
     //public DigitalChannel top_touch = null;
 
@@ -71,7 +74,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE           = 1;
-    static final double     STRAFE          = 1;
+    //static final double     STRAFE          = 1;  //DO NOT UN COMMENT (will screw up "public void STRAFE")
     static final double     TURN_SPEED      = 1;
 
 
@@ -85,10 +88,11 @@ public abstract class BaseOpMode extends LinearOpMode {
         rear_right = hardwareMap.get(DcMotor.class, "drive_RR");
 
         REV_SERVO = hardwareMap.get(Servo.class, "REV");
-        
+        JX_SERVO = hardwareMap.get(Servo.class, "JX");
+        ECO_SERVO = hardwareMap.get(Servo.class, "ECO");
+        DS_SERVO = hardwareMap.get(Servo.class, "DS");
 
        // top_touch = hardwareMap.get(DigitalChannel.class, "top_touch");
-
 
         // set digital channel to input mode.
 
@@ -406,175 +410,6 @@ public abstract class BaseOpMode extends LinearOpMode {
     }
 
 
-
-
-
-/*
-    //PID rotation variables
-    Orientation lastAnglesPID = new Orientation();
-    double cumulativeDegrees = 0;
-    double                  globalAnglePID, power = .30, rotatePower = 1, correction, rotation;
-
-    public void rotatePID_InPlace(int degrees, double power)
-    {
-        cumulativeDegrees += degrees;
-        resetAnglePID();
-        double targetDegrees = ((cumulativeDegrees % 360) - getAnglePID());
-        PIDController pidRotate = new PIDController(0,0,0);
-        rotatePID(targetDegrees, power, pidRotate);
-    }
-
-    /**
-     * Rotate left or right the number of degrees. Does not support turning more than 359 degrees.
-     * @param degrees Degrees to turn, + is left - is right
-     */
-   /* public void rotatePID(double degrees, double power, PIDController pidRotate)
-    {
-        // restart imu angle tracking.
-        //resetAnglePID();
-
-        // If input degrees > 359, we cap at 359 with same sign as input.
-        if (Math.abs(degrees) > 359) degrees = (int) Math.copySign(359, degrees);
-
-        // start pid controller. PID controller will monitor the turn angle with respect to the
-        // target angle and reduce power as we approach the target angle. We compute the p and I
-        // values based on the input degrees and starting power level. We compute the tolerance %
-        // to yield a tolerance value of about 1 degree.
-        // Overshoot is dependant on the motor and gearing configuration, starting power, weight
-        // of the robot and the on target tolerance.
-
-        pidRotate.reset();
-
-        double p = Math.abs(power/degrees);
-        double i = p / 100.0;
-        pidRotate.setPID(p, i, 0);
-
-        pidRotate.setSetpoint(degrees);
-        pidRotate.setInputRange(0, degrees);
-        pidRotate.setOutputRange(0, power);
-        pidRotate.setTolerance(1.0 / Math.abs(degrees) * 100.0);
-        pidRotate.enable();
-
-        // getAnglePID() returns + when rotating counter clockwise (left) and - when rotating
-        // clockwise (right).
-
-        // rotate until turn is completed.
-
-        if (degrees < 0)
-        {
-            // On right turn we have to get off zero first.
-            while (opModeIsActive() && getAnglePID() == 0)
-            {
-                front_left.setPower(power);
-                rear_left.setPower(power);
-                front_right.setPower(-power);
-                rear_right.setPower(-power);
-                sleep(100);
-            }
-
-            do
-            {
-                power = pidRotate.performPID(getAnglePID()); // power will be - on right turn.
-                front_left.setPower(-power);
-                rear_left.setPower(-power);
-                front_right.setPower(power);
-                rear_right.setPower(power);
-            } while (opModeIsActive() && !pidRotate.onTarget());
-        }
-        else    // left turn.
-            do
-            {
-                power = pidRotate.performPID(getAnglePID()); // power will be + on left turn.
-                front_left.setPower(-power);
-                rear_left.setPower(-power);
-                front_right.setPower(power);
-                rear_right.setPower(power);
-            } while (opModeIsActive() && !pidRotate.onTarget());
-
-        // turn the motors off.
-        front_left.setPower(0);
-        rear_left.setPower(0);
-        front_right.setPower(0);
-        rear_right.setPower(0);
-
-        rotation = getAnglePID();
-
-        telemetry.addData("2 global heading", globalAnglePID);
-        telemetry.update();
-
-
-        // wait for rotation to stop.
-        sleep(500);
-
-        // reset angle tracking on new heading.
-        //resetAnglePID();
-    }
-
-    /**
-     * Resets the cumulative angle tracking to zero.
-     */
-   /* void resetAnglePID()
-    {
-        lastAnglesPID = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-        //globalAnglePID = 0;
-    }
-
-    /**
-     * Get current cumulative angle rotation from last reset.
-     * @return Angle in degrees. + = left, - = right from zero point.
-     */
-   /* private double getAnglePID()
-    {
-        // We experimentally determined the Z axis is the axis we want to use for heading angle.
-        // We have to process the angle because the imu works in euler angles so the Z axis is
-        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
-        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
-
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-        double deltaAnglePID = angles.firstAngle - lastAnglesPID.firstAngle;
-
-        if (deltaAnglePID < -180)
-            deltaAnglePID += 360;
-        else if (deltaAnglePID > 180)
-            deltaAnglePID -= 360;
-
-        globalAnglePID += deltaAnglePID;
-
-        lastAnglesPID = angles;
-
-        return globalAnglePID;
-    }
-*/
-
-/* Panten working on PID
-    public rotateToAngle(float targetAngle) {
-        float error = targetAngle - getAngle();
-        if (error > threshold)
-            this.rotation =  error*kP
-        return False
-    else:
-        this.rotation = 0
-        return True
-
-    }
-
-
-    function move(fwd, rotation):
-            // This function allows for joystick input
-            this.fwd = fwd
-    this.rotation = rotation
-
-    function execute():
-            // Execute function that should be called every loop
-            this.robotdrive.drive(this.fwd, this.rotation)
-
-            this.fwd = 0
-            this.rotation = 0
-
-*/
-
     public double getHeading(){
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC,
                 AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -590,15 +425,14 @@ public abstract class BaseOpMode extends LinearOpMode {
     }
 
     public enum DriveDirection {
-        FORWARD,
-        BACKWARD,
         LEFT,
         RIGHT,
         STOP,
-        STRAFE_RIGHT,
-        STRAFE_LEFT,
-        BACK_LEFT,
-        TURN_RIGHT
+
+    }
+
+    public enum STRAFE {
+        LEFT, RIGHT
     }
 
 
@@ -608,15 +442,6 @@ public abstract class BaseOpMode extends LinearOpMode {
         RUN_WITHOUT_ENCODERS,
     }
 
-
- 
-
-    public void StopAllDrive() {
-        front_left.setPower(0);
-        front_right.setPower(0);
-        rear_left.setPower(0);
-        rear_right.setPower(0);
-    }
 
 
     public void Drive(DriveDirection direction) {
@@ -638,44 +463,45 @@ public abstract class BaseOpMode extends LinearOpMode {
             rear_left.setPower(-1);
             rear_right.setPower(1);
         }
-       
-        
     }
 
-
-    public void Strafe (DriveDirection direction){
-        if (direction == DriveDirection.LEFT) {
+    public void Strafe (STRAFE direction){
+        if (direction == STRAFE.LEFT) {
             front_left.setPower(-1);
             front_right.setPower(1);
             rear_left.setPower(1);
             rear_right.setPower(-1);
         }
-        if (direction == DriveDirection.RIGHT) {
+        if (direction == STRAFE.RIGHT) {
             front_left.setPower(1);
             front_right.setPower(-1);
             rear_left.setPower(-1);
             rear_right.setPower(1);
         }
     }
+    
     public void encoderDrive( double speed,
                               double distance,
                               double timeoutS) {
-        int newLeftTarget;
-        int newRightTarget;
+        int newFLTarget;
+        int newRLTarget;
+        int newRRTarget;
+        int newFRTarget;
+       
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = front_left.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
-            newRightTarget = front_right.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
-            newRightTarget = rear_right.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
-            newLeftTarget = rear_left.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+            newFLTarget = front_left.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
+            newFRTarget = front_right.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
+            newRRTarget = rear_right.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+            newRLTarget = rear_left.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
 
-            front_left.setTargetPosition(newLeftTarget);
-            front_right.setTargetPosition(newRightTarget);
-            rear_left.setTargetPosition(newLeftTarget);
-            rear_right.setTargetPosition(newRightTarget);
+            front_left.setTargetPosition(newFLTarget);
+            front_right.setTargetPosition(newFRTarget);
+            rear_left.setTargetPosition(newRLTarget);
+            rear_right.setTargetPosition(newRRTarget);
 
             // Turn On RUN_TO_POSITION
             front_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -701,7 +527,7 @@ public abstract class BaseOpMode extends LinearOpMode {
                     (front_left.isBusy() && front_right.isBusy() && rear_left.isBusy() && rear_right.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+                telemetry.addData("Path1", "Running to %7d :%7d", newRLTarget, newFLTarget, newRRTarget, newFRTarget);
                 telemetry.addData("Path2", "Running at %7d :%7d",
                         front_left.getCurrentPosition(),
                         front_right.getCurrentPosition(),
@@ -727,232 +553,6 @@ public abstract class BaseOpMode extends LinearOpMode {
         }
     }
 
-    public void EncoderDrive(DriveDirection direction, int EncoderValue) {
-        if (direction == DriveDirection.STOP) {
-            front_left.setPower(0);
-            front_right.setPower(0);
-            rear_left.setPower(0);
-            rear_right.setPower(0);
-
-        }
-        if (direction == DriveDirection.RIGHT) {
-            //    SetDriveMode(Mode.STOP_RESET_ENCODER);
-            SetDriveMode(Mode.RUN_WITHOUT_ENCODERS);
-
-            //    front_right.setTargetPosition(EncoderValue);
-            //   front_left.setTargetPosition(EncoderValue);
-            //   rear_right.setTargetPosition(EncoderValue);
-            //   rear_left.setTargetPosition(EncoderValue);
-
-            //   front_right.setPower(-1);
-            //   rear_left.setPower(1);
-            //    front_left.setPower(1);
-            //   rear_right.setPower(-1);
-
-            //   while(front_right.isBusy() || front_left.isBusy() || rear_right.isBusy() || rear_left.isBusy() ) {
-
-            // sleep(1);
-            //      //RunSafetyCutoff();
-            //  }
-
-            while (front_left.getCurrentPosition() < EncoderValue) {
-                front_left.setPower(1);
-                front_right.setPower(-1);
-                rear_left.setPower(-1);
-                rear_right.setPower(1);
-                // sleep(1);
-                //RunSafetyCutoff();
-                idle();
-            }
-
-
-            SetDriveMode(Mode.STOP_RESET_ENCODER);
-
-            //front_left.setTargetPosition(EncoderValue
-        }
-
-
-        if (direction == DriveDirection.FORWARD) {
-
-            //SetDriveMode(Mode.STOP_RESET_ENCODER);
-            SetDriveMode(Mode.RUN_WITHOUT_ENCODERS);
-
-
-            while (front_left.getCurrentPosition() < EncoderValue) {
-                front_left.setPower(1);
-                front_right.setPower(1);
-                rear_left.setPower(1);
-                rear_right.setPower(1);
-                //  sleep(1);
-                //RunSafetyCutoff();
-                idle();
-            }
-
-            SetDriveMode(Mode.STOP_RESET_ENCODER);
-        }
-        if (direction == DriveDirection.BACKWARD) {
-            SetDriveMode(Mode.RUN_WITHOUT_ENCODERS);
-
-
-            while (front_left.getCurrentPosition() > -EncoderValue) {
-                front_left.setPower(-1);
-                front_right.setPower(-1);
-                rear_left.setPower(-1);
-                rear_right.setPower(-1);
-                // sleep(1);
-                //RunSafetyCutoff();
-                telemetry.addData("Encoder", front_left.getCurrentPosition());
-                telemetry.update();
-                idle();
-            }
-
-            SetDriveMode(Mode.STOP_RESET_ENCODER);
-
-            //front_left.setTargetPosition(EncoderValue
-        }
-    }
-
-
-/*
-        public void driveByWire ( double drive, double strafe, double turn){
-
-            telemetry.addData("front_left Encoder Position", front_left.getCurrentPosition());
-            telemetry.addData("rear_left Encoder Position", rear_left.getCurrentPosition());
-            telemetry.addData("front_right Encoder Position", front_right.getCurrentPosition());
-            telemetry.addData("rear_right Encoder Position", rear_right.getCurrentPosition());
-
-            double frontLeftPower;
-            double frontRightPower;
-            double rearLeftPower;
-            double rearRightPower;
-
-            double pi = 3.1415926;
-
-
-            //   double drive = -gamepad1.left_stick_y;
-            //  double strafe = gamepad1.left_stick_x * 1.5;
-            //  double turn = gamepad1.right_stick_x;
-
-       /*
-       double gyroDegrees = getAngle();
-
-       double gyroRadians = gyroDegrees * pi/180;
-       double forwardTemp = drive * Math.cos(gyroRadians) + strafe * Math.sin(gyroRadians);
-       strafe = drive * Math.sin(gyroRadians) + strafe * Math.cos(gyroRadians);
-       drive = forwardTemp;
-*/
-
-/*
-            frontLeftPower = (drive + strafe + turn);
-            rearLeftPower = (drive - strafe + turn);
-            frontRightPower = (drive - strafe - turn);
-            rearRightPower = (drive + strafe - turn);
-
-
-            if (Math.abs(frontLeftPower) > 1 || Math.abs(rearLeftPower) > 1 || Math.abs(frontRightPower) > 1 || Math.abs(rearRightPower) > 1) {
-
-                double max = 0;
-                max = Math.max(Math.abs(frontLeftPower), Math.abs(rearLeftPower));
-                max = Math.max(Math.abs(frontRightPower), max);
-                max = Math.max(Math.abs(rearRightPower), max);
-
-                frontLeftPower /= max;
-                rearLeftPower /= max;
-                frontRightPower /= max;
-                rearRightPower /= max;
-
-
-            }
-
-
-            front_left.setPower(frontLeftPower);
-            rear_left.setPower(rearLeftPower);
-            front_right.setPower(frontRightPower);
-            rear_right.setPower(rearRightPower);
-
-
-        }
-
- */
-
-       /* public void encoderDrive( double speed,
-        double distance,
-        double timeoutS) {
-            int newLeftTarget;
-            int newRightTarget;
-
-            // Ensure that the opmode is still active
-            if (opModeIsActive()) {
-
-                // Determine new target position, and pass to motor controller
-                newLeftTarget = front_left.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
-                newRightTarget = front_right.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
-                 newRightTarget = rear_right.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
-                 newLeftTarget = rear_left.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
-
-                front_left.setTargetPosition(newLeftTarget);
-                front_right.setTargetPosition(newRightTarget);
-                rear_left.setTargetPosition(newLeftTarget);
-                rear_right.setTargetPosition(newRightTarget);
-
-                // Turn On RUN_TO_POSITION
-                front_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                front_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                rear_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                rear_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                // reset the timeout time and start motion.
-                runtime.reset();
-                front_left.setPower(Math.abs(speed));
-                front_right.setPower(Math.abs(speed));
-                rear_left.setPower(Math.abs(speed));
-                rear_right.setPower(Math.abs(speed));
-
-                // keep looping while we are still active, and there is time left, and both motors are running.
-                // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-                // its target position, the motion will stop.  This is "safer" in the event that the robot will
-                // always end the motion as soon as possible.
-                // However, if you require that BOTH motors have finished their moves before the robot continues
-                // onto the next step, use (isBusy() || isBusy()) in the loop test.
-                while (opModeIsActive() &&
-                        (runtime.seconds() < timeoutS) &&
-                        (front_left.isBusy() && front_right.isBusy() && rear_left.isBusy() && rear_right.isBusy())) {
-
-                    // Display it for the driver.
-                    telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
-                    telemetry.addData("Path2", "Running at %7d :%7d",
-                            front_left.getCurrentPosition(),
-                            front_right.getCurrentPosition(),
-                            rear_left.getCurrentPosition(),
-                            rear_right.getCurrentPosition());
-                    telemetry.update();
-                    //RunSafetyCutoff();
-                }
-
-                // Stop all motion;
-                front_left.setPower(0);
-                front_right.setPower(0);
-                rear_left.setPower(0);
-                rear_right.setPower(0);
-
-                // Turn off RUN_TO_POSITION
-                front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rear_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rear_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-                //  sleep(250);   // optional pause after each move
-            }
-        }
-
-        */
-
-
-
-
-
-
-
 
     public void SetDriveMode(Mode DriveMode) {
 
@@ -972,7 +572,7 @@ public abstract class BaseOpMode extends LinearOpMode {
             rear_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         }
-    /*
+
         if (DriveMode == Mode.RUN_WITHOUT_ENCODERS) {
 
             front_left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -980,7 +580,7 @@ public abstract class BaseOpMode extends LinearOpMode {
             rear_left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rear_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        }*/
+        }
 
     }
 }
