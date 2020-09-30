@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -88,9 +89,9 @@ public abstract class BaseOpMode extends LinearOpMode {
         rear_right = hardwareMap.get(DcMotor.class, "drive_RR");
 
         REV_SERVO = hardwareMap.get(Servo.class, "REV");
-        JX_SERVO = hardwareMap.get(Servo.class, "JX");
-        ECO_SERVO = hardwareMap.get(Servo.class, "ECO");
-        DS_SERVO = hardwareMap.get(Servo.class, "DS");
+        //JX_SERVO = hardwareMap.get(Servo.class, "JX");
+        //ECO_SERVO = hardwareMap.get(Servo.class, "ECO");
+      //  DS_SERVO = hardwareMap.get(Servo.class, "DS");
 
        // top_touch = hardwareMap.get(DigitalChannel.class, "top_touch");
 
@@ -101,9 +102,9 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        front_left.setDirection(DcMotor.Direction.FORWARD);
-        rear_left.setDirection(DcMotor.Direction.REVERSE);
-        front_right.setDirection(DcMotor.Direction.REVERSE);
+        front_left.setDirection(DcMotor.Direction.REVERSE);
+        rear_left.setDirection(DcMotor.Direction.FORWARD);
+        front_right.setDirection(DcMotor.Direction.FORWARD);
         rear_right.setDirection(DcMotor.Direction.FORWARD);
 
         front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

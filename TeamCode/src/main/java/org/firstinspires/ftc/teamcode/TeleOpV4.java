@@ -29,13 +29,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 
 /**
@@ -51,9 +49,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TeleOp_V1", group="Linear Opmode")
+@TeleOp(name="TeleOp_V4", group="Linear Opmode")
 
-public class TeleOpV1 extends LinearOpMode {
+public class TeleOpV4 extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -66,6 +64,17 @@ public class TeleOpV1 extends LinearOpMode {
     private Servo JX_SERVO  = null;
     private Servo ECO_SERVO = null;
     private Servo DS_SERVO  = null;
+
+
+    //This is code to test mechanum drive
+    // declare motor speed variables
+    double FR; double FL; double RR; double RL;
+    // declare joystick position variables
+    double X1; double Y1; double X2; double Y2;
+    // operational constants
+    double joyScale = 1;
+    double motorMax = 1; // Limit motor power to this value for Andymark RUN_USING_ENCODER mode
+
 
     @Override
     public void runOpMode() {
@@ -82,17 +91,19 @@ public class TeleOpV1 extends LinearOpMode {
         rear_right = hardwareMap.get(DcMotor.class, "drive_RR");
 
         REV_SERVO = hardwareMap.get(Servo.class, "REV");
-        JX_SERVO = hardwareMap.get(Servo.class, "JX");
-        ECO_SERVO = hardwareMap.get(Servo.class, "ECO");
-        DS_SERVO = hardwareMap.get(Servo.class, "DS");
+      //  JX_SERVO = hardwareMap.get(Servo.class, "JX");
+       // ECO_SERVO = hardwareMap.get(Servo.class, "ECO");
+       // DS_SERVO = hardwareMap.get(Servo.class, "DS");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
 
-        front_left.setDirection(DcMotor.Direction.FORWARD);
-        rear_left.setDirection(DcMotor.Direction.REVERSE);
-        front_right.setDirection(DcMotor.Direction.REVERSE);
+        front_left.setDirection(DcMotor.Direction.REVERSE);
+        rear_left.setDirection(DcMotor.Direction.FORWARD);
+        front_right.setDirection(DcMotor.Direction.FORWARD);
         rear_right.setDirection(DcMotor.Direction.FORWARD);
+
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -101,36 +112,73 @@ public class TeleOpV1 extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            // Setup a variable for each drive wheel to save power level for telemetry
-            double leftPower;
-            double rightPower;
-
-            // Choose to drive using either Tank Mode, or POV Mode
-            // Comment out the method that's not used.  The default below is POV.
-
-            // POV Mode uses left stick to go forward, and right stick to turn.
-            // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
-
-            // Tank Mode uses one stick to control each wheel.
-            // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            // leftPower  = -gamepad1.left_stick_y ;
-            // rightPower = -gamepad1.right_stick_y ;
-
-            // Send calculated power to wheels
-            front_right.setPower(rightPower);
-            front_left.setPower(leftPower);
-            rear_right.setPower(rightPower);
-            rear_left.setPower(leftPower);
+            //UpdateDrivetrain();
+            UpdateClamps();
+            UpdateDriveTrain();
 
 
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-            telemetry.update();
         }
     }
+
+    public void UpdateClamps() {
+        //Clamps
+        if (gamepad1.left_bumper) {
+            telemetry.addData("Clamps", "Clamp Up");
+            REV_SERVO.setPosition(0f);
+
+
+        } else if (gamepad1.left_trigger > 0) {
+            telemetry.addData("Clamps", "Clamp Down");
+            REV_SERVO.setPosition(0.8f);
+
+
+        } else {
+            telemetry.addData("Clamps", "Not Moving");
+        }
+    }
+    
+
+   
+    public void UpdateDriveTrain() {
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.update();
+
+        // Reset speed variables
+        FL = 0; FR = 0; RL = 0; RR = 0;
+
+        // Get joystick values
+        Y1 = -gamepad1.left_stick_y * joyScale; // invert so up is positive
+        X1 = gamepad1.left_stick_x * joyScale;
+        Y2 = -gamepad1.right_stick_y * joyScale; // Y2 is not used at present
+        X2 = gamepad1.right_stick_x * joyScale;
+
+        // Forward/back movement
+        FL += Y1; FR += Y1; RL += Y1; RR += Y1;
+
+        // Side to side movement
+        FL += X1; FR -= X1; RL -= X1; RR += X1;
+
+        // Rotation movement
+        FL += X2; FR -= X2; RL += X2; RR -= X2;
+
+        // Clip motor power values to +-motorMax
+        FL = Math.max(-motorMax, Math.min(FL, motorMax));
+        FR = Math.max(-motorMax, Math.min(FR, motorMax));
+        RL = Math.max(-motorMax, Math.min(RL, motorMax));
+        RR = Math.max(-motorMax, Math.min(RR, motorMax));
+
+        // Send values to the motors
+        front_left.setPower(FL);
+        front_right.setPower(FR);
+        rear_left.setPower(RL);
+        rear_right.setPower(RR);
+
+        // Send some useful parameters to the driver station
+        telemetry.addData("FL", "%.3f", FL);
+        telemetry.addData("FR", "%.3f", FR);
+        telemetry.addData("RL", "%.3f", RL);
+        telemetry.addData("RR", "%.3f", RR);
+    }
 }
+
+
