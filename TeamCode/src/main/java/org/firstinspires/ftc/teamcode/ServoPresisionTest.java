@@ -3,9 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 
-
-@Autonomous(name = "System Check Auto", group = "Linear Opmode")
-public class SystemCheckAuto extends BaseAutoOpMode {
+@Autonomous(name = "Servo Precision Test", group = "Linear Opmode")
+public class ServoPresisionTest extends BaseAutoOpMode {
 
     @Override
     public void runOpMode () {
@@ -25,19 +24,27 @@ public class SystemCheckAuto extends BaseAutoOpMode {
         runtime.reset();
 
         GB_SPEED_SERVO.setPosition(Set_Servo_Center);
-        DS_SERVO.setPosition(Set_Servo_Center);
-        //JX_SERVO.setPosition(Set_Servo_Center);   //Didn't put on robot yet
+        DS_SERVO.setPosition(Set_Servo_Center);  //Value would be 0.5
+        sleep(500);
 
-        sleep(600);
+        GB_SPEED_SERVO.setPosition(0.4);
+        DS_SERVO.setPosition(0.6);
+        sleep(500);
 
-        GB_SPEED_SERVO.setPosition(0.1); //far left
-        DS_SERVO.setPosition(1);  //far left
+        GB_SPEED_SERVO.setPosition(0.3);
+        DS_SERVO.setPosition(0.7);
+        sleep(500);
 
+        GB_SPEED_SERVO.setPosition(0.2);
+        DS_SERVO.setPosition(0.8);
+        sleep(500);
+
+        GB_SPEED_SERVO.setPosition(0.1);
+        DS_SERVO.setPosition(0.9);
         sleep(500);
 
         GB_SPEED_SERVO.setPosition(1); //far right
         DS_SERVO.setPosition(0);  //far right
-
         sleep(1000);
         // encoderDrive(DRIVE, 50, 3);
         // encoderDrive(DRIVE, -50, 3);

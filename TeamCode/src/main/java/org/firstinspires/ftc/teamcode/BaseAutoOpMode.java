@@ -59,7 +59,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * forwards/backwards and turning left and right, and the right stick controls strafing. (working on diff. control setup currently)
  */
 @Disabled
-public abstract class BaseAutoOpMode extends BaseOpMode {
+public abstract class BaseAutoOpMode extends BaseOpMode2 {
 
 
     @Override

@@ -60,10 +60,11 @@ public class TeleOpV4 extends LinearOpMode {
     private DcMotor front_right = null;
     private DcMotor rear_right = null;
 
-    private Servo REV_SERVO = null;
-    private Servo JX_SERVO  = null;
-    private Servo ECO_SERVO = null;
-    private Servo DS_SERVO  = null;
+
+    public Servo GB_SPEED_SERVO = null;
+    public Servo JX_SERVO  = null;
+    public Servo DS_SERVO  = null;
+    public Servo GB_9_1 = null;
 
 
     //This is code to test mechanum drive
@@ -90,10 +91,11 @@ public class TeleOpV4 extends LinearOpMode {
         front_right = hardwareMap.get(DcMotor.class, "drive_FR");
         rear_right = hardwareMap.get(DcMotor.class, "drive_RR");
 
-        REV_SERVO = hardwareMap.get(Servo.class, "REV");
-      //  JX_SERVO = hardwareMap.get(Servo.class, "JX");
-       // ECO_SERVO = hardwareMap.get(Servo.class, "ECO");
-       // DS_SERVO = hardwareMap.get(Servo.class, "DS");
+
+        GB_SPEED_SERVO = hardwareMap.get(Servo.class, "GB_SPEED");
+        JX_SERVO = hardwareMap.get(Servo.class, "JX");
+        DS_SERVO = hardwareMap.get(Servo.class, "DS");
+        GB_9_1 = hardwareMap.get(Servo.class, "GB_9-1");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -124,12 +126,12 @@ public class TeleOpV4 extends LinearOpMode {
         //Clamps
         if (gamepad1.left_bumper) {
             telemetry.addData("Clamps", "Clamp Up");
-            REV_SERVO.setPosition(0f);
+            GB_SPEED_SERVO.setPosition(0.1);
 
 
         } else if (gamepad1.left_trigger > 0) {
             telemetry.addData("Clamps", "Clamp Down");
-            REV_SERVO.setPosition(0.8f);
+            GB_SPEED_SERVO.setPosition(0.8);
 
 
         } else {
