@@ -59,6 +59,8 @@ public abstract class BaseOpMode extends LinearOpMode {
     public DcMotor rear_left = null;
     public DcMotor front_right = null;
     public DcMotor rear_right = null;
+    public DcMotor shooter_left = null;
+    public DcMotor shooter_right = null;
 
     public Servo REV_SERVO = null;
     public Servo JX_SERVO  = null;
@@ -99,6 +101,8 @@ public abstract class BaseOpMode extends LinearOpMode {
         rear_left = hardwareMap.get(DcMotor.class, "drive_RL");
         front_right = hardwareMap.get(DcMotor.class, "drive_FR");
         rear_right = hardwareMap.get(DcMotor.class, "drive_RR");
+        shooter_left = hardwareMap.get(DcMotor.class, "shooter_left");
+        shooter_right = hardwareMap.get(DcMotor.class, "shooter_right");
 
         REV_SERVO = hardwareMap.get(Servo.class, "REV");
         //JX_SERVO = hardwareMap.get(Servo.class, "JX");
@@ -118,6 +122,8 @@ public abstract class BaseOpMode extends LinearOpMode {
         rear_left.setDirection(DcMotor.Direction.FORWARD);
         front_right.setDirection(DcMotor.Direction.FORWARD);
         rear_right.setDirection(DcMotor.Direction.FORWARD);
+        shooter_left.setDirection(DcMotor.Direction.FORWARD);
+        shooter_right.setDirection(DcMotor.Direction.REVERSE);
 
         front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rear_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
