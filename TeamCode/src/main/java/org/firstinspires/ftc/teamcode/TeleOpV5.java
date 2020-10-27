@@ -152,7 +152,7 @@ public class   TeleOpV5 extends BaseOpMode {
 
     }
 
-   //NOTE: Eventually turn this into either me or Larson's omnidirectional drive
+   //NOTE: Eventually turn this into either me or Larson's omnidirectional drive.
     public void UpdateDriveTrain() {
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.update();
