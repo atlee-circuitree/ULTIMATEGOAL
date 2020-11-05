@@ -52,6 +52,9 @@ public class   TeleOpV5 extends BaseOpMode {
     private DcMotor rear_left = null;
     private DcMotor front_right = null;
     private DcMotor rear_right = null;
+    private DcMotor shooter_left = null;
+    private DcMotor shooter_right = null;
+    private DcMotor belt_feed = null;
 
     public DigitalChannel bottom_touch = null;
     private Servo arm_servo;
@@ -79,10 +82,17 @@ public class   TeleOpV5 extends BaseOpMode {
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
 
+        //drive train
         front_left = hardwareMap.get(DcMotor.class, "drive_FL");
         rear_left = hardwareMap.get(DcMotor.class, "drive_RL");
         front_right = hardwareMap.get(DcMotor.class, "drive_FR");
         rear_right = hardwareMap.get(DcMotor.class, "drive_RR");
+        //Shooter
+        shooter_left = hardwareMap.get(DcMotor.class, "shooter_L");
+        shooter_right = hardwareMap.get(DcMotor.class, "shooter_R");
+
+        belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
+        
 
         bottom_touch = hardwareMap.get(DigitalChannel.class,"bottom_touch");
         arm_servo = hardwareMap.get(Servo.class, "arm_servo");
@@ -95,7 +105,11 @@ public class   TeleOpV5 extends BaseOpMode {
         front_right.setDirection(DcMotor.Direction.FORWARD);
         rear_right.setDirection(DcMotor.Direction.FORWARD);
 
-
+        shooter_left.setDirection(DcMotor.Direction.FORWARD);
+        shooter_right.setDirection(DcMotor.Direction.REVERSE);
+        
+        
+       
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -108,9 +122,6 @@ public class   TeleOpV5 extends BaseOpMode {
             UpdateArmServo();
             UpdateShooter();
             UpdateDriveTrain();
-
-
-
         }
     }
 
@@ -130,69 +141,89 @@ public class   TeleOpV5 extends BaseOpMode {
         }
     }
     public void UpdateShooter(){
-        if(gamepad1.a){
+        if(gamepad1.right_bumper){
             //Shooting mode
             shooter_left.setPower(1);
             shooter_right.setPower(1);
             //Need to find out good arm servo position
             //arm_servo.setPosition(0.5);
         }
-        else if(gamepad1.b){
+        else if(gamepad1.left_bumper){
             //Feeder mode
-            shooter_left.setPower(-0.25);
-            shooter_right.setPower(-0.25);
+            shooter_left.setPower(-0.5);
+            shooter_right.setPower(-0.5);
             //Need to find good arm servo position
             //arm_servo.setPosition(0)
         }
-        else if(gamepad1.x){
+        else if(gamepad1.b){
             //Stop motors
             shooter_left.setPower(0);
             shooter_right.setPower(0);
         }
 
     }
+    public void UpdateBelt() {
+        if (gamepad1.a) {
+            belt_feed.setPower(1);
 
-   //NOTE: Eventually turn this into either me or Larson's omnidirectional drive.
-    public void UpdateDriveTrain() {
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.update();
-
-        // Reset speed variables
-        FL = 0; FR = 0; RL = 0; RR = 0;
-
-        // Get joystick values
-        Y1 = -gamepad1.left_stick_y * joyScale; // invert so up is positive
-        X1 = gamepad1.left_stick_x * joyScale;
-        Y2 = -gamepad1.right_stick_y * joyScale; // Y2 is not used at present
-        X2 = gamepad1.right_stick_x * joyScale;
-
-        // Forward/back movement
-        FL += Y1; FR += Y1; RL += Y1; RR += Y1;
-
-        // Side to side movement
-        FL += X1; FR -= X1; RL -= X1; RR += X1;
-
-        // Rotation movement
-        FL += X2; FR -= X2; RL += X2; RR -= X2;
-
-        // Clip motor power values to +-motorMax
-        FL = Math.max(-motorMax, Math.min(FL, motorMax));
-        FR = Math.max(-motorMax, Math.min(FR, motorMax));
-        RL = Math.max(-motorMax, Math.min(RL, motorMax));
-        RR = Math.max(-motorMax, Math.min(RR, motorMax));
-
-        // Send values to the motors
-        front_left.setPower(FL);
-        front_right.setPower(FR);
-        rear_left.setPower(RL);
-        rear_right.setPower(RR);
-
-        // Send some useful parameters to the driver station
-        telemetry.addData("FL", "%.3f", FL);
-        telemetry.addData("FR", "%.3f", FR);
-        telemetry.addData("RL", "%.3f", RL);
-        telemetry.addData("RR", "%.3f", RR);
+        } else if (gamepad1.b) {
+            belt_feed.setPower(0);
+        }
     }
-}
+
+        //NOTE: Eventually turn this into either me or Larson's omnidirectional drive.
+        public void UpdateDriveTrain(){
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.update();
+
+            // Reset speed variables
+            FL = 0;
+            FR = 0;
+            RL = 0;
+            RR = 0;
+
+            // Get joystick values
+            Y1 = -gamepad1.left_stick_y * joyScale; // invert so up is positive
+            X1 = gamepad1.left_stick_x * joyScale;
+            Y2 = -gamepad1.right_stick_y * joyScale; // Y2 is not used at present
+            X2 = gamepad1.right_stick_x * joyScale;
+
+            // Forward/back movement
+            FL += Y1;
+            FR += Y1;
+            RL += Y1;
+            RR += Y1;
+
+            // Side to side movement
+            FL += X1;
+            FR -= X1;
+            RL -= X1;
+            RR += X1;
+
+            // Rotation movement
+            FL += X2;
+            FR -= X2;
+            RL += X2;
+            RR -= X2;
+
+            // Clip motor power values to +-motorMax
+            FL = Math.max(-motorMax, Math.min(FL, motorMax));
+            FR = Math.max(-motorMax, Math.min(FR, motorMax));
+            RL = Math.max(-motorMax, Math.min(RL, motorMax));
+            RR = Math.max(-motorMax, Math.min(RR, motorMax));
+
+            // Send values to the motors
+            front_left.setPower(FL);
+            front_right.setPower(FR);
+            rear_left.setPower(RL);
+            rear_right.setPower(RR);
+
+            // Send some useful parameters to the driver station
+            telemetry.addData("FL", "%.3f", FL);
+            telemetry.addData("FR", "%.3f", FR);
+            telemetry.addData("RL", "%.3f", RL);
+            telemetry.addData("RR", "%.3f", RR);
+        }
+    }
 
 
