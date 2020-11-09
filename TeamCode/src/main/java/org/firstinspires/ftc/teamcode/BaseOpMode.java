@@ -79,7 +79,7 @@ public abstract class BaseOpMode extends LinearOpMode {
 
     static final double     COUNTS_PER_MOTOR_REV    = 537.6 ;    // eg: GOBUILDA Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 0.5 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 3.93700787 ;     // For figuring circumference
+    static final double     WHEEL_DIAMETER_INCHES   = 3.93701 ;     // For figuring circumference
     public static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE           = 1;
