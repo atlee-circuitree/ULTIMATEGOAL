@@ -24,19 +24,6 @@ public class SystemCheckAuto extends BaseAutoOpMode {
         waitForStart();
         runtime.reset();
 
-        GB_SPEED_SERVO.setPosition(Set_Servo_Center);
-        DS_SERVO.setPosition(Set_Servo_Center);
-        //JX_SERVO.setPosition(Set_Servo_Center);   //Didn't put on robot yet
-
-        sleep(600);
-
-        GB_SPEED_SERVO.setPosition(0.1); //far left
-        DS_SERVO.setPosition(1);  //far left
-
-        sleep(500);
-
-        GB_SPEED_SERVO.setPosition(1); //far right
-        DS_SERVO.setPosition(0);  //far right
 
         sleep(1000);
         // encoderDrive(DRIVE, 50, 3);

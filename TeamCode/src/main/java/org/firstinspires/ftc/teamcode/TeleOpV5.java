@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -56,8 +57,8 @@ public class   TeleOpV5 extends BaseOpMode {
     private DcMotor shooter_right = null;
     private DcMotor belt_feed = null;
 
-    public DigitalChannel bottom_touch = null;
-    private Servo arm_servo;
+  //  public DigitalChannel bottom_touch = null;
+  //  private Servo arm_servo;
 
 
     //This is code to test mechanum drive
@@ -94,14 +95,14 @@ public class   TeleOpV5 extends BaseOpMode {
         belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
         
 
-        bottom_touch = hardwareMap.get(DigitalChannel.class,"bottom_touch");
-        arm_servo = hardwareMap.get(Servo.class, "arm_servo");
+     //   bottom_touch = hardwareMap.get(DigitalChannel.class,"bottom_touch");
+      //  arm_servo = hardwareMap.get(Servo.class, "arm_servo");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
 
         front_left.setDirection(DcMotor.Direction.REVERSE);
-        rear_left.setDirection(DcMotor.Direction.FORWARD);
+        rear_left.setDirection(DcMotor.Direction.REVERSE);
         front_right.setDirection(DcMotor.Direction.FORWARD);
         rear_right.setDirection(DcMotor.Direction.FORWARD);
 
@@ -119,12 +120,13 @@ public class   TeleOpV5 extends BaseOpMode {
         while (opModeIsActive()) {
 
             //UpdateDrivetrain();
-            UpdateArmServo();
+           // UpdateArmServo();
             UpdateShooter();
             UpdateDriveTrain();
+            UpdateBelt();
         }
     }
-
+/*
     public void UpdateArmServo() {
         //NOTE: should eventually add in hard button stop
         if(gamepad1.right_bumper){
@@ -139,21 +141,17 @@ public class   TeleOpV5 extends BaseOpMode {
                 arm_servo.setPosition(arm_servo_pos);
             }
         }
-    }
+
+    } */
     public void UpdateShooter(){
-        if(gamepad1.right_bumper){
+        if(gamepad1.right_trigger > 0){
             //Shooting mode
             shooter_left.setPower(1);
             shooter_right.setPower(1);
-            //Need to find out good arm servo position
-            //arm_servo.setPosition(0.5);
         }
-        else if(gamepad1.left_bumper){
-            //Feeder mode
-            shooter_left.setPower(-0.5);
-            shooter_right.setPower(-0.5);
-            //Need to find good arm servo position
-            //arm_servo.setPosition(0)
+        else if (gamepad1.left_trigger > 0) {
+            shooter_left.setPower(-0.75);
+            shooter_right.setPower(-0.75);
         }
         else if(gamepad1.b){
             //Stop motors
@@ -165,8 +163,11 @@ public class   TeleOpV5 extends BaseOpMode {
     public void UpdateBelt() {
         if (gamepad1.a) {
             belt_feed.setPower(1);
-
-        } else if (gamepad1.b) {
+        }
+        else if (gamepad1.y) {
+            belt_feed.setPower(-1);
+        }
+        else if (gamepad1.b) {
             belt_feed.setPower(0);
         }
     }

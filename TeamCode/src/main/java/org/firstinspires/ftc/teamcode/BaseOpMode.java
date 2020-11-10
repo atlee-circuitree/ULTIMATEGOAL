@@ -62,11 +62,9 @@ public abstract class BaseOpMode extends LinearOpMode {
     public DcMotor shooter_left = null;
     public DcMotor shooter_right = null;
     public DcMotor belt_feed = null;
+    public DigitalChannel bottom_touch = null;
 
-    public Servo REV_SERVO = null;
-    public Servo JX_SERVO  = null;
-    public Servo ECO_SERVO = null;
-    public Servo DS_SERVO  = null;
+    private Servo arm_servo;
 
     ModernRoboticsI2cGyro gyro    = null;                    // Additional Gyro device
 
@@ -98,20 +96,20 @@ public abstract class BaseOpMode extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
+        //drive train
         front_left = hardwareMap.get(DcMotor.class, "drive_FL");
         rear_left = hardwareMap.get(DcMotor.class, "drive_RL");
         front_right = hardwareMap.get(DcMotor.class, "drive_FR");
         rear_right = hardwareMap.get(DcMotor.class, "drive_RR");
+        //Shooter
         shooter_left = hardwareMap.get(DcMotor.class, "shooter_L");
         shooter_right = hardwareMap.get(DcMotor.class, "shooter_R");
+
         belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
 
-        REV_SERVO = hardwareMap.get(Servo.class, "REV");
-        //JX_SERVO = hardwareMap.get(Servo.class, "JX");
-        //ECO_SERVO = hardwareMap.get(Servo.class, "ECO");
-      //  DS_SERVO = hardwareMap.get(Servo.class, "DS");
 
-       // top_touch = hardwareMap.get(DigitalChannel.class, "top_touch");
+     //   bottom_touch = hardwareMap.get(DigitalChannel.class,"bottom_touch");
+       // arm_servo = hardwareMap.get(Servo.class, "arm_servo");
 
         // set digital channel to input mode.
 
@@ -121,7 +119,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         front_left.setDirection(DcMotor.Direction.REVERSE);
-        rear_left.setDirection(DcMotor.Direction.FORWARD);
+        rear_left.setDirection(DcMotor.Direction.REVERSE);
         front_right.setDirection(DcMotor.Direction.FORWARD);
         rear_right.setDirection(DcMotor.Direction.FORWARD);
         

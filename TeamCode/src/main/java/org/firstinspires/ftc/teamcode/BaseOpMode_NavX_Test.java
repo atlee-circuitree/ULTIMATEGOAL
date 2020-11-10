@@ -33,6 +33,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -58,10 +59,8 @@ public abstract class BaseOpMode_NavX_Test extends LinearOpMode {
     public DcMotor shooter_right = null;
     public DcMotor belt_feed = null;
 
-    public Servo REV_SERVO = null;
-    public Servo JX_SERVO  = null;
-    public Servo ECO_SERVO = null;
-    public Servo DS_SERVO  = null;
+    public DigitalChannel bottom_touch = null;
+    private Servo arm_servo;
 
     ModernRoboticsI2cGyro gyro    = null;                    // Additional Gyro device
 
@@ -101,12 +100,8 @@ public abstract class BaseOpMode_NavX_Test extends LinearOpMode {
         shooter_right = hardwareMap.get(DcMotor.class, "shooter_R");
         belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
 
-        REV_SERVO = hardwareMap.get(Servo.class, "REV");
-        //JX_SERVO = hardwareMap.get(Servo.class, "JX");
-        //ECO_SERVO = hardwareMap.get(Servo.class, "ECO");
-      //  DS_SERVO = hardwareMap.get(Servo.class, "DS");
-
-       // top_touch = hardwareMap.get(DigitalChannel.class, "top_touch");
+       // bottom_touch = hardwareMap.get(DigitalChannel.class,"bottom_touch");
+      //  arm_servo = hardwareMap.get(Servo.class, "arm_servo");
 
         // set digital channel to input mode.
 

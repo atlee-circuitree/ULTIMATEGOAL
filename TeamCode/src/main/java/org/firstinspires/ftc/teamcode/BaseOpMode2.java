@@ -32,6 +32,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -50,15 +52,17 @@ public abstract class BaseOpMode2 extends LinearOpMode {
 
     // Declare OpMode members.
     public ElapsedTime runtime = new ElapsedTime();
-    public DcMotor front_left = null;
-    public DcMotor rear_left = null;
-    public DcMotor front_right = null;
-    public DcMotor rear_right = null;
+    private DcMotor front_left = null;
+    private DcMotor rear_left = null;
+    private DcMotor front_right = null;
+    private DcMotor rear_right = null;
+    private DcMotor shooter_left = null;
+    private DcMotor shooter_right = null;
+    private DcMotor belt_feed = null;
 
-    public Servo GB_SPEED_SERVO = null;
-    public Servo JX_SERVO  = null;
-    public Servo DS_SERVO  = null;
-    public Servo GB_9_1 = null;
+
+    public DigitalChannel bottom_touch = null;
+    private Servo arm_servo;
 
     public static final double Set_Servo_Center     =  0.5 ;
     public static final double Set_Servo_Left = 0.1;
@@ -85,18 +89,20 @@ public abstract class BaseOpMode2 extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
+        //drive train
         front_left = hardwareMap.get(DcMotor.class, "drive_FL");
         rear_left = hardwareMap.get(DcMotor.class, "drive_RL");
         front_right = hardwareMap.get(DcMotor.class, "drive_FR");
         rear_right = hardwareMap.get(DcMotor.class, "drive_RR");
+        //Shooter
+        shooter_left = hardwareMap.get(DcMotor.class, "shooter_L");
+        shooter_right = hardwareMap.get(DcMotor.class, "shooter_R");
 
-        GB_SPEED_SERVO = hardwareMap.get(Servo.class, "GB_SPEED");
-        JX_SERVO = hardwareMap.get(Servo.class, "JX");
-        DS_SERVO = hardwareMap.get(Servo.class, "DS");
-        GB_9_1 = hardwareMap.get(Servo.class, "GB_9-1");
+        belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
 
-       // top_touch = hardwareMap.get(DigitalChannel.class, "top_touch");
 
+       // bottom_touch = hardwareMap.get(DigitalChannel.class,"bottom_touch");
+       // arm_servo = hardwareMap.get(Servo.class, "arm_servo");
         // set digital channel to input mode.
 
        // top_touch.setMode(DigitalChannel.Mode.INPUT);
@@ -105,7 +111,7 @@ public abstract class BaseOpMode2 extends LinearOpMode {
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         front_left.setDirection(DcMotor.Direction.REVERSE);
-        rear_left.setDirection(DcMotor.Direction.FORWARD);
+        rear_left.setDirection(DcMotor.Direction.REVERSE);
         front_right.setDirection(DcMotor.Direction.FORWARD);
         rear_right.setDirection(DcMotor.Direction.FORWARD);
 
