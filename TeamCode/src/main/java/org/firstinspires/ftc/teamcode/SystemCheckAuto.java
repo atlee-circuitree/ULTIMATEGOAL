@@ -13,7 +13,7 @@ public class SystemCheckAuto extends BaseAutoOpModeEncoderTest {
         telemetry.update();
         telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
-        
+
         //Assigns hardware devices names and values
 
         GetHardware();
