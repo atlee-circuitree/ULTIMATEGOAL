@@ -5,13 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 
 @Autonomous(name = "System Check Auto", group = "Linear Opmode")
-public class SystemCheckAuto extends BaseAutoOpMode {
+public class SystemCheckAuto extends BaseAutoOpModeEncoderTest {
 
     @Override
     public void runOpMode () {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
 
 
@@ -26,8 +26,10 @@ public class SystemCheckAuto extends BaseAutoOpMode {
 
 
         sleep(1000);
-        // encoderDrive(DRIVE, 50, 3);
-        // encoderDrive(DRIVE, -50, 3);
+        encoderDrive(DRIVE, 50, 5);
+        sleep(1000);
+        ResetEncoder();
+        encoderDrive(DRIVE, -50, 5);
 
 
 
