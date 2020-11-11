@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 @Autonomous(name = "System Check Auto", group = "Linear Opmode")
@@ -14,7 +14,17 @@ public class SystemCheckAuto extends BaseAutoOpModeEncoderTest {
         telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
 
+        front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // Send telemetry message to indicate successful Encoder reset
+        telemetry.addData("Path0",  "Starting at %7d :%7d",
+                front_left.getCurrentPosition(),
+                front_right.getCurrentPosition());
+        telemetry.update();
         //Assigns hardware devices names and values
 
         GetHardware();
@@ -24,12 +34,16 @@ public class SystemCheckAuto extends BaseAutoOpModeEncoderTest {
         waitForStart();
         runtime.reset();
 
+        //ResetEncoder();
+       // SetDriveMode(Mode.STOP_RESET_ENCODER);
 
         sleep(1000);
-        encoderDrive(DRIVE, 50, 5);
-        sleep(1000);
-        ResetEncoder();
-        encoderDrive(DRIVE, -50, 5);
+        encoderDrive(DRIVE,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+
+        //encoderDrive(DRIVE, 50, 5);
+        //sleep(1000);
+        //ResetEncoder();
+        //encoderDrive(DRIVE, -50, 5);
 
 
 

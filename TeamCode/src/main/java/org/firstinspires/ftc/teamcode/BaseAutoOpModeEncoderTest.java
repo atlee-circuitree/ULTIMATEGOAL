@@ -40,7 +40,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
  * forwards/backwards and turning left and right, and the right stick controls strafing. (working on diff. control setup currently)
  */
 @Disabled
-public abstract class BaseAutoOpModeEncoderTest extends BaseOpModeEncoderTest {
+public abstract class BaseAutoOpModeEncoderTest extends BaseOpModeEncoderTest2 {
 
 
     @Override
@@ -61,10 +61,6 @@ public abstract class BaseAutoOpModeEncoderTest extends BaseOpModeEncoderTest {
         SetDriveMode(Mode.RUN_WITHOUT_ENCODERS);
     }
 
-
-    public void Encoder(){
-        encoderDrive(DRIVE, 20, 5);
-    }
 /*
     public void UnfoldRobotV2() {
 
