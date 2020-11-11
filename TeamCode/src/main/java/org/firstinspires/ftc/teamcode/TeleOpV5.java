@@ -56,6 +56,7 @@ public class   TeleOpV5 extends BaseOpMode {
     private DcMotor shooter_left = null;
     private DcMotor shooter_right = null;
     private DcMotor belt_feed = null;
+    private DcMotor lift_Motor = null;
 
   //  public DigitalChannel bottom_touch = null;
   //  private Servo arm_servo;
@@ -93,7 +94,8 @@ public class   TeleOpV5 extends BaseOpMode {
         shooter_right = hardwareMap.get(DcMotor.class, "shooter_R");
 
         belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
-        
+
+        lift_Motor = hardwareMap.get(DcMotor.class, "lift_M");
 
      //   bottom_touch = hardwareMap.get(DigitalChannel.class,"bottom_touch");
       //  arm_servo = hardwareMap.get(Servo.class, "arm_servo");
@@ -108,6 +110,8 @@ public class   TeleOpV5 extends BaseOpMode {
 
         shooter_left.setDirection(DcMotor.Direction.FORWARD);
         shooter_right.setDirection(DcMotor.Direction.REVERSE);
+
+        lift_Motor.setDirection(DcMotorSimple.Direction.FORWARD);
         
         
        
@@ -124,6 +128,7 @@ public class   TeleOpV5 extends BaseOpMode {
             UpdateShooter();
             UpdateDriveTrain();
             UpdateBelt();
+            UpdateLift();
         }
     }
 /*
@@ -171,6 +176,18 @@ public class   TeleOpV5 extends BaseOpMode {
             belt_feed.setPower(0);
         }
     }
+    public void UpdateLift() {
+        if (gamepad1.dpad_up) {
+            lift_Motor.setPower(1);
+        }
+        else if (gamepad1.dpad_down) {
+            lift_Motor.setPower(-1);
+        }
+        else if (gamepad1.b) {
+            lift_Motor.setPower(0);
+        }
+    }
+
 
         //NOTE: Eventually turn this into either me or Larson's omnidirectional drive.
         public void UpdateDriveTrain(){
