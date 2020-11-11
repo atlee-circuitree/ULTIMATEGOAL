@@ -13,13 +13,7 @@ public class SystemCheckAuto extends BaseAutoOpModeEncoderTest {
         telemetry.update();
         telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
-
-
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
-                front_left.getCurrentPosition(),
-                front_right.getCurrentPosition());
-        telemetry.update();
+        
         //Assigns hardware devices names and values
 
         GetHardware();
@@ -28,13 +22,17 @@ public class SystemCheckAuto extends BaseAutoOpModeEncoderTest {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
-        
+
         front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        // Send telemetry message to indicate successful Encoder reset
+        telemetry.addData("Path0",  "Starting at %7d :%7d",
+                front_left.getCurrentPosition(),
+                front_right.getCurrentPosition());
+        telemetry.update();
         //ResetEncoder();
        // SetDriveMode(Mode.STOP_RESET_ENCODER);
 
