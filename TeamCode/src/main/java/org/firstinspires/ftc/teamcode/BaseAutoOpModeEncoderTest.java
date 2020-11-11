@@ -46,10 +46,10 @@ public abstract class BaseAutoOpModeEncoderTest extends BaseOpModeEncoderTest2 {
     @Override
     public void GetHardware() {
         super.GetHardware();
-        front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        front_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rear_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rear_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+       // front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+       // front_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+       // rear_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+       // rear_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
 
