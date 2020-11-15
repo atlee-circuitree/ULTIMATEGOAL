@@ -45,6 +45,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +60,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * forwards/backwards and turning left and right, and the right stick controls strafing. (working on diff. control setup currently)
  */
 @Disabled
-public abstract class BaseAutoOpMode extends BaseOpMode2 {
+public abstract class BaseAutoOpMode extends BaseOpMode {
 
 
     @Override

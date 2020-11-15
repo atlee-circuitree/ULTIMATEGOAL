@@ -140,6 +140,7 @@ public class TeleOpV6 extends BaseOpMode {
             UpdateLift();
             UpdateArmServo();
             ClawServo();
+            getNavXValues();
         }
     }
     public  void ClawServo() {

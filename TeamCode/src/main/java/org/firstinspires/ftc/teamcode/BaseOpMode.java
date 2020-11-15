@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -41,10 +42,14 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.AHRS;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
+import java.text.DecimalFormat;
 
 
 /**
@@ -67,6 +72,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public DcMotor lift_Motor = null;
     public DigitalChannel lift_bottom = null;
     public DigitalChannel lift_top = null;
+    public AHRS navx_device;
 
     public CRServo arm_servo;
     public Servo claw_servo;
@@ -116,7 +122,7 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         lift_bottom = hardwareMap.get(DigitalChannel.class,"lift_bottom");
         lift_top = hardwareMap.get(DigitalChannel.class,"lift_top");
-
+        navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"), AHRS.DeviceDataType.kProcessedData);
 
         // set digital channel to input mode.
         lift_top.setMode(DigitalChannel.Mode.INPUT);
@@ -591,6 +597,56 @@ public abstract class BaseOpMode extends LinearOpMode {
             rear_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         }
+
+    }
+    public void initNavX(){
+        boolean connected = navx_device.isConnected();
+        telemetry.addData("1 navX-Device", connected ?
+                "Connected" : "Disconnected" );
+        String gyrocal, magcal, yaw, pitch, roll, compass_heading;
+        String fused_heading, ypr, cf, motion;
+        DecimalFormat df = new DecimalFormat("#.##");
+    }
+
+
+    public void getNavXValues(){
+
+        //boolean connected = navx_device.isConnected();
+        //telemetry.addData("1 navX-Device", connected ?
+        //"Connected" : "Disconnected" );
+        String gyrocal, magcal, yaw, pitch, roll, compass_heading;
+        String fused_heading, ypr, cf, motion;
+        DecimalFormat df = new DecimalFormat("#.##");
+
+
+            gyrocal = (navx_device.isCalibrating() ?
+                    "CALIBRATING" : "Calibration Complete");
+            magcal = (navx_device.isMagnetometerCalibrated() ?
+                    "Calibrated" : "UNCALIBRATED");
+            yaw = df.format(navx_device.getYaw());
+            pitch = df.format(navx_device.getPitch());
+            roll = df.format(navx_device.getRoll());
+            ypr = yaw + ", " + pitch + ", " + roll;
+            compass_heading = df.format(navx_device.getCompassHeading());
+            fused_heading = df.format(navx_device.getFusedHeading());
+            if (!navx_device.isMagnetometerCalibrated()) {
+                compass_heading = "-------";
+            }
+            cf = compass_heading + ", " + fused_heading;
+            if ( navx_device.isMagneticDisturbance()) {
+                cf += " (Mag. Disturbance)";
+            }
+            motion = (navx_device.isMoving() ? "Moving" : "Not Moving");
+            if ( navx_device.isRotating() ) {
+                motion += ", Rotating";
+            }
+
+
+        telemetry.addData("2 GyroAccel", gyrocal );
+        telemetry.addData("3 Y,P,R", ypr);
+        telemetry.addData("4 Magnetometer", magcal );
+        telemetry.addData("5 Compass,9Axis", cf );
+        telemetry.addData("6 Motion", motion);
 
     }
 }
