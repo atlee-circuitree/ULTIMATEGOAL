@@ -62,13 +62,14 @@ public abstract class BaseOpMode extends LinearOpMode {
     public DcMotor shooter_left = null;
     public DcMotor shooter_right = null;
     public DcMotor belt_feed = null;
-    public DigitalChannel bottom_touch = null;
+    public DcMotor lift_Motor = null;
+    public DigitalChannel lift_bottom = null;
+    public DigitalChannel lift_top = null;
 
-    private Servo arm_servo;
+    public Servo arm_servo;
+    public Servo claw_servo;
 
     ModernRoboticsI2cGyro gyro    = null;                    // Additional Gyro device
-
-    //public DigitalChannel top_touch = null;
 
     public BNO055IMU imu;
     public Orientation lastAngles = new Orientation();
@@ -106,15 +107,18 @@ public abstract class BaseOpMode extends LinearOpMode {
         shooter_right = hardwareMap.get(DcMotor.class, "shooter_R");
 
         belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
+        lift_Motor = hardwareMap.get(DcMotor.class, "lift_M");
 
+        arm_servo = hardwareMap.get(Servo.class, "arm_servo");
+        claw_servo = hardwareMap.get(Servo.class, "claw_servo");
 
-     //   bottom_touch = hardwareMap.get(DigitalChannel.class,"bottom_touch");
-       // arm_servo = hardwareMap.get(Servo.class, "arm_servo");
+        lift_bottom = hardwareMap.get(DigitalChannel.class,"lift_bottom");
+        lift_top = hardwareMap.get(DigitalChannel.class,"lift_top");
+
 
         // set digital channel to input mode.
-
-       // top_touch.setMode(DigitalChannel.Mode.INPUT);
-
+        lift_top.setMode(DigitalChannel.Mode.INPUT);
+        lift_bottom.setMode(DigitalChannel.Mode.INPUT);
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -122,11 +126,11 @@ public abstract class BaseOpMode extends LinearOpMode {
         rear_left.setDirection(DcMotor.Direction.REVERSE);
         front_right.setDirection(DcMotor.Direction.FORWARD);
         rear_right.setDirection(DcMotor.Direction.FORWARD);
-        
+
         shooter_left.setDirection(DcMotor.Direction.FORWARD);
         shooter_right.setDirection(DcMotor.Direction.REVERSE);
-        
         belt_feed.setDirection(DcMotor.Direction.FORWARD);
+        lift_Motor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rear_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
