@@ -76,6 +76,7 @@ public class TeleOpV6 extends BaseOpMode {
     //Hold the position of the arm servo so we can increment it
     double arm_servo_pos = 0.5;
 
+    boolean clawPos = true;
 
     @Override
     public void runOpMode() {
@@ -122,6 +123,7 @@ public class TeleOpV6 extends BaseOpMode {
         shooter_right.setDirection(DcMotor.Direction.REVERSE);
         lift_Motor.setDirection(DcMotorSimple.Direction.FORWARD);
         belt_feed.setDirection(DcMotor.Direction.FORWARD);
+        arm_servo.setDirection(DcMotorSimple.Direction.FORWARD);
         
        
 
@@ -140,16 +142,25 @@ public class TeleOpV6 extends BaseOpMode {
             UpdateLift();
             UpdateArmServo();
             ClawServo();
+            shortcuts();
             getNavXValues();
         }
     }
     public  void ClawServo() {
-        if(gamepad1.left_stick_button) {
-            claw_servo.setPosition(.3);
+
+        telemetry.addData("Bool clawPos",clawPos);
+        telemetry.addData("RightStickButton",gamepad1.right_stick_button);
+        if(gamepad1.x) {
+            if(clawPos == true & gamepad1.x){
+                claw_servo.setPosition(.455);
+                clawPos = false;
+            }
+            else if(clawPos == false & gamepad1.x){
+                claw_servo.setPosition(.2);
+                clawPos = true;
+            }
         }
-        else if(gamepad1.right_stick_button) {
-            claw_servo.setPosition(.7);
-        }
+
     }
 
     public void UpdateArmServo() {
@@ -159,9 +170,8 @@ public class TeleOpV6 extends BaseOpMode {
         }
         else if(gamepad1.dpad_right) {
             arm_servo.setPower(1);
-
         }
-        else {
+        else if(gamepad1.b){
             arm_servo.setPower(0);
         }
     }
@@ -180,18 +190,19 @@ public class TeleOpV6 extends BaseOpMode {
             //Stop motors
             shooter_left.setPower(0);
             shooter_right.setPower(0);
+            belt_feed.setPower(0);
         }
 
     }
     public void UpdateBelt() {
-        if (gamepad1.a) {
-            belt_feed.setPower(1);
+        if (gamepad1.right_bumper & gamepad1.left_bumper) {
+            belt_feed.setPower(0);
         }
-        else if (gamepad1.y) {
+        else if (gamepad1.left_bumper) {
             belt_feed.setPower(-1);
         }
-        else if (gamepad1.b) {
-            belt_feed.setPower(0);
+        else if(gamepad1.right_bumper){
+            belt_feed.setPower(1);
         }
     }
     public void UpdateLift() {
@@ -203,6 +214,30 @@ public class TeleOpV6 extends BaseOpMode {
         }
         else {
             lift_Motor.setPower(0);
+        }
+    }
+    public void shortcuts(){
+        //feeder mode
+        if(gamepad1.a){
+            while(lift_bottom.getState()) {
+                lift_Motor.setPower(-1);
+            }
+            lift_Motor.setPower(1);
+            sleep(50);
+            lift_Motor.setPower(0);
+            shooter_left.setPower(-1);
+            shooter_right.setPower(-1);
+            belt_feed.setPower(-1);
+
+        }
+        //shooter mode
+        if(gamepad1.y){
+            while(lift_top.getState()) {
+                lift_Motor.setPower(1);
+            }
+            belt_feed.setPower(0);
+            shooter_left.setPower(1);
+            shooter_right.setPower(1);
         }
     }
 

@@ -122,7 +122,7 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         lift_bottom = hardwareMap.get(DigitalChannel.class,"lift_bottom");
         lift_top = hardwareMap.get(DigitalChannel.class,"lift_top");
-        navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"), AHRS.DeviceDataType.kProcessedData);
+
 
         // set digital channel to input mode.
         lift_top.setMode(DigitalChannel.Mode.INPUT);
@@ -599,18 +599,11 @@ public abstract class BaseOpMode extends LinearOpMode {
         }
 
     }
-    public void initNavX(){
-        boolean connected = navx_device.isConnected();
-        telemetry.addData("1 navX-Device", connected ?
-                "Connected" : "Disconnected" );
-        String gyrocal, magcal, yaw, pitch, roll, compass_heading;
-        String fused_heading, ypr, cf, motion;
-        DecimalFormat df = new DecimalFormat("#.##");
-    }
 
 
     public void getNavXValues(){
 
+        navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"), AHRS.DeviceDataType.kProcessedData);
         //boolean connected = navx_device.isConnected();
         //telemetry.addData("1 navX-Device", connected ?
         //"Connected" : "Disconnected" );
