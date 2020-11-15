@@ -36,6 +36,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
+
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -66,7 +68,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public DigitalChannel lift_bottom = null;
     public DigitalChannel lift_top = null;
 
-    public Servo arm_servo;
+    public CRServo arm_servo;
     public Servo claw_servo;
 
     ModernRoboticsI2cGyro gyro    = null;                    // Additional Gyro device
@@ -109,7 +111,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
         lift_Motor = hardwareMap.get(DcMotor.class, "lift_M");
 
-        arm_servo = hardwareMap.get(Servo.class, "arm_servo");
+        arm_servo = hardwareMap.get(CRServo.class, "arm_servo");
         claw_servo = hardwareMap.get(Servo.class, "claw_servo");
 
         lift_bottom = hardwareMap.get(DigitalChannel.class,"lift_bottom");

@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -59,7 +60,7 @@ public class TeleOpV6 extends BaseOpMode {
     private DigitalChannel lift_bottom = null;
     private DigitalChannel lift_top = null;
 
-    private Servo arm_servo;
+    private CRServo arm_servo;
     private Servo claw_servo;
 
 
@@ -94,11 +95,11 @@ public class TeleOpV6 extends BaseOpMode {
         shooter_left = hardwareMap.get(DcMotor.class, "shooter_L");
         shooter_right = hardwareMap.get(DcMotor.class, "shooter_R");
 
-        belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
+        belt_feed = hardwareMap.get(DcMotor.class, "belt_feed");
 
         lift_Motor = hardwareMap.get(DcMotor.class, "lift_M");
 
-        arm_servo = hardwareMap.get(Servo.class, "arm_servo");
+        arm_servo = hardwareMap.get(CRServo.class, "arm_servo");
         claw_servo = hardwareMap.get(Servo.class, "claw_servo");
 
         lift_bottom = hardwareMap.get(DigitalChannel.class,"lift_bottom");
@@ -120,7 +121,7 @@ public class TeleOpV6 extends BaseOpMode {
         shooter_left.setDirection(DcMotor.Direction.FORWARD);
         shooter_right.setDirection(DcMotor.Direction.REVERSE);
         lift_Motor.setDirection(DcMotorSimple.Direction.FORWARD);
-        
+        belt_feed.setDirection(DcMotor.Direction.FORWARD);
         
        
 
@@ -137,27 +138,35 @@ public class TeleOpV6 extends BaseOpMode {
             UpdateDriveTrain();
             UpdateBelt();
             UpdateLift();
+            UpdateArmServo();
+            ClawServo();
         }
     }
-/*
+    public  void ClawServo() {
+        if(gamepad1.left_stick_button) {
+            claw_servo.setPosition(.3);
+        }
+        else if(gamepad1.right_stick_button) {
+            claw_servo.setPosition(.7);
+        }
+    }
+
     public void UpdateArmServo() {
         //NOTE: should eventually add in hard button stop
-        if(gamepad1.right_bumper){
-            if(arm_servo_pos < 1.0){
-                arm_servo_pos += 0.1;
-                arm_servo.setPosition(arm_servo_pos);
-            }
+        if(gamepad1.dpad_left){
+            arm_servo.setPower(-1);
         }
-        else if(gamepad1.left_bumper){
-            if(arm_servo_pos > 0.0){
-                arm_servo_pos -= 0.1;
-                arm_servo.setPosition(arm_servo_pos);
-            }
-        }
+        else if(gamepad1.dpad_right) {
+            arm_servo.setPower(1);
 
-    } */
+        }
+        else {
+            arm_servo.setPower(0);
+        }
+    }
+
     public void UpdateShooter(){
-        if(gamepad1.right_trigger > 0){
+        if(gamepad1.right_trigger > 0) {
             //Shooting mode
             shooter_left.setPower(1);
             shooter_right.setPower(1);
