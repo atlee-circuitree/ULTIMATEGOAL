@@ -30,11 +30,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -43,9 +43,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * If you are looking at this in the far future I don't know if the config has changed any
  */
 
-@TeleOp(name="TeleOp_V6", group="Linear Opmode")
+@TeleOp(name="TeleOp_V7", group="Linear Opmode")
 
-public class TeleOpV6 extends BaseOpMode {
+public class TeleOpV7 extends BaseOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -71,6 +71,7 @@ public class TeleOpV6 extends BaseOpMode {
     double X1; double Y1; double X2; double Y2;
     // operational constants
     double joyScale = 1;
+    double joyScaleSlow = 0.5;
     double motorMax = 1; // Limit motor power to this value for Andymark RUN_USING_ENCODER mode
 
     //Hold the position of the arm servo so we can increment it
@@ -165,28 +166,28 @@ public class TeleOpV6 extends BaseOpMode {
 
     public void UpdateArmServo() {
         //NOTE: should eventually add in hard button stop
-        if(gamepad1.dpad_left){
+        if(gamepad2.dpad_left){
             arm_servo.setPower(-1);
         }
-        else if(gamepad1.dpad_right) {
+        else if(gamepad2.dpad_right) {
             arm_servo.setPower(1);
         }
-        else if(gamepad1.b){
+        else if(gamepad1.b || gamepad2.b){
             arm_servo.setPower(0);
         }
     }
 
     public void UpdateShooter(){
-        if(gamepad1.right_trigger > 0) {
+        if(gamepad2.right_trigger > 0) {
             //Shooting mode
             shooter_left.setPower(1);
             shooter_right.setPower(1);
         }
-        else if (gamepad1.left_trigger > 0) {
+        else if (gamepad2.left_trigger > 0) {
             shooter_left.setPower(-1);
             shooter_right.setPower(-1);
         }
-        else if(gamepad1.b){
+        else if(gamepad1.b || gamepad2.b){
             //Stop motors
             shooter_left.setPower(0);
             shooter_right.setPower(0);
@@ -206,10 +207,10 @@ public class TeleOpV6 extends BaseOpMode {
         }
     }
     public void UpdateLift() {
-        if (gamepad1.dpad_up & lift_top.getState()) {
+        if (gamepad2.dpad_up & lift_top.getState()) {
             lift_Motor.setPower(0.6);
         }
-        else if (gamepad1.dpad_down & lift_bottom.getState()) {
+        else if (gamepad2.dpad_down & lift_bottom.getState()) {
             lift_Motor.setPower(-0.6);
         }
         else {
@@ -218,7 +219,7 @@ public class TeleOpV6 extends BaseOpMode {
     }
     public void shortcuts(){
         //feeder mode
-        if(gamepad1.a){
+        if(gamepad2.a){
             while(lift_bottom.getState()) {
                 lift_Motor.setPower(-1);
             }
@@ -231,7 +232,7 @@ public class TeleOpV6 extends BaseOpMode {
 
         }
         //shooter mode
-        if(gamepad1.y){
+        if(gamepad2.y){
             while(lift_top.getState()) {
                 lift_Motor.setPower(1);
             }
@@ -258,6 +259,7 @@ public class TeleOpV6 extends BaseOpMode {
             X1 = gamepad1.left_stick_x * joyScale;
             Y2 = -gamepad1.right_stick_y * joyScale; // Y2 is not used at present
             X2 = gamepad1.right_stick_x * joyScale;
+            
 
             // Forward/back movement
             FL += Y1;
