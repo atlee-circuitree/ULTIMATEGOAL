@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.configuration.ServoFlavor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -124,8 +125,7 @@ public class TeleOpV7 extends BaseOpMode {
         shooter_right.setDirection(DcMotor.Direction.REVERSE);
         lift_Motor.setDirection(DcMotorSimple.Direction.FORWARD);
         belt_feed.setDirection(DcMotor.Direction.FORWARD);
-        arm_servo.setDirection(DcMotorSimple.Direction.FORWARD);
-        
+        arm_servo.setDirection(DcMotorSimple.Direction.FORWARD); //Larson - Why is this put as a DcMotorSimple?
        
 
         // Wait for the game to start (driver presses PLAY)
@@ -174,6 +174,9 @@ public class TeleOpV7 extends BaseOpMode {
         }
         else if(gamepad1.b || gamepad2.b){
             arm_servo.setPower(0);
+        }
+        else if(gamepad2.dpad_up){
+            arm_servo.setPower(.25); //Larson Add On
         }
     }
 
@@ -243,7 +246,7 @@ public class TeleOpV7 extends BaseOpMode {
     }
 
 
-        //NOTE: Eventually turn this into either me or Larson's omnidirectional drive.
+        //NOTE: Eventually turn this into either Douglas' or Larson's omnidirectional drive.
         public void UpdateDriveTrain(){
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
