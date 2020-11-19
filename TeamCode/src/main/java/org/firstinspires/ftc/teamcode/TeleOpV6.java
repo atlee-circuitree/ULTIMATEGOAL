@@ -49,6 +49,7 @@ public class TeleOpV6 extends BaseOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+    /*
     private DcMotor front_left = null;
     private DcMotor rear_left = null;
     private DcMotor front_right = null;
@@ -62,7 +63,7 @@ public class TeleOpV6 extends BaseOpMode {
 
     private CRServo arm_servo;
     private Servo claw_servo;
-
+    */
 
     //This is code to test mechanum drive
     // declare motor speed variables
@@ -100,7 +101,7 @@ public class TeleOpV6 extends BaseOpMode {
 
         lift_Motor = hardwareMap.get(DcMotor.class, "lift_M");
 
-        arm_servo = hardwareMap.get(CRServo.class, "arm_servo");
+        arm_servo = hardwareMap.get(Servo.class, "arm_servo");
         claw_servo = hardwareMap.get(Servo.class, "claw_servo");
 
         lift_bottom = hardwareMap.get(DigitalChannel.class,"lift_bottom");
@@ -123,7 +124,6 @@ public class TeleOpV6 extends BaseOpMode {
         shooter_right.setDirection(DcMotor.Direction.REVERSE);
         lift_Motor.setDirection(DcMotorSimple.Direction.FORWARD);
         belt_feed.setDirection(DcMotor.Direction.FORWARD);
-        arm_servo.setDirection(DcMotorSimple.Direction.FORWARD);
         
        
 
@@ -166,13 +166,13 @@ public class TeleOpV6 extends BaseOpMode {
     public void UpdateArmServo() {
         //NOTE: should eventually add in hard button stop
         if(gamepad1.dpad_left){
-            arm_servo.setPower(-1);
+            arm_servo.setPosition(1);
         }
         else if(gamepad1.dpad_right) {
-            arm_servo.setPower(1);
+            arm_servo.setPosition(0);
         }
         else if(gamepad1.b){
-            arm_servo.setPower(0);
+            arm_servo.setPosition(0.5);
         }
     }
 
