@@ -118,7 +118,77 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
     }
 */
 
+    public void EncoderDriveByInches(double inches, double speed){
 
+        final double     COUNTS_PER_MOTOR_REV    = 3892 ;    // eg: TETRIX Motor Encoder
+        final double     DRIVE_GEAR_REDUCTION    = 0.5 ;     // This is < 1.0 if geared UP
+        final double     WHEEL_DIAMETER_INCHES   = 3.937;     // For figuring circumference
+        final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
+
+        front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rear_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rear_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        int target = (int)(inches * COUNTS_PER_INCH);
+
+        front_left.setTargetPosition(target);
+        front_right.setTargetPosition(target);
+        rear_left.setTargetPosition(target);
+        rear_right.setTargetPosition(target);
+
+        front_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        front_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rear_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rear_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        front_left.setPower(speed);
+        front_right.setPower(speed);
+        rear_left.setPower(speed);
+        rear_right.setPower(speed);
+
+        while (front_left.isBusy() && front_right.isBusy()){
+            telemetry.addData("Encoder Target", target);
+            telemetry.addData("FL motor encoder", front_left.getCurrentPosition());
+            telemetry.addData("FR motor encoder", front_right.getCurrentPosition());
+            telemetry.update();
+        }
+        front_left.setPower(0);
+        front_right.setPower(0);
+        rear_left.setPower(0);
+        rear_right.setPower(0);
+
+        front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rear_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rear_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+    }
+
+    public void fieldOrientedRotate(int degrees, double speed){
+
+        double angle = navx_device.getYaw();
+
+        if(angle > degrees){
+            while(angle != degrees){
+                angle = navx_device.getYaw();
+                front_left.setPower(-speed);
+                rear_left.setPower(-speed);
+                front_right.setPower(speed);
+                rear_right.setPower(speed);
+            }
+        }
+        else if(angle < degrees){
+            while(angle != degrees){
+                angle = navx_device.getYaw();
+                front_left.setPower(speed);
+                rear_left.setPower(speed);
+                front_right.setPower(-speed);
+                rear_right.setPower(-speed);
+            }
+        }
+
+    }
 }
 
 
