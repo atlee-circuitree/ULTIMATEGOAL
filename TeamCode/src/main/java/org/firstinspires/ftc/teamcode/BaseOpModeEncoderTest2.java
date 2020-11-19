@@ -70,6 +70,7 @@ public abstract class BaseOpModeEncoderTest2 extends LinearOpMode {
     public double globalAngle;
     int loop = 0;
 
+
     static final double     COUNTS_PER_MOTOR_REV    = 537.6 ;    // eg: GOBUILDA Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 0.5 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 3.93701 ;     // For figuring circumference
