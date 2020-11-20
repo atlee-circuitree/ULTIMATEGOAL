@@ -54,6 +54,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
+import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.AHRS;
 
 /**
  * This file contains basic code to run a 4 wheeled Mecanum wheel setup. The d-pad controls
@@ -171,6 +172,8 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
 
         if(angle > degrees){
             while(angle != degrees){
+                telemetry.addData("Angle",angle);
+                telemetry.update();
                 angle = navx_device.getYaw();
                 front_left.setPower(-speed);
                 rear_left.setPower(-speed);
@@ -180,6 +183,8 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
         }
         else if(angle < degrees){
             while(angle != degrees){
+                telemetry.addData("Angle",angle);
+                telemetry.update();
                 angle = navx_device.getYaw();
                 front_left.setPower(speed);
                 rear_left.setPower(speed);

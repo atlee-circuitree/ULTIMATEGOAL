@@ -11,20 +11,19 @@ public class SimonsTestAuto extends BaseAutoOpMode {
     public void runOpMode () {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        telemetry.addData("Status", "Resetting Encoders");
-        telemetry.update();
 
         //Assigns hardware devices names and values
 
         GetHardware();
+        getNavXValues();
 
 
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        runtime.reset();
+        runtime.reset();  
 
-        EncoderDriveByInches(5,1);
+        EncoderDriveByInches(24,1);
         fieldOrientedRotate(90,0.5);
 
 

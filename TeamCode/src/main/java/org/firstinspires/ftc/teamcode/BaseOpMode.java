@@ -151,7 +151,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         rear_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-        GetIMU();
+        //GetIMU();
 
     }
 
