@@ -98,7 +98,7 @@ public class TeleOpV7 extends BaseOpMode {
         shooter_left = hardwareMap.get(DcMotor.class, "shooter_L");
         shooter_right = hardwareMap.get(DcMotor.class, "shooter_R");
 
-        belt_feed = hardwareMap.get(DcMotor.class, "belt_feed");
+        belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
 
         lift_Motor = hardwareMap.get(DcMotor.class, "lift_M");
 
@@ -126,7 +126,7 @@ public class TeleOpV7 extends BaseOpMode {
         lift_Motor.setDirection(DcMotorSimple.Direction.FORWARD);
         belt_feed.setDirection(DcMotor.Direction.FORWARD);
         arm_servo.setDirection(DcMotorSimple.Direction.FORWARD); //Larson - Why is this put as a DcMotorSimple?
-       
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();

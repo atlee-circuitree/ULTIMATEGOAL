@@ -30,11 +30,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -43,9 +43,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * If you are looking at this in the far future I don't know if the config has changed any
  */
 
-@TeleOp(name="TeleOp_V6", group="Linear Opmode")
+@TeleOp(name="TeleOp_V8", group="Linear Opmode")
 
-public class TeleOpV6 extends BaseOpMode {
+public class TeleOpV8 extends BaseOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -60,7 +60,7 @@ public class TeleOpV6 extends BaseOpMode {
     private DigitalChannel lift_bottom = null;
     private DigitalChannel lift_top = null;
 
-    private CRServo arm_servo;
+    private Servo arm_servo;
     private Servo claw_servo;
 
 
@@ -100,7 +100,7 @@ public class TeleOpV6 extends BaseOpMode {
 
         lift_Motor = hardwareMap.get(DcMotor.class, "lift_M");
 
-        arm_servo = hardwareMap.get(CRServo.class, "arm_servo");
+        arm_servo = hardwareMap.get(Servo.class, "arm_servo");
         claw_servo = hardwareMap.get(Servo.class, "claw_servo");
 
         lift_bottom = hardwareMap.get(DigitalChannel.class,"lift_bottom");
@@ -123,7 +123,7 @@ public class TeleOpV6 extends BaseOpMode {
         shooter_right.setDirection(DcMotor.Direction.REVERSE);
         lift_Motor.setDirection(DcMotorSimple.Direction.FORWARD);
         belt_feed.setDirection(DcMotor.Direction.FORWARD);
-        arm_servo.setDirection(DcMotorSimple.Direction.FORWARD);
+
         
        
 
@@ -166,13 +166,13 @@ public class TeleOpV6 extends BaseOpMode {
     public void UpdateArmServo() {
         //NOTE: should eventually add in hard button stop
         if(gamepad1.dpad_left){
-            arm_servo.setPower(-1);
+            arm_servo.setPosition(0.9);
         }
         else if(gamepad1.dpad_right) {
-            arm_servo.setPower(1);
+            arm_servo.setPosition(0.1);
         }
         else if(gamepad1.b){
-            arm_servo.setPower(0);
+            arm_servo.setPosition(0.5);
         }
     }
 

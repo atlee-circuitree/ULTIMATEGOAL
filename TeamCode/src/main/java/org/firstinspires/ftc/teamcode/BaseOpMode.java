@@ -74,7 +74,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public DigitalChannel lift_top = null;
     public AHRS navx_device;
 
-    public CRServo arm_servo;
+    public Servo arm_servo;
     public Servo claw_servo;
 
     ModernRoboticsI2cGyro gyro    = null;                    // Additional Gyro device
@@ -117,7 +117,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
         lift_Motor = hardwareMap.get(DcMotor.class, "lift_M");
 
-        arm_servo = hardwareMap.get(CRServo.class, "arm_servo");
+        arm_servo = hardwareMap.get(Servo.class, "arm_servo");
         claw_servo = hardwareMap.get(Servo.class, "claw_servo");
 
         lift_bottom = hardwareMap.get(DigitalChannel.class,"lift_bottom");

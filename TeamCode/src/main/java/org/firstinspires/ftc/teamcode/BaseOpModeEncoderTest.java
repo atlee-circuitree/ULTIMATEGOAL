@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -39,6 +40,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.AHRS;
 
 
 /**
@@ -58,21 +60,26 @@ public abstract class BaseOpModeEncoderTest extends LinearOpMode {
     public DcMotor shooter_left = null;
     public DcMotor shooter_right = null;
     public DcMotor belt_feed = null;
-    public DigitalChannel bottom_touch = null;
+    public DcMotor lift_Motor = null;
+    public DigitalChannel lift_bottom = null;
+    public DigitalChannel lift_top = null;
+    public AHRS navx_device;
 
-    private Servo arm_servo;
+    public Servo arm_servo;
+    public Servo claw_servo;
+
 
     ModernRoboticsI2cGyro gyro    = null;                    // Additional Gyro device
 
-    //public DigitalChannel top_touch = null;
+
 
     public BNO055IMU imu;
     public Orientation lastAngles = new Orientation();
     public double globalAngle;
     int loop = 0;
 
-    static final double     COUNTS_PER_MOTOR_REV    = 537.6 ;    // eg: GOBUILDA Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 0.5 ;     // This is < 1.0 if geared UP
+    static final double     COUNTS_PER_MOTOR_REV    =  383.6 ;    // eg: GOBUILDA Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 2 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 3.93701 ;     // For figuring circumference
     public static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
@@ -92,11 +99,15 @@ public abstract class BaseOpModeEncoderTest extends LinearOpMode {
         shooter_left = hardwareMap.get(DcMotor.class, "shooter_L");
         shooter_right = hardwareMap.get(DcMotor.class, "shooter_R");
 
+
         belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
+        lift_Motor = hardwareMap.get(DcMotor.class, "lift_M");
 
+        arm_servo = hardwareMap.get(Servo.class, "arm_servo");
+        claw_servo = hardwareMap.get(Servo.class, "claw_servo");
 
-     //   bottom_touch = hardwareMap.get(DigitalChannel.class,"bottom_touch");
-       // arm_servo = hardwareMap.get(Servo.class, "arm_servo");
+        lift_bottom = hardwareMap.get(DigitalChannel.class,"lift_bottom");
+        lift_top = hardwareMap.get(DigitalChannel.class,"lift_top");
 
         // set digital channel to input mode.
 
@@ -126,7 +137,7 @@ public abstract class BaseOpModeEncoderTest extends LinearOpMode {
         rear_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-        GetIMU();
+      //  GetIMU();
 
     }
 
