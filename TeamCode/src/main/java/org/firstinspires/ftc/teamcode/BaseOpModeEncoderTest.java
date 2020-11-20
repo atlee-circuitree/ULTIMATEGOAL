@@ -252,7 +252,6 @@ public abstract class BaseOpModeEncoderTest extends LinearOpMode {
                         rear_left.getCurrentPosition(),
                         rear_right.getCurrentPosition());
                 telemetry.update();
-                //RunSafetyCutoff();
             }
 
             // Stop all motion;

@@ -37,6 +37,8 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+
 
 /**
  * Teleop made 10/22/2020
@@ -190,7 +192,6 @@ public class TeleOpV8 extends BaseOpMode {
             //Stop motors
             shooter_left.setPower(0);
             shooter_right.setPower(0);
-            belt_feed.setPower(0);
         }
 
     }

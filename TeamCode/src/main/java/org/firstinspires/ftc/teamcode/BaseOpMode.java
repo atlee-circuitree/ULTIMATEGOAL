@@ -50,7 +50,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.text.DecimalFormat;
-
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 /**
  * This file contains basic code to run a 4 wheeled Mecanum wheel setup. The d-pad controls
@@ -84,10 +84,10 @@ public abstract class BaseOpMode extends LinearOpMode {
     public double globalAngle;
     int loop = 0;
 
-    static final double     COUNTS_PER_MOTOR_REV    = 537.6 ;    // eg: GOBUILDA Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 0.5 ;     // This is < 1.0 if geared UP
+    static final double     COUNTS_PER_MOTOR_REV    = 383.6 ;    // eg: GOBUILDA Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 2 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 3.93701 ;     // For figuring circumference
-    public static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    public static final double     COUNTS_PER_INCH  = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE           = 1;
     
@@ -137,13 +137,11 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         shooter_left.setDirection(DcMotor.Direction.FORWARD);
         shooter_right.setDirection(DcMotor.Direction.REVERSE);
+
         belt_feed.setDirection(DcMotor.Direction.FORWARD);
         lift_Motor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rear_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rear_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        SetDriveMode(Mode.STOP_RESET_ENCODER);
 
         front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         front_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -479,7 +477,18 @@ public abstract class BaseOpMode extends LinearOpMode {
         RUN_WITH_ENCODER,
         RUN_WITHOUT_ENCODERS,
     }
+    public enum Drive {
+        STOP
+    }
 
+    public void DriveTrain (Drive Stop){
+        if (Stop == Drive.STOP) {
+            front_left.setPower(0);
+            front_right.setPower(0);
+            rear_left.setPower(0);
+            rear_right.setPower(0);
+        }
+    }
 
     public void Strafe (STRAFE direction){
         if (direction == STRAFE.LEFT) {
@@ -495,15 +504,16 @@ public abstract class BaseOpMode extends LinearOpMode {
             rear_right.setPower(1);
         }
     }
+
+    public void encoderLift(double speed, double timeoutS) {
+        int newLiftTarget;
+    }
     
-    public void encoderDrive( double speed,
-                              double distance,
-                              double timeoutS) {
+    public void encoderDrive( double speed, double distance, double timeoutS) {
         int newFLTarget;
         int newRLTarget;
         int newRRTarget;
         int newFRTarget;
-       
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
@@ -540,32 +550,24 @@ public abstract class BaseOpMode extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (front_left.isBusy() && front_right.isBusy() && rear_left.isBusy() && rear_right.isBusy())) {
+                    (rear_left.isBusy() && front_left.isBusy() || front_right.isBusy() && rear_right.isBusy()))
+                //Commented out one is for as soon as one motor gets the value they all stop
+                    //(runtime.seconds() < timeoutS) &&
+                    //(rear_left.isBusy() && front_left.isBusy() && front_right.isBusy() && rear_right.isBusy()))
+            {
 
                 // Display it for the driver.
                 telemetry.addData("Path1", "Running to %7d :%7d", newRLTarget, newFLTarget, newRRTarget, newFRTarget);
-                telemetry.addData("Path2", "Running at %7d :%7d",
-                        front_left.getCurrentPosition(),
-                        front_right.getCurrentPosition(),
-                        rear_left.getCurrentPosition(),
-                        rear_right.getCurrentPosition());
+                telemetry.addData("Path2", "Running at %7d :%7d", front_left.getCurrentPosition(), front_right.getCurrentPosition(), rear_left.getCurrentPosition(), rear_right.getCurrentPosition());
                 telemetry.update();
-                //RunSafetyCutoff();
             }
-
             // Stop all motion;
-            front_left.setPower(0);
-            front_right.setPower(0);
-            rear_left.setPower(0);
-            rear_right.setPower(0);
+            DriveTrain(Drive.STOP);
 
             // Turn off RUN_TO_POSITION
-            front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rear_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rear_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+            SetDriveMode(Mode.RUN_WITH_ENCODER);
             //  sleep(250);   // optional pause after each move
+
         }
     }
 

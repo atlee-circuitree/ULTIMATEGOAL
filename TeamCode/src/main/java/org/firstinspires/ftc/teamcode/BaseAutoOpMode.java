@@ -67,19 +67,12 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
     @Override
     public void GetHardware() {
         super.GetHardware();
-        /*front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        front_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rear_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rear_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-
-         */
         //webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
     }
 
     public void ResetEncoder(){
         SetDriveMode(Mode.STOP_RESET_ENCODER);
-        SetDriveMode(Mode.RUN_WITHOUT_ENCODERS);
+        SetDriveMode(Mode.RUN_WITH_ENCODER);
     }
 
 
