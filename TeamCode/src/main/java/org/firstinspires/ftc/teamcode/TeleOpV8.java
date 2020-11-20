@@ -187,6 +187,8 @@ public class TeleOpV8 extends BaseOpMode {
             //shooter_left.setPower(1);
             shooter_right.setPower(1);
             shooter_left.setVelocity(motorVelocity);
+            shooter_left.setTargetPosition(400);  //Might not need for shooting.  It might turn off the motor after its reached the value
+           // shooter_left.setTargetPositionTolerance(100); //Use later when we want the shooter to wait until its within a certain velocity before shooting
         }
         else if (gamepad1.left_trigger > 0) {
             shooter_left.setPower(-1);
