@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -55,7 +56,7 @@ public class TeleOpV8 extends BaseOpMode {
     private DcMotor rear_left = null;
     private DcMotor front_right = null;
     private DcMotor rear_right = null;
-    private DcMotor shooter_left = null;
+    private DcMotorEx shooter_left = null;
     private DcMotor shooter_right = null;
     private DcMotor belt_feed = null;
     private DcMotor lift_Motor = null;
@@ -65,6 +66,7 @@ public class TeleOpV8 extends BaseOpMode {
     private Servo arm_servo;
     private Servo claw_servo;
 
+    double motorVelocity = 200;
 
     //This is code to test mechanum drive
     // declare motor speed variables
@@ -95,7 +97,7 @@ public class TeleOpV8 extends BaseOpMode {
         front_right = hardwareMap.get(DcMotor.class, "drive_FR");
         rear_right = hardwareMap.get(DcMotor.class, "drive_RR");
         //Shooter
-        shooter_left = hardwareMap.get(DcMotor.class, "shooter_L");
+        shooter_left = hardwareMap.get(DcMotorEx.class, "shooter_L");
         shooter_right = hardwareMap.get(DcMotor.class, "shooter_R");
 
         belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
@@ -126,6 +128,7 @@ public class TeleOpV8 extends BaseOpMode {
         lift_Motor.setDirection(DcMotorSimple.Direction.FORWARD);
         belt_feed.setDirection(DcMotor.Direction.FORWARD);
 
+        shooter_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         
        
 
@@ -181,8 +184,9 @@ public class TeleOpV8 extends BaseOpMode {
     public void UpdateShooter(){
         if(gamepad1.right_trigger > 0) {
             //Shooting mode
-            shooter_left.setPower(1);
+            //shooter_left.setPower(1);
             shooter_right.setPower(1);
+            shooter_left.setVelocity(motorVelocity);
         }
         else if (gamepad1.left_trigger > 0) {
             shooter_left.setPower(-1);

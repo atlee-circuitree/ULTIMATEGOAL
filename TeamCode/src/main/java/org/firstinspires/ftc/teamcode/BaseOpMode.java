@@ -48,7 +48,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import java.text.DecimalFormat;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
@@ -66,7 +66,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public DcMotor rear_left = null;
     public DcMotor front_right = null;
     public DcMotor rear_right = null;
-    public DcMotor shooter_left = null;
+   // public DcMotor shooter_left = null;
     public DcMotor shooter_right = null;
     public DcMotor belt_feed = null;
     public DcMotor lift_Motor = null;
@@ -77,6 +77,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public Servo arm_servo;
     public Servo claw_servo;
 
+    public DcMotorEx shooter_left = null;
     ModernRoboticsI2cGyro gyro    = null;                    // Additional Gyro device
 
     public BNO055IMU imu;
@@ -84,13 +85,20 @@ public abstract class BaseOpMode extends LinearOpMode {
     public double globalAngle;
     int loop = 0;
 
+    //turn motor at 200 ticks per second
+    public double motorVelocity = 200;
+
     static final double     COUNTS_PER_MOTOR_REV    = 383.6 ;    // eg: GOBUILDA Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 3.93701 ;     // For figuring circumference
     public static final double     COUNTS_PER_INCH  = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE           = 1;
-    
+
+    static final double     OMNI_COUNTS_PER_REV     = 8192; //For rev through bore encoder (This is the correct number)
+    static final double     OMNI_WHEEL_DIAMETER     = 3;
+    public static final double      OMNI_COUNTS_PER_INCH    = (OMNI_COUNTS_PER_REV) / (OMNI_WHEEL_DIAMETER * Math.PI);
+
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
     static final double     DRIVE_SPEED             = 0.7;     // Nominal speed for better accuracy.
@@ -111,7 +119,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         front_right = hardwareMap.get(DcMotor.class, "drive_FR");
         rear_right = hardwareMap.get(DcMotor.class, "drive_RR");
         //Shooter
-        shooter_left = hardwareMap.get(DcMotor.class, "shooter_L");
+        shooter_left = hardwareMap.get(DcMotorEx.class, "shooter_L");
         shooter_right = hardwareMap.get(DcMotor.class, "shooter_R");
 
         belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
@@ -140,6 +148,9 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         belt_feed.setDirection(DcMotor.Direction.FORWARD);
         lift_Motor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        shooter_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
         SetDriveMode(Mode.STOP_RESET_ENCODER);
 
