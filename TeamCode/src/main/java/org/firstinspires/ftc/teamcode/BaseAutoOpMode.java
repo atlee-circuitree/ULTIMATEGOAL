@@ -176,13 +176,13 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
 
     public void fieldOrientedRotate(int degrees, double speed){
 
-        double angle = navx_device.getYaw();
+        double angle = navx_centered.getYaw();
 
         if(angle > degrees){
             while(angle != degrees){
                 telemetry.addData("Angle",angle);
                 telemetry.update();
-                angle = navx_device.getYaw();
+                angle = navx_centered.getYaw();
                 front_left.setPower(-speed);
                 rear_left.setPower(-speed);
                 front_right.setPower(speed);
@@ -193,7 +193,7 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
             while(angle != degrees){
                 telemetry.addData("Angle",angle);
                 telemetry.update();
-                angle = navx_device.getYaw();
+                angle = navx_centered.getYaw();
                 front_left.setPower(speed);
                 rear_left.setPower(speed);
                 front_right.setPower(-speed);

@@ -28,7 +28,7 @@ public class NavX_ExampleCode extends OpMode {
 
     @Override
     public void init() {
-        navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"),
+        navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx_centered"),
                 AHRS.DeviceDataType.kProcessedData);
     }
 

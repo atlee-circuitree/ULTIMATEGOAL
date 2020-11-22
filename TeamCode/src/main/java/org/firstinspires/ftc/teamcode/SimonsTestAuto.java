@@ -15,7 +15,8 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         //Assigns hardware devices names and values
 
         GetHardware();
-        getNavXValues();
+        getCannonNavXValues();
+        getCenteredNavXValues();
 
 
 

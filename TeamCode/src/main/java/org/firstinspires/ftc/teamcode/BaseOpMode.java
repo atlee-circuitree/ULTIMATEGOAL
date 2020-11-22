@@ -72,7 +72,8 @@ public abstract class BaseOpMode extends LinearOpMode {
     public DcMotor lift_Motor = null;
     public DigitalChannel lift_bottom = null;
     public DigitalChannel lift_top = null;
-    public AHRS navx_device;
+    public AHRS navx_cannon;
+    public AHRS navx_centered;
 
     public Servo arm_servo;
     public Servo claw_servo;
@@ -551,10 +552,9 @@ public abstract class BaseOpMode extends LinearOpMode {
 
     }
 
+    public void getCenteredNavXValues(){
 
-    public void getNavXValues(){
-
-        navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"), AHRS.DeviceDataType.kProcessedData);
+        navx_centered = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx_centered"), AHRS.DeviceDataType.kProcessedData);
         //boolean connected = navx_device.isConnected();
         //telemetry.addData("1 navX-Device", connected ?
         //"Connected" : "Disconnected" );
@@ -563,25 +563,68 @@ public abstract class BaseOpMode extends LinearOpMode {
         DecimalFormat df = new DecimalFormat("#.##");
 
 
-            gyrocal = (navx_device.isCalibrating() ?
+        gyrocal = (navx_centered.isCalibrating() ?
+                "CALIBRATING" : "Calibration Complete");
+        magcal = (navx_centered.isMagnetometerCalibrated() ?
+                "Calibrated" : "UNCALIBRATED");
+        yaw = df.format(navx_centered.getYaw());
+        pitch = df.format(navx_centered.getPitch());
+        roll = df.format(navx_centered.getRoll());
+        ypr = yaw + ", " + pitch + ", " + roll;
+        compass_heading = df.format(navx_centered.getCompassHeading());
+        fused_heading = df.format(navx_centered.getFusedHeading());
+        if (!navx_centered.isMagnetometerCalibrated()) {
+            compass_heading = "-------";
+        }
+        cf = compass_heading + ", " + fused_heading;
+        if ( navx_centered.isMagneticDisturbance()) {
+            cf += " (Mag. Disturbance)";
+        }
+        motion = (navx_centered.isMoving() ? "Moving" : "Not Moving");
+        if ( navx_centered.isRotating() ) {
+            motion += ", Rotating";
+        }
+
+
+        telemetry.addData("2 GyroAccel", gyrocal );
+        telemetry.addData("3 Y,P,R", ypr);
+        telemetry.addData("4 Magnetometer", magcal );
+        telemetry.addData("5 Compass,9Axis", cf );
+        telemetry.addData("6 Motion", motion);
+
+    }
+
+
+    public void getCannonNavXValues(){
+
+        navx_cannon = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx_cannon"), AHRS.DeviceDataType.kProcessedData);
+        //boolean connected = navx_device.isConnected();
+        //telemetry.addData("1 navX-Device", connected ?
+        //"Connected" : "Disconnected" );
+        String gyrocal, magcal, yaw, pitch, roll, compass_heading;
+        String fused_heading, ypr, cf, motion;
+        DecimalFormat df = new DecimalFormat("#.##");
+
+
+            gyrocal = (navx_cannon.isCalibrating() ?
                     "CALIBRATING" : "Calibration Complete");
-            magcal = (navx_device.isMagnetometerCalibrated() ?
+            magcal = (navx_cannon.isMagnetometerCalibrated() ?
                     "Calibrated" : "UNCALIBRATED");
-            yaw = df.format(navx_device.getYaw());
-            pitch = df.format(navx_device.getPitch());
-            roll = df.format(navx_device.getRoll());
+            yaw = df.format(navx_cannon.getYaw());
+            pitch = df.format(navx_cannon.getPitch());
+            roll = df.format(navx_cannon.getRoll());
             ypr = yaw + ", " + pitch + ", " + roll;
-            compass_heading = df.format(navx_device.getCompassHeading());
-            fused_heading = df.format(navx_device.getFusedHeading());
-            if (!navx_device.isMagnetometerCalibrated()) {
+            compass_heading = df.format(navx_cannon.getCompassHeading());
+            fused_heading = df.format(navx_cannon.getFusedHeading());
+            if (!navx_cannon.isMagnetometerCalibrated()) {
                 compass_heading = "-------";
             }
             cf = compass_heading + ", " + fused_heading;
-            if ( navx_device.isMagneticDisturbance()) {
+            if (navx_cannon.isMagneticDisturbance()) {
                 cf += " (Mag. Disturbance)";
             }
-            motion = (navx_device.isMoving() ? "Moving" : "Not Moving");
-            if ( navx_device.isRotating() ) {
+            motion = (navx_cannon.isMoving() ? "Moving" : "Not Moving");
+            if (navx_cannon.isRotating() ) {
                 motion += ", Rotating";
             }
 
