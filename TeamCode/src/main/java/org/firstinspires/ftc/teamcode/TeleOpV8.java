@@ -60,13 +60,15 @@ public class TeleOpV8 extends BaseOpMode {
     private DcMotor shooter_right = null;
     private DcMotor belt_feed = null;
     private DcMotor lift_Motor = null;
-    private DigitalChannel lift_bottom = null;
+    private DigitalChannel lift_bottom_Left = null;
+    private DigitalChannel lift_bottom_Right = null;
     private DigitalChannel lift_top = null;
 
     private Servo arm_servo;
     private Servo claw_servo;
 
     double motorVelocity = 200;
+    double shooterFar = 2000;
 
     //This is code to test mechanum drive
     // declare motor speed variables
@@ -107,13 +109,15 @@ public class TeleOpV8 extends BaseOpMode {
         arm_servo = hardwareMap.get(Servo.class, "arm_servo");
         claw_servo = hardwareMap.get(Servo.class, "claw_servo");
 
-        lift_bottom = hardwareMap.get(DigitalChannel.class,"lift_bottom");
+        lift_bottom_Left = hardwareMap.get(DigitalChannel.class,"lift_bottom_L");
+        lift_bottom_Right = hardwareMap.get(DigitalChannel.class,"lift_bottom_R");
         lift_top = hardwareMap.get(DigitalChannel.class,"lift_top");
 
 
         // set digital channel to input mode.
         lift_top.setMode(DigitalChannel.Mode.INPUT);
-        lift_bottom.setMode(DigitalChannel.Mode.INPUT);
+        lift_bottom_Left.setMode(DigitalChannel.Mode.INPUT);
+        lift_bottom_Right.setMode(DigitalChannel.Mode.INPUT);
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -139,8 +143,7 @@ public class TeleOpV8 extends BaseOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            //UpdateDrivetrain();
-           // UpdateArmServo();
+            
             UpdateShooter();
             UpdateDriveTrain();
             UpdateBelt();
@@ -148,7 +151,7 @@ public class TeleOpV8 extends BaseOpMode {
             UpdateArmServo();
             ClawServo();
             shortcuts();
-            getNavXValues();
+            getCenteredNavXValues();
         }
     }
     public  void ClawServo() {
@@ -171,13 +174,13 @@ public class TeleOpV8 extends BaseOpMode {
     public void UpdateArmServo() {
         //NOTE: should eventually add in hard button stop
         if(gamepad1.dpad_left){
-            arm_servo.setPosition(0.9);
+            arm_servo.setPosition(0.5);
         }
         else if(gamepad1.dpad_right) {
-            arm_servo.setPosition(0.1);
+            arm_servo.setPosition(0.3);
         }
         else if(gamepad1.b){
-            arm_servo.setPosition(0.5);
+            arm_servo.setPosition(0.4);
         }
     }
 
@@ -186,8 +189,8 @@ public class TeleOpV8 extends BaseOpMode {
             //Shooting mode
             //shooter_left.setPower(1);
             shooter_right.setPower(1);
-            shooter_left.setVelocity(motorVelocity);
-            shooter_left.setTargetPosition(400);  //Might not need for shooting.  It might turn off the motor after its reached the value
+            shooter_left.setVelocity(shooterFar);
+           // shooter_left.setTargetPosition(1000);  //Might not need for shooting.  It might turn off the motor after its reached the value
            // shooter_left.setTargetPositionTolerance(100); //Use later when we want the shooter to wait until its within a certain velocity before shooting
         }
         else if (gamepad1.left_trigger > 0) {
@@ -216,7 +219,7 @@ public class TeleOpV8 extends BaseOpMode {
         if (gamepad1.dpad_up & lift_top.getState()) {
             lift_Motor.setPower(0.6);
         }
-        else if (gamepad1.dpad_down & lift_bottom.getState()) {
+        else if (gamepad1.dpad_down & lift_bottom_Left.getState() & lift_bottom_Left.getState()) {
             lift_Motor.setPower(-0.6);
         }
         else {
@@ -226,7 +229,7 @@ public class TeleOpV8 extends BaseOpMode {
     public void shortcuts(){
         //feeder mode
         if(gamepad1.a){
-            while(lift_bottom.getState()) {
+            while(lift_bottom_Left.getState() & (lift_bottom_Left.getState())) {
                 lift_Motor.setPower(-1);
             }
             lift_Motor.setPower(1);

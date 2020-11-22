@@ -70,7 +70,8 @@ public abstract class BaseOpMode extends LinearOpMode {
     public DcMotor shooter_right = null;
     public DcMotor belt_feed = null;
     public DcMotor lift_Motor = null;
-    public DigitalChannel lift_bottom = null;
+    public DigitalChannel lift_bottom_Left = null;
+    public DigitalChannel lift_bottom_Right = null;
     public DigitalChannel lift_top = null;
     public AHRS navx_cannon;
     public AHRS navx_centered;
@@ -93,11 +94,11 @@ public abstract class BaseOpMode extends LinearOpMode {
     static final double     DRIVE_GEAR_REDUCTION    = 2 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 3.93701 ;     // For figuring circumference
     public static final double     COUNTS_PER_INCH  = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * Math.PI);
     static final double     DRIVE           = 1;
 
     static final double     OMNI_COUNTS_PER_REV     = 8192; //For rev through bore encoder (This is the correct number)
-    static final double     OMNI_WHEEL_DIAMETER     = 3;
+    static final double     OMNI_WHEEL_DIAMETER     = 3.77953;
     public static final double      OMNI_COUNTS_PER_INCH    = (OMNI_COUNTS_PER_REV) / (OMNI_WHEEL_DIAMETER * Math.PI);
 
     // These constants define the desired driving/control characteristics
@@ -129,13 +130,15 @@ public abstract class BaseOpMode extends LinearOpMode {
         arm_servo = hardwareMap.get(Servo.class, "arm_servo");
         claw_servo = hardwareMap.get(Servo.class, "claw_servo");
 
-        lift_bottom = hardwareMap.get(DigitalChannel.class,"lift_bottom");
+        lift_bottom_Left = hardwareMap.get(DigitalChannel.class,"lift_bottom_L");
+        lift_bottom_Right = hardwareMap.get(DigitalChannel.class,"lift_bottom_R");
         lift_top = hardwareMap.get(DigitalChannel.class,"lift_top");
 
 
         // set digital channel to input mode.
         lift_top.setMode(DigitalChannel.Mode.INPUT);
-        lift_bottom.setMode(DigitalChannel.Mode.INPUT);
+        lift_bottom_Left.setMode(DigitalChannel.Mode.INPUT);
+        lift_bottom_Right.setMode(DigitalChannel.Mode.INPUT);
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery

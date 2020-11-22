@@ -153,7 +153,7 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (rear_left.isBusy() && front_left.isBusy() || front_right.isBusy() && rear_right.isBusy()))
+                    (rear_left.isBusy() && front_left.isBusy() && front_right.isBusy() && rear_right.isBusy()))
             //Commented out one is for as soon as one motor gets the value they all stop
             //(runtime.seconds() < timeoutS) &&
             //(rear_left.isBusy() && front_left.isBusy() && front_right.isBusy() && rear_right.isBusy()))

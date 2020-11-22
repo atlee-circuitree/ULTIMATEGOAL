@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -58,7 +59,8 @@ public class TeleOpV7 extends BaseOpMode {
     private DcMotor shooter_right = null;
     private DcMotor belt_feed = null;
     private DcMotor lift_Motor = null;
-    private DigitalChannel lift_bottom = null;
+    private DigitalChannel lift_bottom_Left = null;
+    private DigitalChannel lift_bottom_Right = null;
     private DigitalChannel lift_top = null;
 
     private CRServo arm_servo;
@@ -95,7 +97,7 @@ public class TeleOpV7 extends BaseOpMode {
         front_right = hardwareMap.get(DcMotor.class, "drive_FR");
         rear_right = hardwareMap.get(DcMotor.class, "drive_RR");
         //Shooter
-        shooter_left = hardwareMap.get(DcMotor.class, "shooter_L");
+        shooter_left = hardwareMap.get(DcMotorEx.class, "shooter_L");
         shooter_right = hardwareMap.get(DcMotor.class, "shooter_R");
 
         belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
@@ -105,13 +107,15 @@ public class TeleOpV7 extends BaseOpMode {
         arm_servo = hardwareMap.get(CRServo.class, "arm_servo");
         claw_servo = hardwareMap.get(Servo.class, "claw_servo");
 
-        lift_bottom = hardwareMap.get(DigitalChannel.class,"lift_bottom");
+        lift_bottom_Left = hardwareMap.get(DigitalChannel.class,"lift_bottom_L");
+        lift_bottom_Right = hardwareMap.get(DigitalChannel.class,"lift_bottom_R");
         lift_top = hardwareMap.get(DigitalChannel.class,"lift_top");
 
 
         // set digital channel to input mode.
         lift_top.setMode(DigitalChannel.Mode.INPUT);
-        lift_bottom.setMode(DigitalChannel.Mode.INPUT);
+        lift_bottom_Left.setMode(DigitalChannel.Mode.INPUT);
+        lift_bottom_Right.setMode(DigitalChannel.Mode.INPUT);
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -144,7 +148,7 @@ public class TeleOpV7 extends BaseOpMode {
             UpdateArmServo();
             ClawServo();
             shortcuts();
-            getNavXValues();
+            getCenteredNavXValues();
         }
     }
     public  void ClawServo() {
@@ -213,7 +217,7 @@ public class TeleOpV7 extends BaseOpMode {
         if (gamepad2.dpad_up & lift_top.getState()) {
             lift_Motor.setPower(0.6);
         }
-        else if (gamepad2.dpad_down & lift_bottom.getState()) {
+        else if (gamepad2.dpad_down & lift_bottom_Left.getState()) {
             lift_Motor.setPower(-0.6);
         }
         else {
@@ -223,7 +227,7 @@ public class TeleOpV7 extends BaseOpMode {
     public void shortcuts(){
         //feeder mode
         if(gamepad2.a){
-            while(lift_bottom.getState()) {
+            while(lift_bottom_Left.getState()) {
                 lift_Motor.setPower(-1);
             }
             lift_Motor.setPower(1);
