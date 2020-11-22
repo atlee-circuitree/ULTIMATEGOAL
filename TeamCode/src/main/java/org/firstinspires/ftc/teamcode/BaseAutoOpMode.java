@@ -55,6 +55,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.AHRS;
+import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.navXPIDController;
 
 /**
  * This file contains basic code to run a 4 wheeled Mecanum wheel setup. The d-pad controls
@@ -63,6 +64,8 @@ import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.AHRS;
 @Disabled
 public abstract class BaseAutoOpMode extends BaseOpMode {
 
+
+    private navXPIDController yawPIDController;
 
     @Override
     public void GetHardware() {
@@ -173,13 +176,55 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
 
         }
     }
+    public void initPID(){
+        double tolerance_degrees = 2.0;
+        yawPIDController = new navXPIDController( navx_centered, navXPIDController.navXTimestampedDataSource.YAW);
 
-    public void fieldOrientedRotate(int degrees, double speed){
+        /* Configure the PID controller */
+        //yawPIDController.setSetpoint(TARGET_ANGLE_DEGREES);
+        yawPIDController.setContinuous(true);
+        yawPIDController.setOutputRange(-1, 1);
+        yawPIDController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, tolerance_degrees);
+        yawPIDController.setPID(0.005, 0.0, 0.0);
+        yawPIDController.enable(true);
+
+    }
+
+
+    public void PIDrotate(double target, double speed) {
+        navXPIDController.PIDResult yawPIDResult = new navXPIDController.PIDResult();
+        yawPIDController.setSetpoint(target);
+        telemetry.addData("Setpoint","");
+        telemetry.update();
+                double output = yawPIDResult.getOutput();
+                if ( output < 0 ) {
+                    /* Rotate Left */
+                    telemetry.addData("PID",yawPIDResult.getOutput());
+                    front_left.setPower(-1);
+                    front_right.setPower(1);
+                    rear_left.setPower(-1);
+                    rear_right.setPower(1);
+                } else {
+                    /* Rotate Right */
+                    telemetry.addData("PID",yawPIDResult.getOutput());
+                    front_left.setPower(1);
+                    front_right.setPower(-1);
+                    rear_left.setPower(1);
+                    rear_right.setPower(-1);
+                }
+            }
+
+
+
+
+
+
+    public void rotate(int degrees, double speed){
 
         double angle = navx_centered.getYaw();
 
         if(angle > degrees){
-            while(angle != degrees){
+            while(angle >= degrees){
                 telemetry.addData("Angle",angle);
                 telemetry.update();
                 angle = navx_centered.getYaw();
@@ -190,7 +235,7 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
             }
         }
         else if(angle < degrees){
-            while(angle != degrees){
+            while(angle <= degrees){
                 telemetry.addData("Angle",angle);
                 telemetry.update();
                 angle = navx_centered.getYaw();
@@ -200,7 +245,10 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
                 rear_right.setPower(-speed);
             }
         }
-
+        front_left.setPower(0);
+        front_right.setPower(0);
+        rear_left.setPower(0);
+        rear_right.setPower(0);
     }
 }
 

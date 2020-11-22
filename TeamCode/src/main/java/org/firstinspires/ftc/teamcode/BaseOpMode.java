@@ -43,6 +43,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.AHRS;
+import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.navXPIDController;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -75,6 +76,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public DigitalChannel lift_top = null;
     public AHRS navx_cannon;
     public AHRS navx_centered;
+
 
     public Servo arm_servo;
     public Servo claw_servo;
@@ -109,6 +111,8 @@ public abstract class BaseOpMode extends LinearOpMode {
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
+
+
 
 
     public void GetHardware() {

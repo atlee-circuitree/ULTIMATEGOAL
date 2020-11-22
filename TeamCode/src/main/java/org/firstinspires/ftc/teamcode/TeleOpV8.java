@@ -180,7 +180,7 @@ public class TeleOpV8 extends BaseOpMode {
             arm_servo.setPosition(0.3);
         }
         else if(gamepad1.b){
-            arm_servo.setPosition(0.4);
+            arm_servo.setPosition(0.5);
         }
     }
 
@@ -219,7 +219,7 @@ public class TeleOpV8 extends BaseOpMode {
         if (gamepad1.dpad_up & lift_top.getState()) {
             lift_Motor.setPower(0.6);
         }
-        else if (gamepad1.dpad_down & lift_bottom_Left.getState() & lift_bottom_Left.getState()) {
+        else if (gamepad1.dpad_down & lift_bottom_Left.getState() & lift_bottom_Right.getState()) {
             lift_Motor.setPower(-0.6);
         }
         else {
@@ -229,7 +229,7 @@ public class TeleOpV8 extends BaseOpMode {
     public void shortcuts(){
         //feeder mode
         if(gamepad1.a){
-            while(lift_bottom_Left.getState() & (lift_bottom_Left.getState())) {
+            while(lift_bottom_Left.getState() & (lift_bottom_Right.getState())) {
                 lift_Motor.setPower(-1);
             }
             lift_Motor.setPower(1);

@@ -15,8 +15,9 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         //Assigns hardware devices names and values
 
         GetHardware();
-        getCannonNavXValues();
+        //getCannonNavXValues();
         getCenteredNavXValues();
+        initPID();
 
 
 
@@ -24,9 +25,12 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         waitForStart();
         runtime.reset();  
 
-        encoderDrive(1,24,4);
-        fieldOrientedRotate(90,0.5);
+        //encoderDrive(1,24,4);
+        PIDrotate(90,0.5);
 
+        while(opModeIsActive()){
+            getCenteredNavXValues();
+        }
 
     }
 
