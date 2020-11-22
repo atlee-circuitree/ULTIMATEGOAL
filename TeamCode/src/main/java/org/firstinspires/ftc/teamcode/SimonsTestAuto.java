@@ -23,7 +23,7 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         waitForStart();
         runtime.reset();  
 
-        EncoderDriveByInches(24,1);
+        encoderDrive(1,24,4);
         fieldOrientedRotate(90,0.5);
 
 
