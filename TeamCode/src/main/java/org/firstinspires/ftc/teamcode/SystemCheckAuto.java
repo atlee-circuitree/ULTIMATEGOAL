@@ -35,6 +35,8 @@ public class SystemCheckAuto extends BaseAutoOpMode {
 
         encoderDrive(DRIVE,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
 
+        encoderStrafe(300, 50, 2);
+
         //encoderDrive(DRIVE, 50, 5);
         //sleep(1000);
         //ResetEncoder();

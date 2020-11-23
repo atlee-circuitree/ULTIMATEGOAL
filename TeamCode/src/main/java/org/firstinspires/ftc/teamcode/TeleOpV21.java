@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -49,10 +50,10 @@ public class TeleOpV21 extends BaseOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor front_left = null;
-    private DcMotor rear_left = null;
-    private DcMotor front_right = null;
-    private DcMotor rear_right = null;
+    private DcMotorEx front_left = null;
+    private DcMotorEx rear_left = null;
+    private DcMotorEx front_right = null;
+    private DcMotorEx rear_right = null;
     private DcMotorEx shooter_left = null;
     private DcMotor shooter_right = null;
     private DcMotor belt_feed = null;
@@ -90,6 +91,8 @@ public class TeleOpV21 extends BaseOpMode {
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
 
+        GetHardware();
+        /*
         //drive train
         front_left = hardwareMap.get(DcMotor.class, "drive_FL");
         rear_left = hardwareMap.get(DcMotor.class, "drive_RL");
@@ -130,8 +133,8 @@ public class TeleOpV21 extends BaseOpMode {
         belt_feed.setDirection(DcMotor.Direction.FORWARD);
 
         shooter_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        
-       
+
+         */
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();

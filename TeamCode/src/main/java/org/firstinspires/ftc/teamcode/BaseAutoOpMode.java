@@ -68,6 +68,7 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
     private navXPIDController yawPIDController;
 
     @Override
+
     public void GetHardware() {
         super.GetHardware();
         //webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
@@ -79,43 +80,7 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
     }
 
 
-/*
-    public void UnfoldRobotV2() {
-
-        //encoderDrive(DRIVE, 4, 1);
-        lift_left.setPower(1);
-        lift_right.setPower(-1);
-        sleep(400);
-
-        lift_left.setPower(0);
-        lift_right.setPower(0);
-
-        Clamp_Left.setPosition(0.4);
-        Clamp_Right.setPosition(.5);
-        Release_Servo.setPosition(1);
-        Release_Servo2.setPosition(0);
-
-        sleep(1000);
-
-        encoderDrive(DRIVE, 5, 1);
-
-      top_motor.setPower(1);
-        craneSafetyTimer.reset();
-        while(Top_Sensor_Rear.getState() && craneSafetyTimer.milliseconds() < 2000)
-        {
-            top_motor.setPower(1);
-        }
-        top_motor.setPower(0);
-
-        Block_Pickup.setPosition(0.4f);
-        feeder_motor.setPower(1);
-        sleep(1000);
-        feeder_motor.setPower(0);
-
-    }
-*/
-
-    public void encoderStrafe( double speed, double distance, double timeout) {
+    public void encoderStrafe( double velocity, double distance, double timeout) {
         int RobotTarget;
         if (opModeIsActive()) {
             RobotTarget = belt_feed.getCurrentPosition() + (int) (distance * OMNI_COUNTS_PER_INCH);
@@ -125,10 +90,10 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
             belt_feed.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             runtime.reset();
-            front_left.setPower(Math.abs(-speed));
-            front_right.setPower(Math.abs(speed));
-            rear_left.setPower(Math.abs(speed));
-            rear_right.setPower(Math.abs(-speed));
+            front_left.setVelocity(Math.abs(-velocity));
+            front_right.setVelocity(Math.abs(velocity));
+            rear_left.setVelocity(Math.abs(velocity));
+            rear_right.setVelocity(Math.abs(-velocity));
 
             while (opModeIsActive() &&
                     (runtime.seconds() < timeout) && (belt_feed.isBusy()))
