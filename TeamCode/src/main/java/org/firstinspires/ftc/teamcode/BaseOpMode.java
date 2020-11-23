@@ -159,7 +159,7 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         shooter_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
+        belt_feed.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         SetDriveMode(Mode.STOP_RESET_ENCODER);
 
         front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -485,12 +485,9 @@ public abstract class BaseOpMode extends LinearOpMode {
     }
 
 
-
     public enum STRAFE {
         LEFT, RIGHT
     }
-
-
     public enum Mode {
         STOP_RESET_ENCODER,
         RUN_WITH_ENCODER,
@@ -508,7 +505,6 @@ public abstract class BaseOpMode extends LinearOpMode {
             rear_right.setPower(0);
         }
     }
-
     public void Strafe (STRAFE direction){
         if (direction == STRAFE.LEFT) {
             front_left.setPower(-1);

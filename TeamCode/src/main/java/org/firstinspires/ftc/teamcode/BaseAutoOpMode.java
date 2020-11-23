@@ -115,6 +115,36 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
     }
 */
 
+    public void encoderStrafe( double speed, double distance, double timeout) {
+        int RobotTarget;
+        if (opModeIsActive()) {
+            RobotTarget = belt_feed.getCurrentPosition() + (int) (distance * OMNI_COUNTS_PER_INCH);
+
+            belt_feed.setTargetPosition(RobotTarget);
+
+            belt_feed.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            runtime.reset();
+            front_left.setPower(Math.abs(-speed));
+            front_right.setPower(Math.abs(speed));
+            rear_left.setPower(Math.abs(speed));
+            rear_right.setPower(Math.abs(-speed));
+
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeout) && (belt_feed.isBusy()))
+            {
+
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d :%7d", RobotTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d", belt_feed.getCurrentPosition());
+                telemetry.update();
+            }
+            DriveTrain(Drive.STOP);
+
+            SetDriveMode(Mode.RUN_WITH_ENCODER);
+        }
+    }
+
     public void encoderDrive( double speed, double distance, double timeoutS) {
         int newFLTarget;
         int newRLTarget;
@@ -172,8 +202,6 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
 
             // Turn off RUN_TO_POSITION
             SetDriveMode(Mode.RUN_WITH_ENCODER);
-            //  sleep(250);   // optional pause after each move
-
         }
     }
     public void initPID(){
