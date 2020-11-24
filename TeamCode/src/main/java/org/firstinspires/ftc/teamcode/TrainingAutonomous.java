@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
-
-import java.util.Set;
 
 
-@Autonomous(name = "System Check Auto", group = "Linear Opmode")
-public class SystemCheckAuto extends BaseAutoOpMode {
+@Autonomous(name = "training auto", group = "Linear Opmode")
+public class TrainingAutonomous extends BaseAutoOpMode {
 
     @Override
     public void runOpMode () {
@@ -25,17 +22,10 @@ public class SystemCheckAuto extends BaseAutoOpMode {
         waitForStart();
         runtime.reset();
 
-        SetDriveMode(Mode.STOP_RESET_ENCODER);
-        SetDriveMode(Mode.RUN_WITH_ENCODER);
-
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d", front_left.getCurrentPosition(),
-                rear_left.getCurrentPosition(), rear_right.getCurrentPosition(), front_right.getCurrentPosition());
-        telemetry.update();
-
-      //  encoderDrive(DRIVE,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-
-        encoderStrafe(500, 20, 3);
+        encoderDrive(1, 48, 2);
+        encoderDrive(1, -24, 2);
+        rotate(90, 1);
+      //  claw_servo.setPosition(1);
 
         //encoderDrive(DRIVE, 50, 5);
         //sleep(1000);
