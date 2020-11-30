@@ -74,42 +74,153 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
         //webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
     }
 
-    public void ResetEncoder(){
+    public void ResetDriveEncoder(){
         SetDriveMode(Mode.STOP_RESET_ENCODER);
         SetDriveMode(Mode.RUN_WITH_ENCODER);
     }
 
 
-    public void encoderStrafe( double velocity, double distance, double timeout) {
-        int RobotTarget;
-        if (opModeIsActive()) {
-            RobotTarget = belt_feed.getCurrentPosition() + (int) (distance * OMNI_COUNTS_PER_INCH);
 
-            belt_feed.setTargetPosition(RobotTarget);
+    public void encoderStrafe( double speed, double distance, double timeout) {
+        int RevEncoderTarget;
+        if (opModeIsActive()) {
+            RevEncoderTarget = belt_feed.getCurrentPosition() + (int) (distance * OMNI_COUNTS_PER_INCH);
+
+            belt_feed.setTargetPosition(RevEncoderTarget);
 
             belt_feed.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             runtime.reset();
-            front_left.setVelocity(Math.abs(-velocity));
-            front_right.setVelocity(Math.abs(velocity));
-            rear_left.setVelocity(Math.abs(velocity));
-            rear_right.setVelocity(Math.abs(-velocity));
-
+            front_left.setPower(-Math.abs(speed));
+            front_right.setPower(Math.abs(speed));
+            rear_left.setPower(Math.abs(speed));
+            rear_right.setPower(-Math.abs(speed));
             while (opModeIsActive() &&
                     (runtime.seconds() < timeout) && (belt_feed.isBusy()))
             {
 
                 // Display it for the driver.
-                telemetry.addData("Path1", "Running to %7d :%7d", RobotTarget);
-                telemetry.addData("Path2", "Running at %7d :%7d", belt_feed.getCurrentPosition());
+                telemetry.addData("Path3", "Running to %7d", RevEncoderTarget);
+                telemetry.addData("Path4", "Running at %7d", belt_feed.getCurrentPosition());
                 telemetry.update();
             }
             DriveTrain(Drive.STOP);
+            belt_feed.setPower(0);
+
+            SetDriveMode(Mode.RUN_WITH_ENCODER);
+        }
+    }
+    public void encoderStrafeV2( double speed, double distance, double timeout) {
+        int RevEncoderTarget;
+        int FLTest;
+        if (opModeIsActive()) {
+            RevEncoderTarget = belt_feed.getCurrentPosition() + (int) (distance * OMNI_COUNTS_PER_INCH);
+            FLTest = front_left.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH * 100);
+
+            belt_feed.setTargetPosition(RevEncoderTarget);
+            front_left.setTargetPosition(FLTest);
+
+            front_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            belt_feed.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            runtime.reset();
+            front_left.setPower(-Math.abs(speed));
+            front_right.setPower(Math.abs(speed));
+            rear_left.setPower(Math.abs(speed));
+            rear_right.setPower(-Math.abs(speed));
+            belt_feed.setPower(-Math.abs(speed));
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeout) && (belt_feed.isBusy() && front_left.isBusy()))
+            {
+                // Display it for the driver.
+                telemetry.addData("Path3", "Running to %7d :%7d", RevEncoderTarget, FLTest);
+                telemetry.addData("Path4", "Running at %7d", belt_feed.getCurrentPosition(),
+                        front_left.getCurrentPosition());
+                telemetry.update();
+            }
+            DriveTrain(Drive.STOP);
+            belt_feed.setPower(0);
 
             SetDriveMode(Mode.RUN_WITH_ENCODER);
         }
     }
 
+    public void encoderStrafeV3( double speed, double distance, double timeout) {
+        int RevEncoderTarget;
+        int FLTest;
+        if (opModeIsActive()) {
+            RevEncoderTarget = belt_feed.getCurrentPosition() + (int) (distance * OMNI_COUNTS_PER_INCH);
+
+          //  belt_feed.setTargetPosition(RevEncoderTarget);
+
+            runtime.reset();
+
+            if (belt_feed.getCurrentPosition() < RevEncoderTarget) {
+                front_left.setPower(-Math.abs(speed));
+                front_right.setPower(Math.abs(speed));
+                rear_left.setPower(Math.abs(speed));
+                rear_right.setPower(-Math.abs(speed));
+            }
+            else if (belt_feed.getCurrentPosition() > RevEncoderTarget) {
+                front_left.setPower(Math.abs(speed));
+                front_right.setPower(-Math.abs(speed));
+                rear_left.setPower(-Math.abs(speed));
+                rear_right.setPower(Math.abs(speed));
+            }
+            else {
+                DriveTrain(Drive.STOP);
+            }
+
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeout))
+            {
+                // Display it for the driver.
+                telemetry.addData("Path3", "Running to %7d", RevEncoderTarget);
+                telemetry.addData("Path4", "Running at %7d", belt_feed.getCurrentPosition());
+                telemetry.update();
+            }
+            DriveTrain(Drive.STOP);
+            belt_feed.setPower(0);
+
+          //  SetDriveMode(Mode.RUN_WITH_ENCODER);
+        }
+    }
+    public void encoderStrafeV4( double speed, double distance, double timeout) {
+        int RevEncoderTarget;
+
+        if (opModeIsActive()) {
+            RevEncoderTarget = belt_feed.getCurrentPosition() + (int) (distance * OMNI_COUNTS_PER_INCH);
+
+            //  belt_feed.setTargetPosition(RevEncoderTarget);
+
+            runtime.reset();
+
+
+
+            while (opModeIsActive() && (runtime.seconds() < timeout) && (belt_feed.getCurrentPosition() < RevEncoderTarget)) {
+                front_left.setPower(-Math.abs(speed));
+                front_right.setPower(Math.abs(speed));
+                rear_left.setPower(Math.abs(speed));
+                rear_right.setPower(-Math.abs(speed));
+                telemetry.addData("Path3", "Running to %7d", RevEncoderTarget);
+                telemetry.addData("Path4", "Running at %7d", belt_feed.getCurrentPosition());
+                telemetry.update();
+            }
+            DriveTrain(Drive.STOP);
+            while (opModeIsActive() && (runtime.seconds() < timeout) && (belt_feed.getCurrentPosition() > RevEncoderTarget)) {
+                front_left.setPower(Math.abs(speed));
+                front_right.setPower(-Math.abs(speed));
+                rear_left.setPower(-Math.abs(speed));
+                rear_right.setPower(Math.abs(speed));
+                telemetry.addData("Path3", "Running to %7d", RevEncoderTarget);
+                telemetry.addData("Path4", "Running at %7d", belt_feed.getCurrentPosition());
+                telemetry.update();
+            }
+            DriveTrain(Drive.STOP);
+
+            //  SetDriveMode(Mode.RUN_WITH_ENCODER);
+        }
+    }
     public void encoderDrive( double speed, double distance, double timeoutS) {
         int newFLTarget;
         int newRLTarget;
@@ -152,14 +263,13 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
                     (rear_left.isBusy() && front_left.isBusy() && front_right.isBusy() && rear_right.isBusy()))
-            //Commented out one is for as soon as one motor gets the value they all stop
-            //(runtime.seconds() < timeoutS) &&
-            //(rear_left.isBusy() && front_left.isBusy() && front_right.isBusy() && rear_right.isBusy()))
             {
-
                 // Display it for the driver.
                 telemetry.addData("Path1", "Running to %7d :%7d", newRLTarget, newFLTarget, newRRTarget, newFRTarget);
-                telemetry.addData("Path2", "Running at %7d :%7d", front_left.getCurrentPosition(), front_right.getCurrentPosition(), rear_left.getCurrentPosition(), rear_right.getCurrentPosition());
+                telemetry.addData("Path2", "Running at %7d :%7d", front_left.getCurrentPosition(),
+                        front_right.getCurrentPosition(),
+                        rear_left.getCurrentPosition(),
+                        rear_right.getCurrentPosition());
                 telemetry.update();
             }
             // Stop all motion;
@@ -167,6 +277,8 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
 
             // Turn off RUN_TO_POSITION
             SetDriveMode(Mode.RUN_WITH_ENCODER);
+            //  sleep(250);   // optional pause after each move
+
         }
     }
     public void initPID(){

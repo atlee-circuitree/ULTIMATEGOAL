@@ -11,37 +11,41 @@ public class SystemCheckAuto extends BaseAutoOpMode {
 
     @Override
     public void runOpMode () {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-        telemetry.addData("Status", "Resetting Encoders");
-        telemetry.update();
-
         //Assigns hardware devices names and values
 
         GetHardware();
        // GetIMU();
 
+        telemetry.addData("Status", "Resetting Encoders");
+        telemetry.update();
+
+        belt_feed.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        ResetDriveEncoder();
+       // belt_feed.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        telemetry.addData("Status", "Encoders Reset");
+        telemetry.update();
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
-        SetDriveMode(Mode.STOP_RESET_ENCODER);
-        SetDriveMode(Mode.RUN_WITH_ENCODER);
-
+        /*
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d", front_left.getCurrentPosition(),
                 rear_left.getCurrentPosition(), rear_right.getCurrentPosition(), front_right.getCurrentPosition());
         telemetry.update();
 
-      //  encoderDrive(DRIVE,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+         */
 
-        encoderStrafe(500, 20, 3);
+        telemetry.addData("Path5", "Starting at %7d :%7d", belt_feed.getCurrentPosition(), front_left.getCurrentPosition());
+        telemetry.update();
 
-        //encoderDrive(DRIVE, 50, 5);
-        //sleep(1000);
-        //ResetEncoder();
-        //encoderDrive(DRIVE, -50, 5);
-
+        encoderStrafeV4(0.5, 10, 10);
+        sleep(1000);
+        encoderStrafeV4(0.5, 20, 10);
+        belt_feed.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        encoderStrafeV4(.5, -10, 8);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

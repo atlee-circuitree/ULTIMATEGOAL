@@ -57,7 +57,7 @@ public class TeleOpV8 extends BaseOpMode {
     private DcMotor front_right = null;
     private DcMotor rear_right = null;
     private DcMotorEx shooter_left = null;
-    private DcMotor shooter_right = null;
+    private DcMotorEx shooter_right = null;
     private DcMotor belt_feed = null;
     private DcMotor lift_Motor = null;
     private DigitalChannel lift_bottom_Left = null;
@@ -67,8 +67,8 @@ public class TeleOpV8 extends BaseOpMode {
     private Servo arm_servo;
     private Servo claw_servo;
 
-    double motorVelocity = 200;
-    double shooterFar = 2000;
+    double intake = -2300;
+    double shooterFar = 2300;
 
     //This is code to test mechanum drive
     // declare motor speed variables
@@ -100,7 +100,7 @@ public class TeleOpV8 extends BaseOpMode {
         rear_right = hardwareMap.get(DcMotor.class, "drive_RR");
         //Shooter
         shooter_left = hardwareMap.get(DcMotorEx.class, "shooter_L");
-        shooter_right = hardwareMap.get(DcMotor.class, "shooter_R");
+        shooter_right = hardwareMap.get(DcMotorEx.class, "shooter_R");
 
         belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
 
@@ -133,7 +133,7 @@ public class TeleOpV8 extends BaseOpMode {
         belt_feed.setDirection(DcMotor.Direction.FORWARD);
 
         shooter_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        
+        shooter_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
        
 
         // Wait for the game to start (driver presses PLAY)
@@ -160,11 +160,11 @@ public class TeleOpV8 extends BaseOpMode {
         telemetry.addData("RightStickButton",gamepad1.right_stick_button);
         if(gamepad1.x) {
             if(clawPos == true & gamepad1.x){
-                claw_servo.setPosition(.455);
+                claw_servo.setPosition(.7);
                 clawPos = false;
             }
             else if(clawPos == false & gamepad1.x){
-                claw_servo.setPosition(.2);
+                claw_servo.setPosition(.4);
                 clawPos = true;
             }
         }
@@ -174,28 +174,29 @@ public class TeleOpV8 extends BaseOpMode {
     public void UpdateArmServo() {
         //NOTE: should eventually add in hard button stop
         if(gamepad1.dpad_left){
-            arm_servo.setPosition(0.5);
+            arm_servo.setPosition(0.463);
         }
         else if(gamepad1.dpad_right) {
-            arm_servo.setPosition(0.3);
+            arm_servo.setPosition(0.58);
         }
         else if(gamepad1.b){
-            arm_servo.setPosition(0.5);
+            arm_servo.setPosition(0.463);
         }
     }
 
     public void UpdateShooter(){
+        //telemetry.addData("TargetVelocity", "Running to %7d", 2500);
+        telemetry.addData("CurrentVelocityLeft", shooter_left.getVelocity());
+        telemetry.addData("CurrentVelocityRight",shooter_right.getVelocity());
         if(gamepad1.right_trigger > 0) {
-            //Shooting mode
-            //shooter_left.setPower(1);
-            shooter_right.setPower(1);
+            shooter_right.setVelocity(shooterFar);
             shooter_left.setVelocity(shooterFar);
            // shooter_left.setTargetPosition(1000);  //Might not need for shooting.  It might turn off the motor after its reached the value
            // shooter_left.setTargetPositionTolerance(100); //Use later when we want the shooter to wait until its within a certain velocity before shooting
         }
         else if (gamepad1.left_trigger > 0) {
-            shooter_left.setPower(-1);
-            shooter_right.setPower(-1);
+            shooter_left.setVelocity(intake);
+            shooter_right.setVelocity(intake);
         }
         else if(gamepad1.b){
             //Stop motors
@@ -230,24 +231,22 @@ public class TeleOpV8 extends BaseOpMode {
         //feeder mode
         if(gamepad1.a){
             while(lift_bottom_Left.getState() & (lift_bottom_Right.getState())) {
-                lift_Motor.setPower(-1);
+                lift_Motor.setPower(-0.75);
             }
-            lift_Motor.setPower(1);
-            sleep(50);
-            lift_Motor.setPower(0);
-            shooter_left.setPower(-1);
-            shooter_right.setPower(-1);
-            belt_feed.setPower(-1);
+            shooter_left.setVelocity(intake);
+            shooter_right.setVelocity(intake);
+           // belt_feed.setPower(-1);
 
         }
         //shooter mode
         if(gamepad1.y){
             while(lift_top.getState()) {
-                lift_Motor.setPower(1);
+                lift_Motor.setPower(0.75);
             }
+            shooter_right.setVelocity(shooterFar);
+            shooter_left.setVelocity(shooterFar);
             belt_feed.setPower(0);
-            shooter_left.setPower(1);
-            shooter_right.setPower(1);
+            arm_servo.setPosition(0.47);
         }
     }
 

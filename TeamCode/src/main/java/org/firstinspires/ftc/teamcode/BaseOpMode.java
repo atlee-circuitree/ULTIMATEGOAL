@@ -62,13 +62,13 @@ public abstract class BaseOpMode extends LinearOpMode {
 
     // Declare OpMode members.
     public ElapsedTime runtime = new ElapsedTime();
-    
-    public DcMotorEx front_left = null;
-    public DcMotorEx rear_left = null;
-    public DcMotorEx front_right = null;
-    public DcMotorEx rear_right = null;
+
+    public DcMotor front_left = null;
+    public DcMotor rear_left = null;
+    public DcMotor front_right = null;
+    public DcMotor rear_right = null;
     public DcMotorEx shooter_left = null;
-    public DcMotor shooter_right = null;
+    public DcMotorEx shooter_right = null;
     public DcMotor belt_feed = null;
     public DcMotor lift_Motor = null;
     public DigitalChannel lift_bottom_Left = null;
@@ -120,13 +120,13 @@ public abstract class BaseOpMode extends LinearOpMode {
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         //drive train
-        front_left = hardwareMap.get(DcMotorEx.class, "drive_FL");
-        rear_left = hardwareMap.get(DcMotorEx.class, "drive_RL");
-        front_right = hardwareMap.get(DcMotorEx.class, "drive_FR");
-        rear_right = hardwareMap.get(DcMotorEx.class, "drive_RR");
+        front_left = hardwareMap.get(DcMotor.class, "drive_FL");
+        rear_left = hardwareMap.get(DcMotor.class, "drive_RL");
+        front_right = hardwareMap.get(DcMotor.class, "drive_FR");
+        rear_right = hardwareMap.get(DcMotor.class, "drive_RR");
         //Shooter
         shooter_left = hardwareMap.get(DcMotorEx.class, "shooter_L");
-        shooter_right = hardwareMap.get(DcMotor.class, "shooter_R");
+        shooter_right = hardwareMap.get(DcMotorEx.class, "shooter_R");
 
         belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
         lift_Motor = hardwareMap.get(DcMotor.class, "lift_M");
@@ -146,28 +146,31 @@ public abstract class BaseOpMode extends LinearOpMode {
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        front_left.setDirection(DcMotorEx.Direction.REVERSE);
-        rear_left.setDirection(DcMotorEx.Direction.REVERSE);
-        front_right.setDirection(DcMotorEx.Direction.FORWARD);
-        rear_right.setDirection(DcMotorEx.Direction.FORWARD);
+        front_left.setDirection(DcMotor.Direction.REVERSE);
+        rear_left.setDirection(DcMotor.Direction.REVERSE);
+        front_right.setDirection(DcMotor.Direction.FORWARD);
+        rear_right.setDirection(DcMotor.Direction.FORWARD);
 
-        shooter_left.setDirection(DcMotorEx.Direction.FORWARD);
+        shooter_left.setDirection(DcMotor.Direction.FORWARD);
         shooter_right.setDirection(DcMotor.Direction.REVERSE);
 
         belt_feed.setDirection(DcMotor.Direction.FORWARD);
         lift_Motor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        shooter_left.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        shooter_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        shooter_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        belt_feed.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         SetDriveMode(Mode.STOP_RESET_ENCODER);
+        belt_feed.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        front_left.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        front_right.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        rear_left.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        rear_right.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        front_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rear_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rear_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         shooter_left.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        shooter_right.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        belt_feed.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         SetDriveMode(Mode.RUN_WITH_ENCODER);
 
         //GetIMU();
@@ -487,9 +490,12 @@ public abstract class BaseOpMode extends LinearOpMode {
     }
 
 
+
     public enum STRAFE {
         LEFT, RIGHT
     }
+
+
     public enum Mode {
         STOP_RESET_ENCODER,
         RUN_WITH_ENCODER,
@@ -507,51 +513,36 @@ public abstract class BaseOpMode extends LinearOpMode {
             rear_right.setPower(0);
         }
     }
-    public void Strafe (STRAFE direction){
-        if (direction == STRAFE.LEFT) {
-            front_left.setPower(-1);
-            front_right.setPower(1);
-            rear_left.setPower(1);
-            rear_right.setPower(-1);
-        }
-        if (direction == STRAFE.RIGHT) {
-            front_left.setPower(1);
-            front_right.setPower(-1);
-            rear_left.setPower(-1);
-            rear_right.setPower(1);
-        }
-    }
 
     public void encoderLift(double speed, double timeoutS) {
         int newLiftTarget;
     }
 
-
     public void SetDriveMode(Mode DriveMode) {
 
         if (DriveMode == Mode.STOP_RESET_ENCODER) {
 
-            front_left.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            front_right.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            rear_left.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-            rear_right.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rear_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rear_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         }
         if (DriveMode == Mode.RUN_WITH_ENCODER) {
 
-            front_left.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-            front_right.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-            rear_left.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-            rear_right.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+            front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rear_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rear_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         }
 
         if (DriveMode == Mode.RUN_WITHOUT_ENCODERS) {
 
-            front_left.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-            front_right.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-            rear_left.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-            rear_right.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+            front_left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            front_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rear_left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rear_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         }
 
