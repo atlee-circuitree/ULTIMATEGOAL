@@ -23,14 +23,20 @@ public class SimonsTestAuto extends BaseAutoOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        runtime.reset();  
+        runtime.reset();
+
 
         //encoderDrive(1,24,4);
-        PIDrotate(90,0.5);
+       // PIDrotate(90,0.5);
+        rotate(15, .5);
 
-        while(opModeIsActive()){
+        // Hey uh simon, that while loop is gonna cause problems.
+        // The code will get to the while then never exit the loop.
+       /* while(opModeIsActive()){
             getCenteredNavXValues();
         }
+
+        */
 
     }
 
