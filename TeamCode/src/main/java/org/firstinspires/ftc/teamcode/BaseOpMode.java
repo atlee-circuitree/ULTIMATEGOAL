@@ -80,7 +80,9 @@ public abstract class BaseOpMode extends LinearOpMode {
 
     public Servo arm_servo;
     public Servo claw_servo;
-
+    double intake = -2300;
+    double shooterFar = 2300;
+    boolean clawPos = true;
 
     ModernRoboticsI2cGyro gyro    = null;                    // Additional Gyro device
 
@@ -504,7 +506,21 @@ public abstract class BaseOpMode extends LinearOpMode {
     public enum Drive {
         STOP
     }
+    public enum Shoot{
+        SHOOT_FAR,
+        GET_VELOCITY,
+    }
 
+    public void SetShooterMotors(Shoot Setting){
+        if (Setting == Shoot.SHOOT_FAR) {
+            shooter_left.setVelocity(shooterFar);
+            shooter_right.setVelocity(shooterFar);
+        }
+        if (Setting == Shoot.GET_VELOCITY) {
+            shooter_left.getVelocity();
+            shooter_right.getVelocity();
+        }
+    }
     public void DriveTrain (Drive Stop){
         if (Stop == Drive.STOP) {
             front_left.setPower(0);

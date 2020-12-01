@@ -35,7 +35,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 /**
@@ -43,9 +42,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * If you are looking at this in the far future I don't know if the config has changed any
  */
 
-@TeleOp(name="TeleOp_V9", group="Linear Opmode")
+@TeleOp(name="TeleOp_V10", group="Linear Opmode")
 
-public class TeleOpV9 extends BaseOpMode {
+public class TeleOpV10 extends BaseOpMode {
 
     // Declare OpMode members. Already declared in base op mode.
 
@@ -57,49 +56,7 @@ public class TeleOpV9 extends BaseOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-
-        //drive train
-        front_left = hardwareMap.get(DcMotor.class, "drive_FL");
-        rear_left = hardwareMap.get(DcMotor.class, "drive_RL");
-        front_right = hardwareMap.get(DcMotor.class, "drive_FR");
-        rear_right = hardwareMap.get(DcMotor.class, "drive_RR");
-        //Shooter
-        shooter_left = hardwareMap.get(DcMotorEx.class, "shooter_L");
-        shooter_right = hardwareMap.get(DcMotorEx.class, "shooter_R");
-
-        belt_feed = hardwareMap.get(DcMotor.class, "belt_Feed");
-
-        lift_Motor = hardwareMap.get(DcMotor.class, "lift_M");
-
-        arm_servo = hardwareMap.get(Servo.class, "arm_servo");
-        claw_servo = hardwareMap.get(Servo.class, "claw_servo");
-
-        lift_bottom_Left = hardwareMap.get(DigitalChannel.class,"lift_bottom_L");
-        lift_bottom_Right = hardwareMap.get(DigitalChannel.class,"lift_bottom_R");
-        lift_top = hardwareMap.get(DigitalChannel.class,"lift_top");
-
-
-        // set digital channel to input mode.
-        lift_top.setMode(DigitalChannel.Mode.INPUT);
-        lift_bottom_Left.setMode(DigitalChannel.Mode.INPUT);
-        lift_bottom_Right.setMode(DigitalChannel.Mode.INPUT);
-
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-
-        front_left.setDirection(DcMotor.Direction.REVERSE);
-        rear_left.setDirection(DcMotor.Direction.REVERSE);
-        front_right.setDirection(DcMotor.Direction.FORWARD);
-        rear_right.setDirection(DcMotor.Direction.FORWARD);
-
-        shooter_left.setDirection(DcMotor.Direction.FORWARD);
-        shooter_right.setDirection(DcMotor.Direction.REVERSE);
-        lift_Motor.setDirection(DcMotorSimple.Direction.FORWARD);
-        belt_feed.setDirection(DcMotor.Direction.FORWARD);
-
-        shooter_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        shooter_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-       
+        GetHardware();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -107,8 +64,6 @@ public class TeleOpV9 extends BaseOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
-            
             UpdateShooter();
             UpdateDriveTrain();
             UpdateBelt();
@@ -133,7 +88,6 @@ public class TeleOpV9 extends BaseOpMode {
                 clawPos = true;
             }
         }
-
     }
 
     public void UpdateArmServo() {

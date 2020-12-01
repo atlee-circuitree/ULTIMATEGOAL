@@ -191,12 +191,7 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
         if (opModeIsActive()) {
             RevEncoderTarget = belt_feed.getCurrentPosition() + (int) (distance * OMNI_COUNTS_PER_INCH);
 
-            //  belt_feed.setTargetPosition(RevEncoderTarget);
-
             runtime.reset();
-
-
-
             while (opModeIsActive() && (runtime.seconds() < timeout) && (belt_feed.getCurrentPosition() < RevEncoderTarget)) {
                 front_left.setPower(-Math.abs(speed));
                 front_right.setPower(Math.abs(speed));
@@ -281,6 +276,8 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
 
         }
     }
+
+
     public void initPID(){
         double tolerance_degrees = 2.0;
         yawPIDController = new navXPIDController( navx_centered, navXPIDController.navXTimestampedDataSource.YAW);

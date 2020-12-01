@@ -37,7 +37,7 @@ public class SystemCheckAuto extends BaseAutoOpMode {
 
         encoderDrive(DRIVE,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
          */
-
+/*
         telemetry.addData("Path5", "Starting at %7d :%7d", belt_feed.getCurrentPosition(), front_left.getCurrentPosition());
         telemetry.update();
 
@@ -46,6 +46,20 @@ public class SystemCheckAuto extends BaseAutoOpMode {
         encoderStrafeV4(0.5, 20, 10);
         belt_feed.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         encoderStrafeV4(.5, -10, 8);
+
+
+ */
+
+        //telemetry.addData("Velocity", "Starting at %7d", shooter_left.getVelocity());
+      //  telemetry.update();
+       // SetShooterMotors(Shoot.SHOOT_FAR);
+
+
+
+
+        //belt_feed.setPower(1);
+
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
