@@ -63,8 +63,8 @@ public class TeleOpV12 extends BaseOpMode {
             //UpdateDriveTrain();
             UpdateDriveTrainSlow();
             UpdateBelt();
-            //Lift1();
-            Lift2();
+            Lift1();
+           // Lift2();
             UpdateArmServo();
             ClawServo();
             shortcuts();
@@ -122,7 +122,6 @@ public class TeleOpV12 extends BaseOpMode {
             shooter_left.setVelocity(intake);
             shooter_right.setVelocity(intake);
         }
-
     }
 
     public void UpdateBelt() {
@@ -134,7 +133,6 @@ public class TeleOpV12 extends BaseOpMode {
             belt_feed.setPower(1);
         }
     }
-
 
     public void UpdateLift() {
         if (gamepad2.dpad_up & lift_top.getState()) {
@@ -148,12 +146,6 @@ public class TeleOpV12 extends BaseOpMode {
         }
     }
 
-    public void Lift2() {
-        double LiftPower = Math.atan(gamepad2.right_stick_y) - Math.PI / 4;
-       // final double v1 =  Math.cos(robotAngle);
-        lift_Motor.setPower(LiftPower);
-
-    }
     public void Lift1() {
         double Up;
         Up = -gamepad2.left_stick_y;
@@ -199,8 +191,8 @@ public class TeleOpV12 extends BaseOpMode {
         telemetry.update();
 
         double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-        double robotAngle = Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y) - Math.PI / 4;
-        double rightX = gamepad1.right_stick_x;
+        double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4; //Larson Reversed the "y" and "x" 12/3/2020 5:25
+        double rightX = gamepad1.right_stick_y;
         final double v1 = r * Math.cos(robotAngle) + rightX;
         final double v2 = r * Math.sin(robotAngle) - rightX;
         final double v3 = r * Math.sin(robotAngle) + rightX;
@@ -237,32 +229,13 @@ public class TeleOpV12 extends BaseOpMode {
             rear_right.setPower(v4 / 2);
         }
         else {
-            front_left.setPower(v1);
-            front_right.setPower(v2);
-            rear_left.setPower(v3);
-            rear_right.setPower(v4);
+            front_left.setPower(v1*2);
+            front_right.setPower(v2*2);
+            rear_left.setPower(v3*2);
+            rear_right.setPower(v4*2);
         }
     }
 
-    //NOTE: Eventually turn this into either me or Larson's omnidirectional drive.
-/*
-    public void UpdateDriveTrain() {
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.update();
-        double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-        double robotAngle = Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y) + Math.PI / 4;
-        double rightX = gamepad1.right_stick_x;
-        final double v1 = -r * Math.cos(robotAngle) + rightX;
-        final double v2 = -r * Math.sin(robotAngle) - rightX;
-        final double v3 = -r * Math.sin(robotAngle) + rightX;
-        final double v4 = -r * Math.cos(robotAngle) - rightX;
-
-        front_left.setPower(v1);
-        front_right.setPower(v2);
-        rear_left.setPower(v3);
-        rear_right.setPower(v4);
-    }
-    */
 }
 
 
