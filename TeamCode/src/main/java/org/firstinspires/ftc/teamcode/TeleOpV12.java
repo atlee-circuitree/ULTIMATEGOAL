@@ -63,8 +63,9 @@ public class TeleOpV12 extends BaseOpMode {
             //UpdateDriveTrain();
             UpdateDriveTrainSlow();
             UpdateBelt();
+            //RIP lift_motor 2020-2020
             //Lift1();
-            Lift2();
+            //Lift2();
             UpdateArmServo();
             ClawServo();
             shortcuts();
