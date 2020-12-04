@@ -63,8 +63,8 @@ public class TeleOpV12 extends BaseOpMode {
             //UpdateDriveTrain();
             UpdateDriveTrainSlow();
             UpdateBelt();
-            Lift1();
-           // Lift2();
+           // Lift1();
+            Lift2();
             UpdateArmServo();
             ClawServo();
             shortcuts();
@@ -154,6 +154,14 @@ public class TeleOpV12 extends BaseOpMode {
             lift_Motor.setPower(0);
         }
         */
+    }
+    public void Lift2() {
+        double Up;
+        Up = -gamepad2.left_stick_y;
+
+        if (lift_top.getState()) {
+            lift_Motor.setPower(Up);
+        }
     }
 
     public void shortcuts() {
