@@ -2,15 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import android.util.Log;
 
-import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.AHRS;
-import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.navXPIDController;
-
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.AHRS;
+import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.navXPIDController;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 
@@ -29,8 +27,8 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
  * the default update rate (50Hz), which may be lowered in order
  * to reduce the frequency of the updates to the drive system.
  */
-@Autonomous(name = "NavX Straight Driving", group = "Linear Opmode")
-public class NavXStraightDriving extends BaseAutoOpMode {
+@Autonomous(name = "NavX PID Rotate", group = "Linear Opmode")
+public class NavXPIDRotate extends BaseAutoOpMode {
     DcMotor leftMotor;
     DcMotor rightMotor;
 
@@ -44,8 +42,8 @@ public class NavXStraightDriving extends BaseAutoOpMode {
 
     private final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
 
-    private final double TARGET_ANGLE_DEGREES = 0.0;
-    private final double TOLERANCE_DEGREES = 1.0;
+    private final double TARGET_ANGLE_DEGREES = 90.0;
+    private final double TOLERANCE_DEGREES = 2.0;
     private final double MIN_MOTOR_OUTPUT_VALUE = -1.0;
     private final double MAX_MOTOR_OUTPUT_VALUE = 1.0;
     private final double YAW_PID_P = 0.005;
@@ -55,6 +53,7 @@ public class NavXStraightDriving extends BaseAutoOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         GetHardware();
+
 
         navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx_centered"), AHRS.DeviceDataType.kProcessedData, NAVX_DEVICE_UPDATE_RATE_HZ);
 
@@ -95,31 +94,30 @@ public class NavXStraightDriving extends BaseAutoOpMode {
         double drive_speed = 0.5;
 
         while ( runtime.time() < TOTAL_RUN_TIME_SECONDS ) {
-            if ( yawPIDController.waitForNewUpdate(yawPIDResult, DEVICE_TIMEOUT_MS ) ) {
-                if ( yawPIDResult.isOnTarget() ) {
-                    telemetry.addData("PID","On target");
-                    front_left.setPower(drive_speed);
-                    front_right.setPower(drive_speed);
-                    rear_left.setPower(drive_speed);
-                    rear_right.setPower(drive_speed);
-                } else {
-                    double output = yawPIDResult.getOutput();
+            if ( yawPIDController.waitForNewUpdate(yawPIDResult, DEVICE_TIMEOUT_MS) ) {
+                    double output = yawPIDResult.getOutput() * 2;
                     if ( output < 0 ) {
                         /* Rotate Left */
-                        telemetry.addData("PID",yawPIDResult.getOutput());
-                        front_left.setPower(drive_speed - output);
-                        front_right.setPower(drive_speed + output);
-                        rear_left.setPower(drive_speed - output);
-                        rear_right.setPower(drive_speed + output);
-                    } else {
+                        telemetry.addData("PID Left",yawPIDResult.getOutput());
+                        front_left.setPower(-output);
+                        front_right.setPower(output);
+                        rear_left.setPower(-output);
+                        rear_right.setPower(output);
+                    } else if( output > 0 ) {
                         /* Rotate Right */
-                        telemetry.addData("PID",yawPIDResult.getOutput());
-                        front_left.setPower(drive_speed + output);
-                        front_right.setPower(drive_speed - output);
-                        rear_left.setPower(drive_speed + output);
-                        rear_right.setPower(drive_speed - output);
+                        telemetry.addData("PID Right",yawPIDResult.getOutput());
+                        front_left.setPower(output);
+                        front_right.setPower(-output);
+                        rear_left.setPower(output);
+                        rear_right.setPower(-output);
+                    } else {
+                        telemetry.addData("PID On Point", yawPIDResult.getOutput());
+                        front_left.setPower(0);
+                        front_right.setPower(0);
+                        rear_left.setPower(0);
+                        rear_right.setPower(0);
                     }
-                }
+                telemetry.addData("NavX Yaw: ", navx_device.getYaw());
                 telemetry.update();
             } else {
                 /* A timeout occurred */

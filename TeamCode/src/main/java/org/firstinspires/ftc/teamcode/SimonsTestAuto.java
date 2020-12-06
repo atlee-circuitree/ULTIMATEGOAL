@@ -8,16 +8,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class SimonsTestAuto extends BaseAutoOpMode {
 
     @Override
-    public void runOpMode () {
+    public void runOpMode () throws InterruptedException {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         //Assigns hardware devices names and values
 
         GetHardware();
-        //getCannonNavXValues();
-        getCenteredNavXValues();
-        initPID();
+
 
 
 
@@ -25,18 +23,13 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         waitForStart();
         runtime.reset();
 
+        encoderDrive(0.7,48,4);
+        PIDrotate(90,3.5);
+        encoderDrive(0.7,24,2);
+        PIDrotate(180,3.5);
+        encoderDrive(0.7,48,4);
 
-        //encoderDrive(1,24,4);
-       // PIDrotate(90,0.5);
-        rotate(15, .5);
 
-        // Hey uh simon, that while loop is gonna cause problems.
-        // The code will get to the while then never exit the loop.
-       /* while(opModeIsActive()){
-            getCenteredNavXValues();
-        }
-
-        */
 
     }
 

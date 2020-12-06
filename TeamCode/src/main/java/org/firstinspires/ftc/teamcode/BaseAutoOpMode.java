@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -54,8 +56,10 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
+import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.AHRS;
 import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.navXPIDController;
+import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.IDataArrivalSubscriber;
 
 /**
  * This file contains basic code to run a 4 wheeled Mecanum wheel setup. The d-pad controls
@@ -65,13 +69,17 @@ import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.navXPIDController;
 public abstract class BaseAutoOpMode extends BaseOpMode {
 
 
-    private navXPIDController yawPIDController;
+    public navXPIDController yawPIDController;
+
 
     @Override
 
     public void GetHardware() {
         super.GetHardware();
         //webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        yawPIDController = new navXPIDController( navx_centered, navXPIDController.navXTimestampedDataSource.YAW);
+
+
     }
 
     public void ResetDriveEncoder(){
@@ -277,44 +285,65 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
         }
     }
 
+    public void PIDrotate(double target, double cutoffTime) throws InterruptedException {
 
-    public void initPID(){
-        double tolerance_degrees = 2.0;
-        yawPIDController = new navXPIDController( navx_centered, navXPIDController.navXTimestampedDataSource.YAW);
+        final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
+        final double TARGET_ANGLE_DEGREES = target;
+        final double TOLERANCE_DEGREES = 2.0;
+        final double MIN_MOTOR_OUTPUT_VALUE = -1.0;
+        final double MAX_MOTOR_OUTPUT_VALUE = 1.0;
+        final double YAW_PID_P = 0.005;
+        final double YAW_PID_I = 0.0;
+        final double YAW_PID_D = 0.0;
+        //int DEVICE_TIMEOUT_MS =500;
+        int problemChild = 0;
+        ElapsedTime runtime = new ElapsedTime();
 
         /* Configure the PID controller */
-        //yawPIDController.setSetpoint(TARGET_ANGLE_DEGREES);
+        yawPIDController.setSetpoint(TARGET_ANGLE_DEGREES);
         yawPIDController.setContinuous(true);
-        yawPIDController.setOutputRange(-1, 1);
-        yawPIDController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, tolerance_degrees);
-        yawPIDController.setPID(0.005, 0.0, 0.0);
+        yawPIDController.setOutputRange(MIN_MOTOR_OUTPUT_VALUE, MAX_MOTOR_OUTPUT_VALUE);
+        yawPIDController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, TOLERANCE_DEGREES);
+        yawPIDController.setPID(YAW_PID_P, YAW_PID_I, YAW_PID_D);
         yawPIDController.enable(true);
 
-    }
-
-
-    public void PIDrotate(double target, double speed) {
         navXPIDController.PIDResult yawPIDResult = new navXPIDController.PIDResult();
-        yawPIDController.setSetpoint(target);
-        telemetry.addData("Setpoint","");
-        telemetry.update();
-                double output = yawPIDResult.getOutput();
-                if ( output < 0 ) {
+
+        while (runtime.time() <= cutoffTime) {
+            if(yawPIDController.waitForNewUpdate(yawPIDResult, 500)){
+                double output = yawPIDResult.getOutput() * 2;
+                if (output < 0) {
                     /* Rotate Left */
-                    telemetry.addData("PID",yawPIDResult.getOutput());
-                    front_left.setPower(-1);
-                    front_right.setPower(1);
-                    rear_left.setPower(-1);
-                    rear_right.setPower(1);
-                } else {
+                    telemetry.addData("PID Left", yawPIDResult.getOutput());
+                    front_left.setPower(-output);
+                    front_right.setPower(output);
+                    rear_left.setPower(-output);
+                    rear_right.setPower(output);
+                } else if (output > 0) {
                     /* Rotate Right */
-                    telemetry.addData("PID",yawPIDResult.getOutput());
-                    front_left.setPower(1);
-                    front_right.setPower(-1);
-                    rear_left.setPower(1);
-                    rear_right.setPower(-1);
+                    telemetry.addData("PID Right", yawPIDResult.getOutput());
+                    front_left.setPower(output);
+                    front_right.setPower(-output);
+                    rear_left.setPower(output);
+                    rear_right.setPower(-output);
+                } else {
+                    telemetry.addData("PID On Point", yawPIDResult.getOutput());
+                    front_left.setPower(0);
+                    front_right.setPower(0);
+                    rear_left.setPower(0);
+                    rear_right.setPower(0);
                 }
+                telemetry.addData("NavX Yaw: ", navx_centered.getYaw());
+                telemetry.update();
+                problemChild++;
+            } else{
+                telemetry.addData("Timeout occured","");
+                telemetry.update();
             }
+        }
+
+
+    }
 
 
 

@@ -44,6 +44,9 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.AHRS;
 import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.navXPIDController;
+import org.firstinspires.ftc.teamcode.kauailabs.navx.AHRSProtocol;
+import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.navXPerformanceMonitor;
+import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.IDataArrivalSubscriber;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -121,6 +124,8 @@ public abstract class BaseOpMode extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
+        getCenteredNavXValues();
+        getCannonNavXValues();
         //drive train
         front_left = hardwareMap.get(DcMotor.class, "drive_FL");
         rear_left = hardwareMap.get(DcMotor.class, "drive_RL");
@@ -574,35 +579,13 @@ public abstract class BaseOpMode extends LinearOpMode {
         String fused_heading, ypr, cf, motion;
         DecimalFormat df = new DecimalFormat("#.##");
 
-
-        gyrocal = (navx_centered.isCalibrating() ?
-                "CALIBRATING" : "Calibration Complete");
-        magcal = (navx_centered.isMagnetometerCalibrated() ?
-                "Calibrated" : "UNCALIBRATED");
         yaw = df.format(navx_centered.getYaw());
         pitch = df.format(navx_centered.getPitch());
         roll = df.format(navx_centered.getRoll());
         ypr = yaw + ", " + pitch + ", " + roll;
-        compass_heading = df.format(navx_centered.getCompassHeading());
-        fused_heading = df.format(navx_centered.getFusedHeading());
-        if (!navx_centered.isMagnetometerCalibrated()) {
-            compass_heading = "-------";
-        }
-        cf = compass_heading + ", " + fused_heading;
-        if ( navx_centered.isMagneticDisturbance()) {
-            cf += " (Mag. Disturbance)";
-        }
-        motion = (navx_centered.isMoving() ? "Moving" : "Not Moving");
-        if ( navx_centered.isRotating() ) {
-            motion += ", Rotating";
-        }
 
 
-        telemetry.addData("2 GyroAccel", gyrocal );
-        telemetry.addData("3 Y,P,R", ypr);
-        telemetry.addData("4 Magnetometer", magcal );
-        telemetry.addData("5 Compass,9Axis", cf );
-        telemetry.addData("6 Motion", motion);
+        telemetry.addData("Yaw, Pitch, Roll", ypr);
 
     }
 
@@ -618,34 +601,13 @@ public abstract class BaseOpMode extends LinearOpMode {
         DecimalFormat df = new DecimalFormat("#.##");
 
 
-            gyrocal = (navx_cannon.isCalibrating() ?
-                    "CALIBRATING" : "Calibration Complete");
-            magcal = (navx_cannon.isMagnetometerCalibrated() ?
-                    "Calibrated" : "UNCALIBRATED");
+
             yaw = df.format(navx_cannon.getYaw());
             pitch = df.format(navx_cannon.getPitch());
             roll = df.format(navx_cannon.getRoll());
             ypr = yaw + ", " + pitch + ", " + roll;
-            compass_heading = df.format(navx_cannon.getCompassHeading());
-            fused_heading = df.format(navx_cannon.getFusedHeading());
-            if (!navx_cannon.isMagnetometerCalibrated()) {
-                compass_heading = "-------";
-            }
-            cf = compass_heading + ", " + fused_heading;
-            if (navx_cannon.isMagneticDisturbance()) {
-                cf += " (Mag. Disturbance)";
-            }
-            motion = (navx_cannon.isMoving() ? "Moving" : "Not Moving");
-            if (navx_cannon.isRotating() ) {
-                motion += ", Rotating";
-            }
+            telemetry.addData("Yaw, Pitch, Roll", ypr);
 
-
-        telemetry.addData("2 GyroAccel", gyrocal );
-        telemetry.addData("3 Y,P,R", ypr);
-        telemetry.addData("4 Magnetometer", magcal );
-        telemetry.addData("5 Compass,9Axis", cf );
-        telemetry.addData("6 Motion", motion);
 
     }
 }

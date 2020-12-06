@@ -60,11 +60,9 @@ public class TeleOpV12 extends BaseOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             UpdateShooter();
-            //UpdateDriveTrain();
             UpdateDriveTrainSlow();
             UpdateBelt();
-           // Lift1();
-            Lift2();
+            updateLift();
             UpdateArmServo();
             ClawServo();
             shortcuts();
@@ -134,33 +132,22 @@ public class TeleOpV12 extends BaseOpMode {
         }
     }
 
-    public void UpdateLift() {
-        if (gamepad2.dpad_up & lift_top.getState()) {
-            lift_Motor.setPower(0.6);
-        }
-        else if (gamepad2.dpad_down & lift_bottom_Left.getState() & lift_bottom_Right.getState()) {
-            lift_Motor.setPower(-0.6);
-        }
-        else {
-            lift_Motor.setPower(0);
-        }
-    }
+    public void updateLift() {
+        double ls;
+        ls = -gamepad2.left_stick_y;
 
-    public void Lift1() {
-        double Up;
-        Up = -gamepad2.left_stick_y;
-        lift_Motor.setPower(Up);
-        /*if ( lift_top.getState()) {
-            lift_Motor.setPower(0);
+        if(ls < 0){
+            if(lift_bottom_Left.getState() | lift_bottom_Left.getState()){
+                lift_Motor.setPower(ls);
+            }
         }
-        */
-    }
-    public void Lift2() {
-        double Up;
-        Up = -gamepad2.left_stick_y;
-
-        if (lift_top.getState()) {
-            lift_Motor.setPower(Up);
+        if(ls > 0){
+            if(lift_top.getState()){
+                lift_Motor.setPower(ls);
+            }
+        }
+        else{
+            lift_Motor.setPower(0);
         }
     }
 
