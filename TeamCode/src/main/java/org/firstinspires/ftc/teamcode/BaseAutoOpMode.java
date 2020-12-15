@@ -285,6 +285,71 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
         }
     }
 
+
+    //You dont really need to worry about this Doug, it doesn't work currently - Simon (12/15/2020)
+    public void encoderStrafeV5( double speed, double distance, double timeoutS) {
+        int newFLTarget;
+        int newRLTarget;
+        int newRRTarget;
+        int newFRTarget;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newFLTarget = front_left.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
+            newFRTarget = front_right.getCurrentPosition() + (int) (-distance * COUNTS_PER_INCH);
+            newRRTarget = rear_right.getCurrentPosition() + (int)(-distance * COUNTS_PER_INCH);
+            newRLTarget = rear_left.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+
+            front_left.setTargetPosition(newFLTarget);
+            front_right.setTargetPosition(newFRTarget);
+            rear_left.setTargetPosition(newRLTarget);
+            rear_right.setTargetPosition(newRRTarget);
+
+            // Turn On RUN_TO_POSITION
+            front_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            front_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rear_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rear_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            front_left.setPower(speed);
+            front_right.setPower(-speed);
+            rear_left.setPower(-speed);
+            rear_right.setPower(speed);
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (rear_left.isBusy() && front_left.isBusy() && front_right.isBusy() && rear_right.isBusy()))
+            {
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d :%7d", newRLTarget, newFLTarget, newRRTarget, newFRTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d", front_left.getCurrentPosition(),
+                        front_right.getCurrentPosition(),
+                        rear_left.getCurrentPosition(),
+                        rear_right.getCurrentPosition());
+                telemetry.update();
+            }
+            // Stop all motion;
+            DriveTrain(Drive.STOP);
+
+            // Turn off RUN_TO_POSITION
+            SetDriveMode(Mode.RUN_WITH_ENCODER);
+            //  sleep(250);   // optional pause after each move
+
+        }
+    }
+
+
+
     public void PIDrotate(double target, double cutoffTime) throws InterruptedException {
 
         final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
