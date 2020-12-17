@@ -61,16 +61,16 @@ public abstract class BaseAutoOpModeHudson extends BaseOpModeHudson {
         FORWARDS, BACKWARDS, STOP
     }
 
-    public enum servo {
-        Left, RIGHT
+    public enum Servo {
+        LEFT, RIGHT
     }
 
-    public void arm_servo(servo Direction) {
-        if (Direction == servo.Left){
-            servo.setPosition(0.1);
+    public void arm_servo(Servo Direction) {
+        if (Direction == Servo.LEFT) {
+            Servo.setPosition(0.1);
         }
-        if (Direction == servo.RIGHT){
-            servo.setPosition(0.9);
+        if (Direction == Servo.RIGHT) {
+            Servo.setPosition(0.9);
         }
     }
 
