@@ -34,7 +34,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.navXPIDController;
-// :)
+
 /**
  * This file contains basic code to run a 4 wheeled Mecanum wheel setup. The d-pad controls
  * forwards/backwards and turning left and right, and the right stick controls strafing. (working on diff. control setup currently)
@@ -57,8 +57,21 @@ public abstract class BaseAutoOpModeHudson extends BaseOpModeHudson {
         LEFT, RIGHT
     }
 
-    public enum drive_train{
+    public enum drive_train {
         FORWARDS, BACKWARDS, STOP
+    }
+
+    public enum servo {
+        Left, RIGHT
+    }
+
+    public void arm_servo(servo Direction) {
+        if (Direction == servo.Left){
+            servo.setPosition(0.1);
+        }
+        if (Direction == servo.RIGHT){
+            servo.setPosition(0.9);
+        }
     }
 
     public void Drive(drive_train Direction) {

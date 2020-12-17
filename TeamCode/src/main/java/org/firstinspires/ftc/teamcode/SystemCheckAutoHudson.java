@@ -13,7 +13,7 @@ public class SystemCheckAutoHudson extends BaseAutoOpModeHudson {
 
         telemetry.addData("Status", "Robot is ready");
         telemetry.update();
-// :)
+
         waitForStart();
         runtime.reset();
 
