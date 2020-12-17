@@ -3,7 +3,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-//Simon's encoder test opmode (created 11/19/2020)
+/**
+* Simon's general test opmode
+*/
+
 @Autonomous(name = "Simon's Test Auto", group = "Linear Opmode")
 public class SimonsTestAuto extends BaseAutoOpMode {
 
@@ -23,11 +26,8 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         waitForStart();
         runtime.reset();
 
-        encoderDrive(0.7,48,4);
-        PIDrotate(90,3.5);
-        encoderDrive(0.7,24,2);
-        PIDrotate(180,3.5);
-        encoderDrive(0.7,48,4);
+        encoderStrafeV5(1,48,5.0);
+
 
 
 

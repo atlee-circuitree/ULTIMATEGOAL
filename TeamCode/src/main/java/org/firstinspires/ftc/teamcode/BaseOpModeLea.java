@@ -29,10 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -51,26 +50,42 @@ import java.text.DecimalFormat;
  * forwards/backwards and turning left and right, and the right stick controls strafing. (working on diff. control setup currently)
  */
 
-public abstract class BaseOpModeA extends LinearOpMode {
+public abstract class BaseOpModeLea extends LinearOpMode {
 
     // Declare OpMode members.
     public ElapsedTime runtime = new ElapsedTime();
-    
+
     public DcMotor front_left = null;
-    public DcMotor back_left = null;
+    public DcMotor rear_left = null;
     public DcMotor front_right = null;
-    public DcMotor back_right = null;
+    public DcMotor rear_right = null;
+
+    public Servo arm_servo;
+
+    double Forward = 1;
+
 
     public void GetHardware() {
-        front_left = hardwareMap.get(DcMotor.class, "front_left");
-        back_left= hardwareMap.get(DcMotor.class, "back_left");
-        front_right= hardwareMap.get(DcMotor. class, "front_right");
-        back_right = hardwareMap.get(DcMotor.class, "backright");
+        // Initialize the hardware variables. Note that the strings used here as parameters
+        // to 'get' must correspond to the names assigned during the robot configuration
+        // step (using the FTC Robot Controller app on the phone).
 
-        front_left.setDirection(DcMotor.Direction.FORWARD);
+        //drive train
+        front_left = hardwareMap.get(DcMotor.class, "drive_FL");
+        rear_left = hardwareMap.get(DcMotor.class, "drive_RL");
+        front_right = hardwareMap.get(DcMotor.class, "drive_FR");
+        rear_right = hardwareMap.get(DcMotor.class, "drive_RR");
+
+        arm_servo = hardwareMap.get(Servo.class, "Servo");
+
+        front_left.setDirection(DcMotor.Direction.REVERSE);
+        rear_left.setDirection(DcMotor.Direction.REVERSE);
+        front_right.setDirection(DcMotor.Direction.FORWARD);
+        rear_right.setDirection(DcMotor.Direction.FORWARD);
+
+        //GetIMU();
 
     }
-
 }
 
 

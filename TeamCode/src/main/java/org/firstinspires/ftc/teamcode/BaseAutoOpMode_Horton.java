@@ -29,49 +29,57 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.AHRS;
-
-import java.text.DecimalFormat;
+import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.navXPIDController;
 
 /**
  * This file contains basic code to run a 4 wheeled Mecanum wheel setup. The d-pad controls
  * forwards/backwards and turning left and right, and the right stick controls strafing. (working on diff. control setup currently)
  */
+@Disabled
+public abstract class BaseAutoOpMode_Horton extends BaseOpMode_Horton {
 
-public abstract class BaseOpModeA extends LinearOpMode {
-
-    // Declare OpMode members.
-    public ElapsedTime runtime = new ElapsedTime();
-    
-    public DcMotor front_left = null;
-    public DcMotor back_left = null;
-    public DcMotor front_right = null;
-    public DcMotor back_right = null;
+    @Override
 
     public void GetHardware() {
-        front_left = hardwareMap.get(DcMotor.class, "front_left");
-        back_left= hardwareMap.get(DcMotor.class, "back_left");
-        front_right= hardwareMap.get(DcMotor. class, "front_right");
-        back_right = hardwareMap.get(DcMotor.class, "backright");
-
-        front_left.setDirection(DcMotor.Direction.FORWARD);
-
+        super.GetHardware();
+        //webcamName = hardwareMap.get(WebcamName.class
     }
 
+
+        public enum STRAFE {
+            left, right
+
+        }
+
+        public void drive(STRAFE Direction){
+            if (Direction == STRAFE.left) {
+                front_left.setPower(1);
+                front_right.setPower(-1);
+                back_left.setPower(1);
+                rear_right.setPower(-1);
+
+            }
+            if (Direction == STRAFE.right)
+                front_left.setPower(-1);
+                front_right.setPower(1);
+                rear_left.setPower(-1);
+                rear_right.setPower(1);
+            }
+
+        }
+    }
 }
+
+
+
+
+
+
+
 
 
 
