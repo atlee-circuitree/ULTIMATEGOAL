@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -60,8 +61,8 @@ public abstract class BaseOpModeLea extends LinearOpMode {
     public DcMotor rear_right = null;
 
     public Servo arm_servo;
-    public Servo claw_servo;
 
+    double Forward = 1;
 
 
     public void GetHardware() {
@@ -75,6 +76,7 @@ public abstract class BaseOpModeLea extends LinearOpMode {
         front_right = hardwareMap.get(DcMotor.class, "drive_FR");
         rear_right = hardwareMap.get(DcMotor.class, "drive_RR");
 
+        arm_servo = hardwareMap.get(Servo.class, "Servo");
 
         front_left.setDirection(DcMotor.Direction.REVERSE);
         rear_left.setDirection(DcMotor.Direction.REVERSE);

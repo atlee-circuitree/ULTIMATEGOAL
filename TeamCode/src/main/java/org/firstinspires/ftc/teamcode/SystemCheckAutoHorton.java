@@ -15,8 +15,12 @@ public class SystemCheckAutoHorton extends BaseAutoOpMode_Horton{
         waitForStart();
         runtime.reset();
 
+<<<<<<< HEAD
         telemetry.addData("status", "da robot be movin");
         drive(STRAFE.left);
+=======
+        telemetry.addData("status",  "Da Robot be ready" );
+>>>>>>> 25704f4d7eec5147f1b640d394ddb82690d8c5e7
 
     }
 
