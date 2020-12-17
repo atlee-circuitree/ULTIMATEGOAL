@@ -14,7 +14,13 @@ public class SystemCheckAutoHorton extends BaseOpMode_Horton {
         GetHardware();
 
         telemetry.addData("status",  "Da Robot be ready" );
+        telemetry.update();
 
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+        runtime.reset();
+
+          
     }
 
 }

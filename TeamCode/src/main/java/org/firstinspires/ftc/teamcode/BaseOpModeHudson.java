@@ -61,6 +61,7 @@ public abstract class BaseOpModeHudson extends LinearOpMode {
     public DcMotor front_right = null;
     public DcMotor back_right = null;
 
+
     public void GetHardware() {
         front_left = hardwareMap.get(DcMotor.class, "front_left");
         back_left = hardwareMap.get(DcMotor.class, "back_left");
@@ -71,7 +72,7 @@ public abstract class BaseOpModeHudson extends LinearOpMode {
         back_left.setDirection(DcMotor.Direction.REVERSE);
         front_right.setDirection(DcMotor.Direction.FORWARD);
         back_right.setDirection(DcMotor.Direction.FORWARD);
-}
+    }
 
 
 

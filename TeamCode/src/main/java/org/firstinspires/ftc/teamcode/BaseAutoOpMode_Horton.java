@@ -46,33 +46,28 @@ public abstract class BaseAutoOpMode_Horton extends BaseOpMode_Horton {
 
     public void GetHardware() {
         super.GetHardware();
-        //webcamName = hardwareMap.get(WebcamName.class
+
     }
 
 
-        public enum STRAFE {
-            left, right
-
-        }
-
-        public void drive(STRAFE Direction){
-            if (Direction == STRAFE.left) {
+    public enum STRAFE {
+        left, right
+    }
+    public void drive(STRAFE Direction){
+        if (Direction == STRAFE.left) {
                 front_left.setPower(1);
                 front_right.setPower(-1);
                 back_left.setPower(1);
-                rear_right.setPower(-1);
-
-            }
-            if (Direction == STRAFE.right)
-                front_left.setPower(-1);
-                front_right.setPower(1);
-                rear_left.setPower(-1);
-                rear_right.setPower(1);
-            }
+                back_right.setPower(-1);
 
         }
+        if (Direction == STRAFE.right)
+                front_left.setPower(-1);
+                front_right.setPower(1);
+                back_left.setPower(-1);
+                back_right.setPower(1);
+        }
     }
-}
 
 
 
