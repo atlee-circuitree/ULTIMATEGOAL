@@ -60,7 +60,7 @@ public abstract class BaseAutoOpModeHudson extends BaseOpModeHudson {
     public enum drive_train {
         FORWARDS, BACKWARDS, STOP
     }
-    
+
     public enum servo {
         Left, RIGHT
     }
