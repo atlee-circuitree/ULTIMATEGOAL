@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,8 +20,9 @@ public class SystemCheckAutoLea extends BaseAutoOpModeLea {
         waitForStart();
         runtime.reset();
 
+        arm_servo.setPosition(0.5);
         Drive(STRAFE.LEFT);
-        sleep(1000);
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

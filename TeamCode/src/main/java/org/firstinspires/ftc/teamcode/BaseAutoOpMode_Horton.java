@@ -42,14 +42,12 @@ import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.navXPIDController;
 @Disabled
 public abstract class BaseAutoOpMode_Horton extends BaseOpMode_Horton {
 
-
-
-
     @Override
 
     public void GetHardware() {
         super.GetHardware();
         //webcamName = hardwareMap.get(WebcamName.class
+    }
 
 
         public enum STRAFE {
@@ -61,8 +59,9 @@ public abstract class BaseAutoOpMode_Horton extends BaseOpMode_Horton {
             if (Direction == STRAFE.left) {
                 front_left.setPower(1);
                 front_right.setPower(-1);
-                rear_left.setPower(1);
+                back_left.setPower(1);
                 rear_right.setPower(-1);
+
             }
             if (Direction == STRAFE.right)
                 front_left.setPower(-1);
@@ -73,6 +72,7 @@ public abstract class BaseAutoOpMode_Horton extends BaseOpMode_Horton {
 
         }
     }
+}
 
 
 

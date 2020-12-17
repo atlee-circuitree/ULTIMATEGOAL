@@ -13,7 +13,7 @@ public class SystemCheckAutoHorton extends BaseOpMode_Horton {
 
         GetHardware();
 
-        telemetry.addData( caption: "status" value: "Da Robot be ready" )
+        telemetry.addData("status",  "Da Robot be ready" );
 
     }
 
