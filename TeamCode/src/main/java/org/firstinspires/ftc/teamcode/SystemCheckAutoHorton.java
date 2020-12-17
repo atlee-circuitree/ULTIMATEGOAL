@@ -20,7 +20,7 @@ public class SystemCheckAutoHorton extends BaseOpMode_Horton {
         waitForStart();
         runtime.reset();
 
-          
+
     }
 
 }

@@ -49,7 +49,6 @@ public abstract class BaseAutoOpMode_Horton extends BaseOpMode_Horton {
 
     }
 
-
     public enum STRAFE {
         left, right
     }
