@@ -48,15 +48,17 @@ public abstract class BaseOpModeShane extends LinearOpMode {
     public DcMotor front_right = null;
     public DcMotor back_left = null;
     public DcMotor back_right = null;
+
     public void GetHardware() {
         front_left = hardwareMap.get(DcMotor.class, "front_left");
         front_right = hardwareMap.get(DcMotor.class, "front_right");
-        back_left = hardwareMap.get(DcMotor.class,"back_left");
-        back_right = hardwareMap.get(DcMotor.class,"back_right");
+        back_left = hardwareMap.get(DcMotor.class, "back_left");
+        back_right = hardwareMap.get(DcMotor.class, "back_right");
         front_left.setDirection(DcMotor.Direction.FORWARD);
         front_right.setDirection(DcMotor.Direction.FORWARD);
         back_left.setDirection(DcMotor.Direction.REVERSE);
-        back_right.setDirection(DcMotor.Direction.REVERSE)}
+        back_right.setDirection(DcMotor.Direction.REVERSE);
+    }
 
 }
 
