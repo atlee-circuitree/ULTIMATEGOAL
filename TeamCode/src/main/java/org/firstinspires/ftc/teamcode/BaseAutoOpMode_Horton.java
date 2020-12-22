@@ -51,42 +51,55 @@ public abstract class BaseAutoOpMode_Horton extends BaseOpMode_Horton {
 
     public enum STRAFE {
         left, right
+    }
 
-        }
-        public void drive(STRAFE Direction){
+    public enum Drive {
+        forward, reverse, stop
+    }
+
+    public void drive(STRAFE Direction) {
         if (Direction == STRAFE.left) {
             front_left.setPower(1);
             front_right.setPower(-1);
             back_left.setPower(1);
             back_right.setPower(-1);
 
-            }
-        if (Direction == STRAFE.right)
+        }
+        if (Direction == STRAFE.right) {
             front_left.setPower(-1);
             front_right.setPower(1);
             back_left.setPower(-1);
             back_right.setPower(1);
 
-         if (Direction == drive.forward)
+        }
+
+    }
+
+    public void DriveDirection(Drive Direction) {
+
+        if (Direction == Drive.forward) {
             front_left.setPower(1);
             front_right.setPower(1);
             back_left.setPower(1);
             back_right.setPower(1);
 
-         if (Direction == drive.reverse)   
+        }
+        if (Direction == Drive.reverse) {
             front_left.setPower(-1);
             front_right.setPower(-1);
             back_left.setPower(-1);
             back_right.setPower(-1);
 
-
-
-            }
-
-
-            }
-
         }
+    }
+}
+
+
+
+
+
+
+
 
 
 
