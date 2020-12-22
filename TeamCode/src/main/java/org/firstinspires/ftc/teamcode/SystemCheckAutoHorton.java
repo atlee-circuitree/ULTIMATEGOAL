@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-@Autonomous(name = "System Check Auto", group = "Linear Opmode")
+@Autonomous(name = "System Check Auto Horton", group = "Linear Opmode")
 
 public class SystemCheckAutoHorton extends BaseAutoOpMode_Horton{
 
