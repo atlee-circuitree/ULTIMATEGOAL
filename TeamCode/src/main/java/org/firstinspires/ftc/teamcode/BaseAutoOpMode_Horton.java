@@ -67,13 +67,21 @@ public abstract class BaseAutoOpMode_Horton extends BaseOpMode_Horton {
             back_left.setPower(-1);
             back_right.setPower(1);
 
-            public void drive(drive Direction forward )
+         if (Direction == drive.forward)
             front_left.setPower(1);
             front_right.setPower(1);
             back_left.setPower(1);
             back_right.setPower(1);
 
-            public void drive()
+         if (Direction == drive.reverse)   
+            front_left.setPower(-1);
+            front_right.setPower(-1);
+            back_left.setPower(-1);
+            back_right.setPower(-1);
+
+
+
+            }
 
 
             }
