@@ -29,55 +29,38 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.navXPIDController;
 
 /**
  * This file contains basic code to run a 4 wheeled Mecanum wheel setup. The d-pad controls
  * forwards/backwards and turning left and right, and the right stick controls strafing. (working on diff. control setup currently)
  */
-@Disabled
-public abstract class BaseAutoOpMode_Horton extends BaseOpMode_Horton {
 
-    @Override
+public abstract class BaseOpModeShane extends LinearOpMode {
+
+    // Declare OpMode members.
+    public ElapsedTime runtime = new ElapsedTime();
+    
+    public DcMotor front_left = null;
+    public DcMotor front_right = null;
+    public DcMotor back_left = null;
+    public DcMotor back_right = null;
+
     public void GetHardware() {
-        super.GetHardware();
-        //webcamName = hardwareMap.get(WebcamName.class
+        front_left = hardwareMap.get(DcMotor.class, "front_left");
+        front_right = hardwareMap.get(DcMotor.class, "front_right");
+        back_left = hardwareMap.get(DcMotor.class, "back_left");
+        back_right = hardwareMap.get(DcMotor.class, "back_right");
+        front_left.setDirection(DcMotor.Direction.FORWARD);
+        front_right.setDirection(DcMotor.Direction.FORWARD);
+        back_left.setDirection(DcMotor.Direction.REVERSE);
+        back_right.setDirection(DcMotor.Direction.REVERSE);
     }
 
-
-    public enum STRAFE {
-        left, right
-
-        }
-        public void drive(STRAFE Direction){
-        if (Direction == STRAFE.left) {
-            front_left.setPower(1);
-            front_right.setPower(-1);
-            back_left.setPower(1);
-            back_right.setPower(-1);
-
-            }
-        if (Direction == STRAFE.right)
-            front_left.setPower(-1);
-            front_right.setPower(1);
-            back_left.setPower(-1);
-            back_right.setPower(1);
-            }
-
-        }
-
-
-
-
-
-
-
-
-
+}
 
 
 
