@@ -67,10 +67,10 @@ public abstract class BaseAutoOpModeHudson extends BaseOpModeHudson {
 
     public void arm_servo(Servo Direction) {
         if (Direction == Servo.LEFT) {
-            Servo.setPosition(0.1);
+            servo.setPosition(0.1);
         }
         if (Direction == Servo.RIGHT) {
-            Servo.setPosition(0.9);
+            servo.setPosition(0.9);
         }
     }
 
