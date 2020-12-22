@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-@Autonomous(name = "System Check Auto", group = "Linear Opmode")
+@Autonomous(name = "System Check Auto Hudson", group = "Linear Opmode")
 public class SystemCheckAutoHudson extends BaseAutoOpModeHudson {
 
     @Override
