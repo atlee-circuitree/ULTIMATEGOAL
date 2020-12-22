@@ -28,7 +28,7 @@ public class SystemCheckAutoHorton extends BaseAutoOpMode_Horton{
 
         drive(STRAFE.right);
 
-        telemetry.addData("path" "complete");
+        telemetry.addData("path","complete");
         telemetry.update();
 
 
