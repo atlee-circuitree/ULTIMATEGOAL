@@ -35,13 +35,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.navigation.;
+//import org.firstinspires.ftc.robotcore.external.navigation.;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 /**
  * This file contains basic code to run a 4 wheeled Mecanum wheel setup. The d-pad controls
  * forwards/backwards and turning left and right, and the right stick controls strafing. (working on diff. control setup currently)
  */
-
+@Disabled
 public abstract class AngleTurningHudson extends LinearOpMode {
 
     // Declare OpMode members.
@@ -54,7 +55,7 @@ public abstract class AngleTurningHudson extends LinearOpMode {
     public Servo servo;
     BNO055IMU imu;
     float globalAngle = 0;
-    Orientation lastAngles = new Orientation();
+  //  Orientation lastAngles = new Orientation();
 
 
     public void GetHardware() {
@@ -94,6 +95,7 @@ public abstract class AngleTurningHudson extends LinearOpMode {
         imu.initialize(parameters);
     }
     //Set the current angle to 0
+    /*
     public void ResetAngle()
     {
         //Read the current angle from the IMU
@@ -106,6 +108,8 @@ public abstract class AngleTurningHudson extends LinearOpMode {
     {
 
     }
+
+     */
 
 }
 
