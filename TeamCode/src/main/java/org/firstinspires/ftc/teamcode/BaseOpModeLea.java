@@ -61,6 +61,7 @@ public abstract class BaseOpModeLea extends LinearOpMode {
     public DcMotor rear_right = null;
 
     public Servo arm_servo;
+    public Servo claw_servo;
 
     double Forward = 1;
 
