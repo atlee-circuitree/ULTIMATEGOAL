@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 /**
  * Created by Michael Vierra, FTC 8461 on 9/13/2017.
@@ -19,6 +20,7 @@ Bytes    16-bit word    Description
         10, 11   y              width of object
         12, 13   y              height of object
         */
+@Autonomous(name = "Pixy 2 Example Code", group = "Linear Opmode")
 
 public class Pixy2ExampleCode extends LinearOpMode {
     I2cDeviceSynch pixy;
