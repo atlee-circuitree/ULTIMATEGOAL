@@ -66,15 +66,15 @@ public abstract class BaseAutoOpMode_Horton extends BaseOpMode_Horton {
 
     public void drive(STRAFE Direction) {
         if (Direction == STRAFE.left) {
-            front_left.setPower(.5);
-            front_right.setPower(-.5);
+            front_left.setPower(-.5);
+            front_right.setPower(.5);
             back_left.setPower(.5);
             back_right.setPower(-.5);
 
         }
         if (Direction == STRAFE.right) {
-            front_left.setPower(-.5);
-            front_right.setPower(.5);
+            front_left.setPower(.5);
+            front_right.setPower(-.5);
             back_left.setPower(-.5);
             back_right.setPower(.5);
         }
