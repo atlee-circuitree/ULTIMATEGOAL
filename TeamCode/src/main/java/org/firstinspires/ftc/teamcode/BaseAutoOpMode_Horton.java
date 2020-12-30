@@ -45,16 +45,23 @@ public abstract class BaseAutoOpMode_Horton extends BaseOpMode_Horton {
     @Override
     public void GetHardware() {
         super.GetHardware();
-        //webcamName = hardwareMap.get(WebcamName.class
+
     }
 
 
     public enum STRAFE {
         left, right
+
     }
 
-    public enum Drive {
+    public enum DRIVE {
         forward, reverse, stop
+
+    }
+
+    public enum TURN {
+        left, right,
+
     }
 
     public void drive(STRAFE Direction) {
@@ -70,39 +77,51 @@ public abstract class BaseAutoOpMode_Horton extends BaseOpMode_Horton {
             front_right.setPower(1);
             back_left.setPower(-1);
             back_right.setPower(1);
-
         }
-
     }
+    public void drive(DRIVE Direction) {
+        if (Direction == DRIVE.forward) {
 
-    public void DriveDirection(Drive Direction) {
-
-        if (Direction == Drive.stop) {
-            front_left.setPower(0);
-            front_right.setPower(0);
-            back_left.setPower(0);
-            back_right.setPower(0);
-            sleep(100);
-        }
-
-
-
-        if (Direction == Drive.forward) {
             front_left.setPower(1);
             front_right.setPower(1);
             back_left.setPower(1);
             back_right.setPower(1);
-
         }
-        if (Direction == Drive.reverse) {
+        if (Direction == DRIVE.reverse) {
             front_left.setPower(-1);
             front_right.setPower(-1);
             back_left.setPower(-1);
             back_right.setPower(-1);
+        }
 
+        if (Direction == DRIVE.stop) {
+            front_left.setPower(0);
+            front_right.setPower(0);
+            back_left.setPower(0);
+            back_right.setPower(0);
+            sleep(500);
+        }
+    }
+    public void drive(TURN Direction){
+        if (Direction == TURN.right) {
+            front_left.setPower(1);
+            front_right.setPower(-1);
+            back_left.setPower(1);
+            back_right.setPower(-1);
+        }
+
+        if (Direction == TURN.left) {
+            front_left.setPower(-1);
+            front_right.setPower(1);
+            back_left.setPower(-1);
+            back_right.setPower(1);
         }
     }
 }
+
+
+
+
 
 
 
