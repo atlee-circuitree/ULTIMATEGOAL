@@ -24,23 +24,23 @@ public class SystemCheckAutoHorton extends BaseAutoOpMode_Horton{
         telemetry.addData("status", "da robot be movin");
 
         drive(DRIVE.forward);
-        sleep(1000);
+        sleep(500);
         drive(DRIVE.stop);
         drive(STRAFE.right);
-        sleep(1000);
+        sleep(500);
         drive(DRIVE.stop);
         drive(DRIVE.reverse);
-        sleep(1000);
+        sleep(500);
         drive(DRIVE.stop);
         drive(STRAFE.left);
-        sleep(1000);
+        sleep(500);
         drive(DRIVE.stop);
         sleep(3000);
         drive(TURN.right);
-        sleep(1000);
+        sleep(500);
         drive(DRIVE.stop);
         drive(TURN.left);
-        sleep(1000);
+        sleep(500);
         drive(DRIVE.stop);
 
 
