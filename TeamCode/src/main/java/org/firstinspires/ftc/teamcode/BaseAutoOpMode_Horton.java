@@ -47,8 +47,9 @@ public abstract class BaseAutoOpMode_Horton extends BaseOpMode_Horton {
         super.GetHardware();
         //webcamName = hardwareMap.get(WebcamName.class
     }
+}
 
-
+/*
     public enum STRAFE {
         left, right
 
@@ -79,6 +80,8 @@ public abstract class BaseAutoOpMode_Horton extends BaseOpMode_Horton {
             }
 
         }
+
+ */
 
 
 
