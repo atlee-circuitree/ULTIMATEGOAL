@@ -18,32 +18,48 @@ public class SystemCheckAutoHorton extends BaseAutoOpMode_Horton{
         GetHardware();
         telemetry.addData("status",  "Da Robot be ready" );
         telemetry.update();
+        telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.update();
+
+        front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        back_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // Send telemetry message to indicate successful Encoder reset
+        telemetry.addData("Path0",  "Starting at %7d :%7d",
+                back_left.getCurrentPosition(),
+                back_right.getCurrentPosition(),
+                front_left.getCurrentPosition(),
+                front_right.getCurrentPosition());
+        telemetry.update();
+
         waitForStart();
         runtime.reset();
-
+//forward and turning right
         telemetry.addData("status", "da robot be movin");
-
-        drive(DRIVE.forward);
-        sleep(500);
-        drive(DRIVE.stop);
-        drive(STRAFE.right);
-        sleep(500);
-        drive(DRIVE.stop);
-        drive(DRIVE.reverse);
-        sleep(500);
-        drive(DRIVE.stop);
-        drive(STRAFE.left);
-        sleep(500);
-        drive(DRIVE.stop);
-        sleep(3000);
-        drive(TURN.right);
-        sleep(500);
-        drive(DRIVE.stop);
-        drive(TURN.left);
-        sleep(500);
-        drive(DRIVE.stop);
-
-
+        encoderDrive(0.5,24,24, 2.0);
+        encoderDrive(0.5,12, -12, 1.0);
+        encoderDrive(0.5, 24, 24, 2.0);
+        encoderDrive(0.5, 12, -12, 1.0);
+        encoderDrive(0.5,24,24, 2.0);
+        encoderDrive(0.5,12, -12, 1.0);
+        encoderDrive(0.5, 24, 24, 2.0);
+        encoderDrive(0.5, 12, -12, 1.0);
+//reverse and turn left
+        encoderDrive(0.5,-24,-24, 2.0);
+        encoderDrive(0.5,-12, 12, 1.0);
+        encoderDrive(0.5, -24, -24, 2.0);
+        encoderDrive(0.5, -12, 12, 1.0);
+        encoderDrive(0.5,-24,-24, 2.0);
+        encoderDrive(0.5,-12, 12, 1.0);
+        encoderDrive(0.5, -24, -24, 2.0);
+        encoderDrive(0.5, -12, 12, 1.0);
 
 
 
