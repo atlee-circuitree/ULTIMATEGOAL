@@ -44,22 +44,22 @@ public class SystemCheckAutoHorton extends BaseAutoOpMode_Horton{
 //forward and turning right
         telemetry.addData("status", "da robot be movin");
         encoderDrive(0.5,24,24, 2.0);
-        encoderDrive(0.5,12, -12, 1.0);
+        encoderDrive(0.5,20, -20, 1.0);
         encoderDrive(0.5, 24, 24, 2.0);
-        encoderDrive(0.5, 12, -12, 1.0);
+        encoderDrive(0.5, 20, -20, 1.0);
         encoderDrive(0.5,24,24, 2.0);
-        encoderDrive(0.5,12, -12, 1.0);
+        encoderDrive(0.5,20, -20, 1.0);
         encoderDrive(0.5, 24, 24, 2.0);
-        encoderDrive(0.5, 12, -12, 1.0);
+        encoderDrive(0.5, 20, -20, 1.0);
 //reverse and turn left
         encoderDrive(0.5,-24,-24, 2.0);
-        encoderDrive(0.5,-12, 12, 1.0);
+        encoderDrive(0.5,-20, 20, 1.0);
         encoderDrive(0.5, -24, -24, 2.0);
-        encoderDrive(0.5, -12, 12, 1.0);
+        encoderDrive(0.5, -20, 20, 1.0);
         encoderDrive(0.5,-24,-24, 2.0);
-        encoderDrive(0.5,-12, 12, 1.0);
+        encoderDrive(0.5,-20, 20, 1.0);
         encoderDrive(0.5, -24, -24, 2.0);
-        encoderDrive(0.5, -12, 12, 1.0);
+        encoderDrive(0.5, -20, 20, 1.0);
 
 
 
