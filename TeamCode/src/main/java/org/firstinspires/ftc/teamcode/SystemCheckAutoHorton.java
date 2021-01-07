@@ -41,15 +41,8 @@ public class SystemCheckAutoHorton extends BaseAutoOpMode_Horton {
 
         waitForStart();
         runtime.reset();
-        
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0", "Starting at %7d :%7d",
-                back_left.getCurrentPosition(),
-                back_right.getCurrentPosition(),
-                front_left.getCurrentPosition(),
-                front_right.getCurrentPosition());
-        telemetry.update();
 
+        encoderDrive(.25,12,12,20);
 //forward and turning right
         /*
         telemetry.addData("status", "da robot be movin");
