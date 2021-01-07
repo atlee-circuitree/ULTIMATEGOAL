@@ -54,12 +54,12 @@ public abstract class BaseOpModeJess extends LinearOpMode {
     public void GetHardware(){
         front_left = hardwareMap.get(DcMotor.class, "front_left");
         front_right = hardwareMap.get(DcMotor.class, "front_right");
-        rear_left = hardwareMap.get(DcMotor.class, "rear_left");
-        rear_right = hardwareMap.get(DcMotor.class, "rear_right");
+        rear_left = hardwareMap.get(DcMotor.class, "back_left");
+        rear_right = hardwareMap.get(DcMotor.class, "back_right");
 
-        front_left.setDirection(DcMotor.Direction.FORWARD);
+        front_left.setDirection(DcMotor.Direction.REVERSE);
         front_right.setDirection(DcMotor.Direction.FORWARD);
-        rear_left.setDirection(DcMotor.Direction.FORWARD);
+        rear_left.setDirection(DcMotor.Direction.REVERSE);
         rear_right.setDirection(DcMotor.Direction.FORWARD);
 
     }
