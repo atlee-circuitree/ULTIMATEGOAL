@@ -29,7 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import android.util.Log;
+//import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
