@@ -42,7 +42,8 @@ public class SystemCheckAutoHorton extends BaseAutoOpMode_Horton {
         waitForStart();
         runtime.reset();
 
-        encoderDrive(.25,12,12,20);
+        encoderSTRAFE(.25,12,20);
+
 //forward and turning right
         /*
         telemetry.addData("status", "da robot be movin");

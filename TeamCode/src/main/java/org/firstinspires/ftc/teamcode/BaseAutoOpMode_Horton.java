@@ -189,11 +189,11 @@ public abstract class BaseAutoOpMode_Horton extends BaseOpMode_Horton {
             front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-             sleep(250);   // optional pause after each move
+           //  sleep(250);   // optional pause after each move
         }
     }
     public void encoderSTRAFE(double speed,
-                              double leftInches, double rightInches,
+                              double distance,
                               double timeoutS) {
         int newFrontLeftTarget;
         int newFrontRightTarget;
@@ -204,10 +204,10 @@ public abstract class BaseAutoOpMode_Horton extends BaseOpMode_Horton {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newFrontLeftTarget = front_left.getCurrentPosition() - (int) (leftInches * COUNTS_PER_INCH);
-            newFrontRightTarget = front_right.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-            newBackLeftTarget = back_left.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-            newBackRightTarget = back_right.getCurrentPosition() - (int) (rightInches * COUNTS_PER_INCH);
+            newFrontLeftTarget = front_left.getCurrentPosition() - (int) (distance * COUNTS_PER_INCH);
+            newFrontRightTarget = front_right.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
+            newBackLeftTarget = back_left.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
+            newBackRightTarget = back_right.getCurrentPosition() - (int) (distance * COUNTS_PER_INCH);
 
             front_left.setTargetPosition(newFrontLeftTarget);
             front_right.setTargetPosition(newFrontRightTarget);
@@ -256,7 +256,7 @@ public abstract class BaseAutoOpMode_Horton extends BaseOpMode_Horton {
             front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            sleep(250);   // optional pause after each move
+           // sleep(250);   // optional pause after each move
 
         }
     }
