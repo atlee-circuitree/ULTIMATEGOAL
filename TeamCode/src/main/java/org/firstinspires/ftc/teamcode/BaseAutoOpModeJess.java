@@ -67,16 +67,16 @@ public abstract class BaseAutoOpModeJess extends BaseOpModeJess {
             rear_right.setPower(0);
         }
         if (Direction == DRIVE.forward) {
-            front_left.setPower(0);
-            front_right.setPower(0);
-            rear_left.setPower(0);
-            rear_right.setPower(0);
+            front_left.setPower(.5);
+            front_right.setPower(.5);
+            rear_left.setPower(.5);
+            rear_right.setPower(.5);
         }
         if (Direction == DRIVE.reverse) {
-            front_left.setPower(0);
-            front_right.setPower(0);
-            rear_left.setPower(0);
-            rear_right.setPower(0);
+            front_left.setPower(-.5);
+            front_right.setPower(-.5);
+            rear_left.setPower(-.5);
+            rear_right.setPower(-.5);
         }
 
 
