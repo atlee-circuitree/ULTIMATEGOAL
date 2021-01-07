@@ -35,7 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.navigation.;
+import org.firstinspires.ftc.robotcore.external.navigation.*;
 
 /**
  * This file contains basic code to run a 4 wheeled Mecanum wheel setup. The d-pad controls
@@ -52,7 +52,7 @@ public abstract class AngleTurningHudson extends LinearOpMode {
     public DcMotor front_right = null;
     public DcMotor back_right = null;
     public Servo servo;
-    BNO055IMU imu;
+    public BNO055IMU imu;
     float globalAngle = 0;
     Orientation lastAngles = new Orientation();
 
@@ -63,7 +63,7 @@ public abstract class AngleTurningHudson extends LinearOpMode {
         front_right = hardwareMap.get(DcMotor.class, "front_right");
         back_right = hardwareMap.get(DcMotor.class, "back_right");
         servo = hardwareMap.get(Servo.class, "servo");
-
+        InitializeIMU();
 
         front_left.setDirection(DcMotor.Direction.REVERSE);
         back_left.setDirection(DcMotor.Direction.REVERSE);
@@ -72,6 +72,35 @@ public abstract class AngleTurningHudson extends LinearOpMode {
 
         waitForStart();
         runtime.reset();
+
+        //set the current angle to 0
+        ResetAngle();
+        //Turn Left
+        front_left.setPower(-0.5);
+        back_left.setPower(-0.5);
+        front_right.setPower(0.5);
+        back_right.setPower(0.5);
+
+        //Wait until our angle of rotation is 90 degrees
+        while(GetAngle() < 90)
+        {
+            telemetry.addData("Turning", "Left");
+            telemetry.update();
+        }
+
+        //Turn off motors
+        front_left.setPower(0);
+        back_left.setPower(0);
+        front_right.setPower(0);
+        back_right.setPower(0);
+
+        //write the last angle to the display
+        telemetry.addData("Angle", GetAngle());
+        telemetry.update();
+
+        //keep angle on the display for 5 seconds
+        sleep(5000);
+
     }
     //Set up the IMU
     public void InitializeIMU()
@@ -104,7 +133,31 @@ public abstract class AngleTurningHudson extends LinearOpMode {
     //Get the current angle
     public float GetAngle()
     {
+        // We experimentally determined the Z axis is the axis we want to use for heading angle.
+        // We have to process the angle because the imu works in euler angles so the Z axis is
+        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
+        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
 
+        //Request the angle from the Sensor
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        //Figure out the difference since the last angle and the current angle
+        float deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        //Convert Euler angles
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        //Add the difference to the Global Angle
+        globalAngle += deltaAngle;
+
+        //Store the current angle as "lastAngles" - this sets us up for the next time the function is called
+        lastAngles = angles;
+
+        //Send the calculated angle back to the caller
+        return globalAngle;
     }
 
 }
