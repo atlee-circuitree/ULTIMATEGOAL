@@ -17,21 +17,7 @@ public class SystemCheckAutoHudson extends BaseAutoOpModeHudson {
         waitForStart();
         runtime.reset();
 
-        Drive(drive_train.FORWARDS);
-        sleep(1000);
-        Drive(drive_train.STOP);
-        Drive(STRAFE.LEFT);
-        sleep(1000);
-        Drive(drive_train.STOP);
-        Drive(drive_train.BACKWARDS);
-        sleep(1000);
-        Drive(drive_train.STOP);
-        Drive(STRAFE.RIGHT);
-        sleep(1000);
-        Drive(drive_train.STOP);
-        Drive(drive_train.FORWARDS);
-        sleep(1000);
-        Drive(drive_train.STOP);
+        encoderDrive(1,3,4);
 
         telemetry.addData("Path","Complete");
         telemetry.update();
