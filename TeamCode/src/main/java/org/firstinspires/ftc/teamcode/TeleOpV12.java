@@ -137,13 +137,13 @@ public class TeleOpV12 extends BaseOpMode {
         ls = -gamepad2.left_stick_y;
 
         if(ls < 0){
-            if(lift_bottom_Left.getState() | lift_bottom_Left.getState()){
-                lift_Motor.setPower(ls);
+            if(lift_bottom_Left.getState() | lift_bottom_Right.getState()){
+                lift_Motor.setPower(0.5);
             }
         }
         if(ls > 0){
             if(lift_top.getState()){
-                lift_Motor.setPower(ls);
+                lift_Motor.setPower(-0.5);
             }
         }
         else{
