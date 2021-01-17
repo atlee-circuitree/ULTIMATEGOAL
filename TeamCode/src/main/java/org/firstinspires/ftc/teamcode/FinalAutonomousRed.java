@@ -3,17 +3,19 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
-* Simon's general test opmode
-*/
+ * No, this is not final yet...
+ */
 
 
 
-@Autonomous(name = "Simon's Test Auto", group = "Linear Opmode")
-public class SimonsTestAuto extends BaseAutoOpMode {
+@Autonomous(name = "FinalAutonomousRed", group = "Linear Opmode")
+@Disabled
+public class FinalAutonomousRed extends BaseAutoOpMode {
 
     private int ringCount = 0;
 
@@ -33,7 +35,7 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         waitForStart();
         runtime.reset();
 
-        claw_servo.setPosition(.4);
+
 
         while(lift_bottom_Left.getState() && lift_bottom_Right.getState()){
             lift_Motor.setPower(-0.4);
@@ -45,8 +47,8 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         }
         lift_Motor.setPower(0);
 
-        encoderDrive(0.7,30,2.0);
-        PIDrotate(-50,3.0);
+        encoderDrive(0.7,30,2);
+        PIDrotate(-45,3.0);
         DriveTrain(Drive.STOP);
         sleep(200);
         if(distance_sensor.getDistance(DistanceUnit.MM) < 300){
@@ -66,19 +68,11 @@ public class SimonsTestAuto extends BaseAutoOpMode {
             }
         }
 
-        if(ringCount == 0){
-            PIDrotate(0,3.0);
-            encoderDrive(0.7,48,3.0);
-            encoderStrafeV4(0.7,12,1.5);
-
-            arm_servo.setPosition(0.65);
-            sleep(3000);
-            claw_servo.setPosition(.7);
-            sleep(200);
-            arm_servo.setPosition(0.47);
-            sleep(1500);
+        while(opModeIsActive()){
+            telemetry.addData("Distance",distance_sensor.getDistance(DistanceUnit.MM));
+            telemetry.addData("Rings: ",ringCount);
+            telemetry.update();
         }
-
 
 
 

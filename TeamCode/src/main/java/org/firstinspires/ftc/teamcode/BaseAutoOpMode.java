@@ -286,7 +286,7 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
     }
 
 
-
+    //Not Working
     public void encoderStrafeV5( double speed, double distance, double timeoutS) {
         int newFLTarget;
         int newRLTarget;
