@@ -68,15 +68,27 @@ public class SimonsTestAuto extends BaseAutoOpMode {
 
         if(ringCount == 0){
             PIDrotate(0,3.0);
-            encoderDrive(0.7,48,3.0);
-            encoderStrafeV4(0.7,12,1.5);
+            encoderDrive(1,48,3.0);
+            encoderStrafeV4(1,12,1.5);
 
             arm_servo.setPosition(0.65);
             sleep(3000);
             claw_servo.setPosition(.7);
             sleep(200);
             arm_servo.setPosition(0.47);
-            sleep(1500);
+            sleep(2500);
+        }
+        else if(ringCount == 1){
+            PIDrotate(0,3.0);
+            encoderDrive(1,68,4.0);
+            encoderStrafeV4(1,35,3.0);
+
+            arm_servo.setPosition(0.65);
+            sleep(3000);
+            claw_servo.setPosition(.7);
+            sleep(200);
+            arm_servo.setPosition(0.47);
+            sleep(2500);
         }
 
 
