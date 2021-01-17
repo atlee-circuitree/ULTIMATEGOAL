@@ -286,7 +286,7 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
     }
 
 
-    //You dont really need to worry about this Doug, it doesn't work currently - Simon (12/15/2020)
+
     public void encoderStrafeV5( double speed, double distance, double timeoutS) {
         int newFLTarget;
         int newRLTarget;
@@ -361,7 +361,7 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
         final double YAW_PID_I = 0.0;
         final double YAW_PID_D = 0.0;
         //int DEVICE_TIMEOUT_MS =500;
-        int problemChild = 0;
+        //int problemChild = 0;
         ElapsedTime runtime = new ElapsedTime();
 
         /* Configure the PID controller */
@@ -376,21 +376,36 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
 
         while (runtime.time() <= cutoffTime) {
             if(yawPIDController.waitForNewUpdate(yawPIDResult, 500)){
-                double output = yawPIDResult.getOutput() * 2;
+                double output = yawPIDResult.getOutput()*2;
+                //if(target < 0){
+                //    output = output * -1;
+                //}
                 if (output < 0) {
                     /* Rotate Left */
+                    if(target < 0){
+                        output = output * -1;
+                    }
                     telemetry.addData("PID Left", yawPIDResult.getOutput());
                     front_left.setPower(-output);
                     front_right.setPower(output);
                     rear_left.setPower(-output);
                     rear_right.setPower(output);
+                    if(target < 0){
+                        output = output * -1;
+                    }
                 } else if (output > 0) {
                     /* Rotate Right */
+                    if(target < 0){
+                        output = output * -1;
+                    }
                     telemetry.addData("PID Right", yawPIDResult.getOutput());
                     front_left.setPower(output);
                     front_right.setPower(-output);
                     rear_left.setPower(output);
                     rear_right.setPower(-output);
+                    if(target < 0){
+                        output = output * -1;
+                    }
                 } else {
                     telemetry.addData("PID On Point", yawPIDResult.getOutput());
                     front_left.setPower(0);
@@ -400,7 +415,7 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
                 }
                 telemetry.addData("NavX Yaw: ", navx_centered.getYaw());
                 telemetry.update();
-                problemChild++;
+                //problemChild++;
             } else{
                 telemetry.addData("Timeout occured","");
                 telemetry.update();

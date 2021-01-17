@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-@Autonomous(name = "System Check Auto", group = "Linear Opmode")
+@Autonomous(name = "System Check Auto Horton", group = "Linear Opmode")
 
 public class SystemCheckAutoHorton extends BaseAutoOpMode_Horton{
 
@@ -19,14 +19,14 @@ public class SystemCheckAutoHorton extends BaseAutoOpMode_Horton{
 
 
         telemetry.addData("status", "da robot be movin");
-        drive(STRAFE.left);
+        //drive(STRAFE.left);
 
         telemetry.addData("status",  "Da Robot be ready" );
 
         telemetry.update();
         waitForStart();
 
-        drive(STRAFE.right);
+        //drive(STRAFE.right);
 
         telemetry.addData("path","complete");
         telemetry.update();

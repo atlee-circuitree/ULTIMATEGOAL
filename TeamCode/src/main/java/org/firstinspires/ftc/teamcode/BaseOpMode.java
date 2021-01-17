@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.CRServo;
 
@@ -79,6 +80,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public DigitalChannel lift_top = null;
     public AHRS navx_cannon;
     public AHRS navx_centered;
+    public DistanceSensor distance_sensor;
 
 
     public Servo arm_servo;
@@ -144,6 +146,7 @@ public abstract class BaseOpMode extends LinearOpMode {
         lift_bottom_Left = hardwareMap.get(DigitalChannel.class,"lift_bottom_L");
         lift_bottom_Right = hardwareMap.get(DigitalChannel.class,"lift_bottom_R");
         lift_top = hardwareMap.get(DigitalChannel.class,"lift_top");
+        distance_sensor = hardwareMap.get(DistanceSensor.class, "distance_sensor");
 
 
         // set digital channel to input mode.
