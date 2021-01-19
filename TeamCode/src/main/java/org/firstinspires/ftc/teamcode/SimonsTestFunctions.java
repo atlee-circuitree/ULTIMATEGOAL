@@ -29,12 +29,18 @@ public class SimonsTestFunctions extends BaseAutoOpMode {
         waitForStart();
         runtime.reset();
 
-        PIDrotate(-45,2.0);
-        PIDrotate(-90,2.0);
+        lift_Motor.setPower(0);
+
+        shooter_left.setVelocity(intake);
+        shooter_right.setVelocity(intake);
+
+        encoderDrive(0.7,60,4.0);
+
+    }
 
 
 
 
     }
 
-}
+
