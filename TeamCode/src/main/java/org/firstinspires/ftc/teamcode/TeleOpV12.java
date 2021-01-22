@@ -138,12 +138,12 @@ public class TeleOpV12 extends BaseOpMode {
 
         if(ls < 0){
             if(lift_bottom_Left.getState() | lift_bottom_Right.getState()){
-                lift_Motor.setPower(0.5);
+                lift_Motor.setPower(1);
             }
         }
         if(ls > 0){
             if(lift_top.getState()){
-                lift_Motor.setPower(-0.5);
+                lift_Motor.setPower(-1);
             }
         }
         else{
