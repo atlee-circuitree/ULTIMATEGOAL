@@ -72,6 +72,7 @@ public abstract class BaseAutoOpModeHudson extends BaseOpModeHudson {
         LEFT, RIGHT
     }
 
+    /*
     public void arm_servo(Servo Direction) {
         if (Direction == Servo.LEFT) {
             servo.setPosition(0.1);
@@ -81,6 +82,8 @@ public abstract class BaseAutoOpModeHudson extends BaseOpModeHudson {
         }
     }
 
+
+     */
     public void Drive(drive_train Direction) {
         if (Direction == drive_train.STOP) {
             front_left.setPower(0);
@@ -163,8 +166,8 @@ public abstract class BaseAutoOpModeHudson extends BaseOpModeHudson {
                     (front_left.isBusy() && back_left.isBusy() && front_right.isBusy() && back_right.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1", "Running to %7d :%7d :%7d :%7d", newFrontLeftTarget, newBackLeftTarget, newFrontRightTarget, newBackRightTarget);
-                telemetry.addData("Path2", "Running at %7d :%7d :%7d :%7d",
+                telemetry.addData("Path1", "Running to %7d :%7d", newFrontLeftTarget, newBackLeftTarget, newFrontRightTarget, newBackRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
                         front_left.getCurrentPosition(),
                         back_left.getCurrentPosition(),
                         front_right.getCurrentPosition());

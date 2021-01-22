@@ -3,15 +3,20 @@
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import org.firstinspires.ftc.robotcore.external.navigation.*;
 
 @Autonomous(name = "System Check Auto Lea", group = "Linear Opmode")
 public class SystemCheckAutoLea extends BaseAutoOpModeLea {
+
 
     @Override
     public void runOpMode () {
         //Assigns hardware devices names and values
 
         GetHardware();
+        InitializeIMU();
 
         telemetry.addData("Status", "Da Robot Be Ready");
         telemetry.update();
@@ -20,7 +25,6 @@ public class SystemCheckAutoLea extends BaseAutoOpModeLea {
         waitForStart();
         runtime.reset();
 
-        arm_servo.setPosition(0.5);
         Drive(STRAFE.LEFT);
 
 

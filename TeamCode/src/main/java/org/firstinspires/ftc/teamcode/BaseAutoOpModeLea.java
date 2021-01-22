@@ -31,9 +31,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.navXPIDController;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import org.firstinspires.ftc.robotcore.external.navigation.*;
 
 /**
  * This file contains basic code to run a 4 wheeled Mecanum wheel setup. The d-pad controls
@@ -47,7 +47,6 @@ public abstract class BaseAutoOpModeLea extends BaseOpModeLea {
 
     public void GetHardware() {
         super.GetHardware();
-
     }
 
 
@@ -71,6 +70,84 @@ public abstract class BaseAutoOpModeLea extends BaseOpModeLea {
         }
 
     }
+
+    //Set up the IMU
+    public void InitializeIMU() {
+        // Set up the parameters with which we will use our IMU. Note that integration
+        // algorithm here just reports accelerations to the logcat log; it doesn't actually
+        // provide positional information.
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+    }
+
+    public void ResetAngle() {
+        //Read the current angle from the IMU
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        //Set the current angle to 0
+        globalAngle = 0;
+    }
+
+    public float GetAngle() {
+        // We experimentally determined the Z axis is the axis we want to use for heading angle.
+        // We have to process the angle because the imu works in euler angles so the Z axis is
+        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
+        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
+
+        //Request the angle from the Sensor
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        //Figure out the difference since the last angle and the current angle
+        float deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        //Convert Euler angles
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        //Add the difference to the Global Angle
+        globalAngle += deltaAngle;
+
+        //Store the current angle as "lastAngles" - this sets us up for the next time the function is called
+        lastAngles = angles;
+        //Send the calculated angle back to the caller
+        return globalAngle;
+    }
+/*
+    public boolean RotateToTarget(float targetAngle, double power) {
+         double mrgError = 0.25;
+       if (Math.abs(GetAngle() - targetAngle() < mrgError)){
+
+       }
+        if (targetAngle > 0) {
+            front_left.setPower(power);
+            front_right.setPower(-power);
+            rear_left.setPower(power);
+            rear_right.setPower(-power);
+
+        }
+        else {
+            front_left.setPower(-power);
+            front_right.setPower(power);
+            rear_left.setPower(-power);
+            rear_right.setPower(power);
+        }
+
+
+    }*/
+
+
 }
 
 

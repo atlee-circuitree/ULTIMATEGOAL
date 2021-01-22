@@ -39,9 +39,11 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import org.firstinspires.ftc.robotcore.external.navigation.*;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.AHRS;
+
 
 import java.text.DecimalFormat;
 
@@ -62,9 +64,11 @@ public abstract class BaseOpModeLea extends LinearOpMode {
 
     public Servo arm_servo;
     public Servo claw_servo;
-
     double Forward = 1;
 
+    BNO055IMU imu;
+    float globalAngle = 0;
+    Orientation lastAngles = new Orientation();
 
     public void GetHardware() {
         // Initialize the hardware variables. Note that the strings used here as parameters

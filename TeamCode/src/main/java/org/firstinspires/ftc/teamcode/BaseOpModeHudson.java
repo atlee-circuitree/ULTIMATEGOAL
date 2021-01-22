@@ -73,13 +73,15 @@ public abstract class BaseOpModeHudson extends LinearOpMode {
 
         front_left.setDirection(DcMotor.Direction.REVERSE);
         back_left.setDirection(DcMotor.Direction.REVERSE);
-        front_right.setDirection(DcMotor.Direction.FORWARD);
+        front_right.setDirection(DcMotor.Direction.REVERSE);
         back_right.setDirection(DcMotor.Direction.FORWARD);
-
+/*
         front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         back_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+ */
     }
 
 
