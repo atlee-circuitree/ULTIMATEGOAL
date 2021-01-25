@@ -34,16 +34,10 @@ public class SimonsTestShooter extends BaseAutoOpMode {
 
         claw_servo.setPosition(.4);
 
-
-        PIDrotate(-15,3.0);
-
-        while(lift_bottom_Left.getState() && lift_bottom_Right.getState()){
-            lift_Motor.setPower(-0.5);
-        }
         lift_Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift_Motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        while(lift_Motor.getCurrentPosition() < 1500){
-            lift_Motor.setPower(0.6);
+        while(lift_Motor.getCurrentPosition() > -25){
+            lift_Motor.setPower(-0.6);
         }
         lift_Motor.setPower(0);
 
@@ -51,7 +45,7 @@ public class SimonsTestShooter extends BaseAutoOpMode {
         shooter_left.setVelocity(shooterFar);
         sleep(2000);
         belt_feed.setPower(1);
-        sleep(4000);
+        sleep(7000);
         belt_feed.setPower(0);
         shooter_left.setPower(0);
         shooter_right.setPower(0);

@@ -35,7 +35,7 @@ public class StartingPosition extends BaseAutoOpMode {
         claw_servo.setPosition(0.4);
         sleep(500);
         while(lift_top.getState()) {
-            lift_Motor.setPower(0.5);
+            lift_Motor.setPower(1);
         }
         lift_Motor.setPower(0);
         arm_servo.setPosition(0.47);

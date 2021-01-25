@@ -86,7 +86,7 @@ public abstract class BaseOpMode extends LinearOpMode {
     public Servo arm_servo;
     public Servo claw_servo;
     double intake = -2300;
-    double shooterFar = 1700;
+    double shooterFar = 1900;
     boolean clawPos = true;
 
     ModernRoboticsI2cGyro gyro    = null;                    // Additional Gyro device

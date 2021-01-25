@@ -44,7 +44,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="TeleOpV13", group="Linear Opmode")
 
-public class TeleOpV13 extends BaseOpMode {
+public class TeleOpV13 extends BaseAutoOpMode {
 
     // declare motor speed variables
     double FR; double FL; double RR; double RL;
@@ -56,9 +56,10 @@ public class TeleOpV13 extends BaseOpMode {
 
 
     boolean clawPos = true;
+    double LiftM;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -81,7 +82,9 @@ public class TeleOpV13 extends BaseOpMode {
             UpdateLift();
             UpdateArmServo();
             ClawServo();
-            shortcuts();
+            //shortcuts();
+            shortcutsV2();
+            telemetry.addData("LiftM", LiftM);
             telemetry.addData("Lift motor encoder", lift_Motor.getCurrentPosition());
             telemetry.update();
 
@@ -93,10 +96,12 @@ public class TeleOpV13 extends BaseOpMode {
             if(clawPos == true & gamepad1.x){
                 claw_servo.setPosition(.7);
                 clawPos = false;
+                sleep(200);
             }
             else if(clawPos == false & gamepad1.x){
-                claw_servo.setPosition(.4);
+                claw_servo.setPosition(.3);
                 clawPos = true;
+                sleep(200);
             }
         }
 
@@ -147,25 +152,33 @@ public class TeleOpV13 extends BaseOpMode {
     }
     public void UpdateLift() {
 
-        if(gamepad2.dpad_down){
+        LiftM = 0;
+
+        Y2 = -gamepad2.left_stick_y * joyScale;
+
+        LiftM += Y2;
+
+        LiftM = Math.max(-motorMax, Math.min(LiftM,motorMax));
+
+        if(Y2 < 0){
             if(lift_bottom_Left.getState() | lift_bottom_Right.getState()){
-                lift_Motor.setPower(-0.7);
+                lift_Motor.setPower(LiftM);
             }
         }
-        else if(gamepad2.dpad_up){
+        else if(Y2 > 0){
             if(lift_top.getState()){
-                lift_Motor.setPower(0.7);
+                lift_Motor.setPower(LiftM);
             }
         }
         else{
             lift_Motor.setPower(0);
         }
-        telemetry.addData("Lift encoder:",lift_Motor.getCurrentPosition());
+
     }
     public void shortcuts(){
         //feeder mode
         if(gamepad2.a){
-            while(lift_bottom_Left.getState() & (lift_bottom_Right.getState())) {
+            while(lift_bottom_Left.getState() | (lift_bottom_Right.getState())) {
                 lift_Motor.setPower(-0.7);
                 UpdateDriveTrain();
             }
@@ -190,6 +203,14 @@ public class TeleOpV13 extends BaseOpMode {
             shooter_right.setVelocity(shooterFar);
             shooter_left.setVelocity(shooterFar);
             belt_feed.setPower(0);
+        }
+    }
+
+    public void shortcutsV2() throws InterruptedException {
+        if(gamepad2.a){
+            telemetry.addLine("Rotating...");
+            telemetry.update();
+            PIDrotate(0,1.5);
         }
     }
 
