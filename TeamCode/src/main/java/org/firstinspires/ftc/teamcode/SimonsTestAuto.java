@@ -63,14 +63,23 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         encoderStrafeV4(0.7,35,3.0);
         PIDrotate(180,3.0);
         DriveTrain(Drive.STOP);
-        while (lift_bottom_Left.getState() || lift_bottom_Right.getState()) {
+       /* while (lift_bottom_Left.getState() || lift_bottom_Right.getState()) {
             lift_Motor.setPower(-0.7);
+        }
+
+        */
+        //changed while to if
+        if(lift_bottom_Left.getState() || lift_bottom_Right.getState()){
+            lift_Motor.setPower(-0.8);
         }
         telemetry.addData("DEBUG 1", " ");
         telemetry.update();
         lift_Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift_Motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        while (lift_Motor.getCurrentPosition() < 250) {
+
+
+        //Changed while to if
+        if (lift_Motor.getCurrentPosition() < 250) {
             lift_Motor.setPower(0.7);
         }
         telemetry.addData("DEBUG 2", " ");
@@ -79,10 +88,11 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         sleep(200);
         if(distance_sensor.getDistance(DistanceUnit.MM) < 300) {
             ringCount = 4;
-        } else {
+        }
+        else {
             telemetry.addData("DEBUG 3", " ");
             telemetry.update();
-            while(lift_bottom_Left.getState() || lift_bottom_Right.getState()) {
+            if(lift_bottom_Left.getState() || lift_bottom_Right.getState()) {
                 lift_Motor.setPower(-0.7);
             }
             telemetry.addData("DEBUG 4", " ");
@@ -101,7 +111,7 @@ public class SimonsTestAuto extends BaseAutoOpMode {
             telemetry.update();
         }
 
-        /*
+
         if(ringCount == 0){
             encoderDrive(1,-12,2.0);
             encoderStrafeV4(0.7,-6,1.0);
@@ -146,8 +156,6 @@ public class SimonsTestAuto extends BaseAutoOpMode {
             DriveTrain(Drive.STOP);
 
         }
-
-         */
 
     }
 }

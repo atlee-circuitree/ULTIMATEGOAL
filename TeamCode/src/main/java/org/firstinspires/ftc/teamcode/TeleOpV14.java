@@ -31,20 +31,15 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 /**
  * Simon's tiny brain couldn't handle field oriented drive so he made this
  */
 
-@TeleOp(name="TeleOpV13", group="Linear Opmode")
+@TeleOp(name="TeleOpV14", group="Linear Opmode")
 
-public class TeleOpV13 extends BaseAutoOpMode {
+public class TeleOpV14 extends BaseAutoOpMode {
 
     // declare motor speed variables
     double FR; double FL; double RR; double RL;
@@ -132,7 +127,7 @@ public class TeleOpV13 extends BaseAutoOpMode {
             shooter_left.setVelocity(intake);
             shooter_right.setVelocity(intake);
         }
-        else if(gamepad2.b){
+        else if(gamepad2.y){
             //Stop motors
             shooter_left.setPower(0);
             shooter_right.setPower(0);
@@ -216,7 +211,7 @@ public class TeleOpV13 extends BaseAutoOpMode {
 
     public void Kill() {
         if (gamepad1.b | gamepad2.b) {
-            belt_feed.setPower(0);
+            //belt_feed.setPower(0);
             lift_Motor.setPower(0);
             shooter_left.setPower(0);
             shooter_right.setPower(0);
