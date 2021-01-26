@@ -63,11 +63,10 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         encoderStrafeV4(0.7,35,3.0);
         PIDrotate(180,3.0);
         DriveTrain(Drive.STOP);
-       /* while (lift_bottom_Left.getState() || lift_bottom_Right.getState()) {
+       while (lift_bottom_Left.getState() || lift_bottom_Right.getState()) {
             lift_Motor.setPower(-0.7);
         }
 
-        */
         //changed while to if
         if(lift_bottom_Left.getState() || lift_bottom_Right.getState()){
             lift_Motor.setPower(-0.8);
