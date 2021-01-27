@@ -65,12 +65,8 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         DriveTrain(Drive.STOP);
        while (lift_bottom_Left.getState() || lift_bottom_Right.getState()) {
             lift_Motor.setPower(-0.7);
-        }
+       }
 
-        //changed while to if
-        if(lift_bottom_Left.getState() || lift_bottom_Right.getState()){
-            lift_Motor.setPower(-0.8);
-        }
         telemetry.addData("DEBUG 1", " ");
         telemetry.update();
         lift_Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -78,7 +74,7 @@ public class SimonsTestAuto extends BaseAutoOpMode {
 
 
         //Changed while to if
-        if (lift_Motor.getCurrentPosition() < 250) {
+        while (lift_Motor.getCurrentPosition() < 250) {
             lift_Motor.setPower(0.7);
         }
         telemetry.addData("DEBUG 2", " ");
