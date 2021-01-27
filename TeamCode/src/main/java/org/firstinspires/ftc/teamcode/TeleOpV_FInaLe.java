@@ -37,12 +37,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Simon's tiny brain couldn't handle field oriented drive so he made this
  */
 
-@TeleOp(name="TeleOpV15", group="Linear Opmode")
+@TeleOp(name="TeleOpV_FiNaLE", group="Linear Opmode")
 
-public class TeleOpV15 extends BaseOpMode {
+public class TeleOpV_FInaLe extends BaseAutoOpMode {
 
     // declare motor speed variables
-    double FR; double FL; double RR; double RL; double LiftM;
+    double FR; double FL; double RR; double RL;
     // declare joystick position variables
     double X1; double Y1; double X2; double Y2;
     // operational constants
@@ -51,9 +51,10 @@ public class TeleOpV15 extends BaseOpMode {
 
 
     boolean clawPos = true;
+    double LiftM;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -71,14 +72,14 @@ public class TeleOpV15 extends BaseOpMode {
             //getCannonNavXValues();
             Kill();
             UpdateShooter();
-            UpdateDriveTrain();
-           // UpdateDriveTrainSlow();
+            UpdateDriveTrainSlow();
             UpdateBelt();
-           // UpdateLift();
-            Lift4();
+            UpdateLift();
             UpdateArmServo();
             ClawServo();
-            shortcuts();
+            //shortcuts();
+            shortcutsV2();
+            telemetry.addData("LiftM", LiftM);
             telemetry.addData("Lift motor encoder", lift_Motor.getCurrentPosition());
             telemetry.update();
 
@@ -90,10 +91,12 @@ public class TeleOpV15 extends BaseOpMode {
             if(clawPos == true & gamepad1.x){
                 claw_servo.setPosition(.7);
                 clawPos = false;
+                sleep(200);
             }
             else if(clawPos == false & gamepad1.x){
-                claw_servo.setPosition(.4);
+                claw_servo.setPosition(.3);
                 clawPos = true;
+                sleep(200);
             }
         }
 
@@ -101,14 +104,13 @@ public class TeleOpV15 extends BaseOpMode {
 
     public void UpdateArmServo() {
         //NOTE: should eventually add in hard button stop
-        if(gamepad1.dpad_left){
-            arm_servo.setPosition(0.47); //0.463
+        //arm up
+        if(gamepad1.left_bumper){
+            arm_servo.setPosition(0.55); //0.463
         }
-        else if(gamepad1.dpad_right) {
+        //arm down
+        else if(gamepad1.left_trigger > 0.2) {
             arm_servo.setPosition(0.65);
-        }
-        else if(gamepad1.dpad_up){
-            arm_servo.setPosition(0.55);
         }
     }
 
@@ -124,7 +126,7 @@ public class TeleOpV15 extends BaseOpMode {
             shooter_left.setVelocity(intake);
             shooter_right.setVelocity(intake);
         }
-        else if(gamepad2.b){
+        else if(gamepad2.y){
             //Stop motors
             shooter_left.setPower(0);
             shooter_right.setPower(0);
@@ -144,75 +146,14 @@ public class TeleOpV15 extends BaseOpMode {
     }
     public void UpdateLift() {
 
-        if(gamepad2.dpad_down){
-            if(lift_bottom_Left.getState() | lift_bottom_Right.getState()){
-                lift_Motor.setPower(-0.7);
-            }
-        }
-        else if(gamepad2.dpad_up){
-            if(lift_top.getState()){
-                lift_Motor.setPower(0.7);
-            }
-        }
-        else{
-            lift_Motor.setPower(0);
-        }
-        telemetry.addData("Lift encoder:",lift_Motor.getCurrentPosition());
-    }
-    public void shortcuts(){
-        //feeder mode
-        if(gamepad2.a){
-            while(lift_bottom_Left.getState() & (lift_bottom_Right.getState())) {
-                lift_Motor.setPower(-0.7);
-                UpdateDriveTrain();
-            }
-            lift_Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            lift_Motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            while(lift_Motor.getCurrentPosition() < 50){
-                lift_Motor.setPower(0.7);
-            }
-            lift_Motor.setPower(0);
-            shooter_left.setVelocity(intake);
-            shooter_right.setVelocity(intake);
-            belt_feed.setPower(-1);
-
-        }
-        //shooter mode
-        if(gamepad2.y){
-            while(lift_top.getState()) {
-                lift_Motor.setPower(0.7);
-                UpdateDriveTrain();
-            }
-            lift_Motor.setPower(0);
-            shooter_right.setVelocity(shooterFar);
-            shooter_left.setVelocity(shooterFar);
-            belt_feed.setPower(0);
-        }
-    }
-
-    public void Kill() {
-        if (gamepad1.b | gamepad2.b) {
-            belt_feed.setPower(0);
-            lift_Motor.setPower(0);
-            shooter_left.setPower(0);
-            shooter_right.setPower(0);
-        }
-    }
-    public void Lift4(){
         LiftM = 0;
 
+        Y2 = -gamepad2.left_stick_y * joyScale;
 
-        // Get joystick values
-        Y2 = -gamepad2.left_stick_y * joyScale; // invert so up is positive
-
-        // Forward/back movement
         LiftM += Y2;
 
+        LiftM = Math.max(-motorMax, Math.min(LiftM,motorMax));
 
-        // Clip motor power values to +-motorMax
-        LiftM = Math.max(-motorMax, Math.min(LiftM, motorMax));
-
-        // Send values to the motors
         if(Y2 < 0){
             if(lift_bottom_Left.getState() | lift_bottom_Right.getState()){
                 lift_Motor.setPower(LiftM);
@@ -226,41 +167,87 @@ public class TeleOpV15 extends BaseOpMode {
         else{
             lift_Motor.setPower(0);
         }
-        telemetry.addData("Lift encoder:",lift_Motor.getCurrentPosition());
+
+    }
+    public void shortcuts(){
+        //feeder mode
+        if(gamepad2.a){
+            if(lift_bottom_Left.getState() | (lift_bottom_Right.getState())) { //changed from while to if 1/25/2021
+                lift_Motor.setPower(-0.7);
+                UpdateDriveTrain();
+            }
+            lift_Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lift_Motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            if(lift_Motor.getCurrentPosition() < 50){ //changed from while to if 1/25/2021
+                lift_Motor.setPower(0.7);
+            }
+            lift_Motor.setPower(0);
+            shooter_left.setVelocity(intake);
+            shooter_right.setVelocity(intake);
+            belt_feed.setPower(-1);
+
+        }
+        //shooter mode
+        if(gamepad2.y){
+            if(lift_top.getState()) { //changed from while to if 1/25/2021
+                lift_Motor.setPower(0.7);
+                UpdateDriveTrain();
+            }
+            lift_Motor.setPower(0);
+            shooter_right.setVelocity(shooterFar);
+            shooter_left.setVelocity(shooterFar);
+            belt_feed.setPower(0);
+        }
+    }
+
+    public void shortcutsV2() throws InterruptedException {
+        if(gamepad2.a){
+            telemetry.addLine("Rotating...");
+            telemetry.update();
+            PIDrotate(0,1.5);
+        }
+    }
+
+    public void Kill() {
+        if (gamepad1.b | gamepad2.b) {
+            //belt_feed.setPower(0);
+            lift_Motor.setPower(0);
+            shooter_left.setPower(0);
+            shooter_right.setPower(0);
+        }
     }
 
 
-
-        //NOTE: Eventually turn this into either me or Larson's omnidirectional drive.
-        public void UpdateDriveTrain(){
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.update();
-
-            double r = Math.hypot(gamepad1.left_stick_x, -gamepad1.left_stick_y);
-            double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4; //Larson Reversed the "y" and "x" 12/3/2020 5:25
-            double rightX = gamepad1.right_stick_x;
-            final double v1 = r * Math.cos(robotAngle) + rightX;
-            final double v2 = r * Math.sin(robotAngle) - rightX;
-            final double v3 = r * Math.sin(robotAngle) + rightX;
-            final double v4 = r * Math.cos(robotAngle) - rightX;
-
-            front_left.setPower(v1*2);
-            front_right.setPower(v2*2);
-            rear_left.setPower(v3*2);
-            rear_right.setPower(v4*2);
-        }
-    public void UpdateDriveTrainSlow() {
+    //NOTE: Eventually turn this into either me or Larson's omnidirectional drive.
+    public void UpdateDriveTrain(){
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.update();
 
-        double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-        double robotAngle = Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y) - Math.PI / 4;
+        double r = Math.hypot(gamepad1.left_stick_x, -gamepad1.left_stick_y);
+        double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4; //Larson Reversed the "y" and "x" 12/3/2020 5:25
         double rightX = gamepad1.right_stick_x;
-
         final double v1 = r * Math.cos(robotAngle) + rightX;
         final double v2 = r * Math.sin(robotAngle) - rightX;
         final double v3 = r * Math.sin(robotAngle) + rightX;
         final double v4 = r * Math.cos(robotAngle) - rightX;
+
+        front_left.setPower(v1*2);
+        front_right.setPower(v2*2);
+        rear_left.setPower(v3*2);
+        rear_right.setPower(v4*2);
+    }
+    public void UpdateDriveTrainSlow() {
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.update();
+
+        double r = Math.hypot(gamepad1.left_stick_x, -gamepad1.left_stick_y);
+        double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4; //Larson Reversed the "y" and "x" 12/3/2020 5:25
+        double rightX = gamepad1.right_stick_x;
+        final double v1 = r * Math.cos(robotAngle) + rightX;
+        final double v2 = r * Math.sin(robotAngle) - rightX;
+        final double v3 = r * Math.sin(robotAngle) + rightX;
+        final double v4 = r * Math.cos(robotAngle) - rightX;
+
 
         if (gamepad1.right_stick_button) {
             front_left.setPower(v1/2);
@@ -281,9 +268,6 @@ public class TeleOpV15 extends BaseOpMode {
             rear_right.setPower(v4*2);
         }
     }
-
-
-
-}
+    }
 
 
