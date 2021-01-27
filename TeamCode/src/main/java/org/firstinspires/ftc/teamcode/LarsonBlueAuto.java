@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 
-//@Autonomous(name = "Larson'sBlueAuto", group = "Linear Opmode")
+@Autonomous(name = "Larson'sBlueAuto", group = "Linear Opmode")
 public class LarsonBlueAuto extends BaseAutoOpMode {
 
     private int ringCount = 0;

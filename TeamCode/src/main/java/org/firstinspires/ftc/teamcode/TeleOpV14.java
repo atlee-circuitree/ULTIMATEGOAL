@@ -104,14 +104,13 @@ public class TeleOpV14 extends BaseAutoOpMode {
 
     public void UpdateArmServo() {
         //NOTE: should eventually add in hard button stop
-        if(gamepad1.dpad_left){
-            arm_servo.setPosition(0.47); //0.463
+        //arm up
+        if(gamepad1.left_bumper){
+            arm_servo.setPosition(0.55); //0.463
         }
-        else if(gamepad1.dpad_right) {
+        //arm down
+        else if(gamepad1.left_trigger > 0.2) {
             arm_servo.setPosition(0.65);
-        }
-        else if(gamepad1.dpad_up){
-            arm_servo.setPosition(0.55);
         }
     }
 
