@@ -27,21 +27,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.oldteleops;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.BaseAutoOpMode;
+
 
 /**
  * Simon's tiny brain couldn't handle field oriented drive so he made this
- **/
+ */
 
-@TeleOp(name="TeleOpV_FiNaLE2", group="Linear Opmode")
+@TeleOp(name="TeleOpV13", group="Linear Opmode")
 
-public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
+public class TeleOpV13 extends BaseAutoOpMode {
 
     // declare motor speed variables
     double FR; double FL; double RR; double RL;
@@ -74,15 +79,13 @@ public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
             //getCannonNavXValues();
             Kill();
             UpdateShooter();
-            UpdateDriveTrainSlow();
+            UpdateDriveTrain();
             UpdateBelt();
             UpdateLift();
             UpdateArmServo();
             ClawServo();
             //shortcuts();
             shortcutsV2();
-            AutoRingShoot();
-            AutoRingShoot2();
             telemetry.addData("LiftM", LiftM);
             telemetry.addData("Lift motor encoder", lift_Motor.getCurrentPosition());
             telemetry.update();
@@ -103,37 +106,19 @@ public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
                 sleep(200);
             }
         }
-        if(gamepad2.x) {
-            if(clawPos == true & gamepad2.x){
-                claw_servo.setPosition(.7);
-                clawPos = false;
-                sleep(200);
-            }
-            else if(clawPos == false & gamepad2.x){
-                claw_servo.setPosition(.3);
-                clawPos = true;
-                sleep(200);
-            }
-        }
 
     }
 
     public void UpdateArmServo() {
         //NOTE: should eventually add in hard button stop
-        //arm up
-        if(gamepad1.left_bumper){
-            arm_servo.setPosition(0.55); //0.463
+        if(gamepad1.dpad_left){
+            arm_servo.setPosition(0.47); //0.463
         }
-        //arm down
-        else if(gamepad1.left_trigger > 0.2) {
+        else if(gamepad1.dpad_right) {
             arm_servo.setPosition(0.65);
         }
-        else if(gamepad2.dpad_up){
-            arm_servo.setPosition(0.55); //0.463
-        }
-        //arm down
-        else if(gamepad2.dpad_down) {
-            arm_servo.setPosition(0.65);
+        else if(gamepad1.dpad_up){
+            arm_servo.setPosition(0.55);
         }
     }
 
@@ -149,7 +134,7 @@ public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
             shooter_left.setVelocity(intake);
             shooter_right.setVelocity(intake);
         }
-        else if(gamepad2.y){
+        else if(gamepad2.b){
             //Stop motors
             shooter_left.setPower(0);
             shooter_right.setPower(0);
@@ -230,36 +215,6 @@ public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
             PIDrotate(0,1.5);
         }
     }
-    public void AutoRingShoot(){
-        if(gamepad1.y) {
-            shooter_right.setVelocity(1700);
-            shooter_left.setVelocity(1700);
-            belt_feed.setPower(-1);
-            encoderStrafeV4(0.3, 19, 2);
-            belt_feed.setPower(-1);
-            sleep(700);
-            encoderStrafeV4(0.3, 16, 4.0);
-            sleep(1000);
-            belt_feed.setPower(0);
-            shooter_left.setPower(0);
-            shooter_right.setPower(0);
-        }
-    }
-    public void AutoRingShoot2(){
-        if(gamepad1.dpad_left) {
-            shooter_right.setVelocity(1700);
-            shooter_left.setVelocity(1700);
-            encoderStrafeV4(0.5, -45, 4);
-           // PIDrotate(1, 2);
-            belt_feed.setPower(1);
-            sleep(700);
-            encoderStrafeV4(0.3, -13, 4.0);
-            sleep(2000);
-            belt_feed.setPower(0);
-            shooter_left.setPower(0);
-            shooter_right.setPower(0);
-        }
-    }
 
     public void Kill() {
         if (gamepad1.b | gamepad2.b) {
@@ -271,56 +226,56 @@ public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
     }
 
 
-    //NOTE: Eventually turn this into either me or Larson's omnidirectional drive.
-    public void UpdateDriveTrain(){
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.update();
 
-        double r = Math.hypot(gamepad1.left_stick_x, -gamepad1.left_stick_y);
-        double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4; //Larson Reversed the "y" and "x" 12/3/2020 5:25
-        double rightX = gamepad1.right_stick_x;
-        final double v1 = r * Math.cos(robotAngle) + rightX;
-        final double v2 = r * Math.sin(robotAngle) - rightX;
-        final double v3 = r * Math.sin(robotAngle) + rightX;
-        final double v4 = r * Math.cos(robotAngle) - rightX;
+        //NOTE: Eventually turn this into either me or Larson's omnidirectional drive.
+        public void UpdateDriveTrain(){
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.update();
 
-        front_left.setPower(v1*2);
-        front_right.setPower(v2*2);
-        rear_left.setPower(v3*2);
-        rear_right.setPower(v4*2);
+            // Reset speed variables
+            FL = 0;
+            FR = 0;
+            RL = 0;
+            RR = 0;
+
+            // Get joystick values
+            Y1 = -gamepad1.left_stick_y * joyScale; // invert so up is positive
+            X1 = gamepad1.left_stick_x * joyScale;
+            Y2 = -gamepad1.right_stick_y * joyScale; // Y2 is not used at present
+            X2 = gamepad1.right_stick_x * joyScale;
+
+            // Forward/back movement
+            FL += Y1;
+            FR += Y1;
+            RL += Y1;
+            RR += Y1;
+
+            // Side to side movement
+            FL += X1;
+            FR -= X1;
+            RL -= X1;
+            RR += X1;
+
+            // Rotation movement
+            FL += X2;
+            FR -= X2;
+            RL += X2;
+            RR -= X2;
+
+            // Clip motor power values to +-motorMax
+            FL = Math.max(-motorMax, Math.min(FL, motorMax));
+            FR = Math.max(-motorMax, Math.min(FR, motorMax));
+            RL = Math.max(-motorMax, Math.min(RL, motorMax));
+            RR = Math.max(-motorMax, Math.min(RR, motorMax));
+
+            // Send values to the motors
+            front_left.setPower(FL);
+            front_right.setPower(FR);
+            rear_left.setPower(RL);
+            rear_right.setPower(RR);
+
+        }
+
     }
-    public void UpdateDriveTrainSlow() {
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.update();
-
-        double r = Math.hypot(gamepad1.left_stick_x, -gamepad1.left_stick_y);
-        double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4; //Larson Reversed the "y" and "x" 12/3/2020 5:25
-        double rightX = gamepad1.right_stick_x;
-        final double v1 = r * Math.cos(robotAngle) + rightX;
-        final double v2 = r * Math.sin(robotAngle) - rightX;
-        final double v3 = r * Math.sin(robotAngle) + rightX;
-        final double v4 = r * Math.cos(robotAngle) - rightX;
-
-
-        if (gamepad1.right_stick_button) {
-            front_left.setPower(v1/2);
-            front_right.setPower(v2/2);
-            rear_left.setPower(v3/2);
-            rear_right.setPower(v4/2);
-        }
-        else if (gamepad1.left_stick_button) {
-            front_left.setPower(v1 / 2);
-            front_right.setPower(v2 / 2);
-            rear_left.setPower(v3 / 2);
-            rear_right.setPower(v4 / 2);
-        }
-        else {
-            front_left.setPower(v1*2);
-            front_right.setPower(v2*2);
-            rear_left.setPower(v3*2);
-            rear_right.setPower(v4*2);
-        }
-    }
-}
 
 

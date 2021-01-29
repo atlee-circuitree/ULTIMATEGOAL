@@ -27,21 +27,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.oldteleops;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.BaseAutoOpMode;
+
 
 /**
  * Simon's tiny brain couldn't handle field oriented drive so he made this
- **/
+ */
 
-@TeleOp(name="TeleOpV_FiNaLE2", group="Linear Opmode")
+@TeleOp(name="TeleOpV_FiNaLE", group="Linear Opmode")
 
-public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
+public class TeleOpV_FInaLe extends BaseAutoOpMode {
 
     // declare motor speed variables
     double FR; double FL; double RR; double RL;
@@ -81,8 +81,6 @@ public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
             ClawServo();
             //shortcuts();
             shortcutsV2();
-            AutoRingShoot();
-            AutoRingShoot2();
             telemetry.addData("LiftM", LiftM);
             telemetry.addData("Lift motor encoder", lift_Motor.getCurrentPosition());
             telemetry.update();
@@ -103,18 +101,6 @@ public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
                 sleep(200);
             }
         }
-        if(gamepad2.x) {
-            if(clawPos == true & gamepad2.x){
-                claw_servo.setPosition(.7);
-                clawPos = false;
-                sleep(200);
-            }
-            else if(clawPos == false & gamepad2.x){
-                claw_servo.setPosition(.3);
-                clawPos = true;
-                sleep(200);
-            }
-        }
 
     }
 
@@ -126,13 +112,6 @@ public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
         }
         //arm down
         else if(gamepad1.left_trigger > 0.2) {
-            arm_servo.setPosition(0.65);
-        }
-        else if(gamepad2.dpad_up){
-            arm_servo.setPosition(0.55); //0.463
-        }
-        //arm down
-        else if(gamepad2.dpad_down) {
             arm_servo.setPosition(0.65);
         }
     }
@@ -230,40 +209,10 @@ public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
             PIDrotate(0,1.5);
         }
     }
-    public void AutoRingShoot(){
-        if(gamepad1.y) {
-            shooter_right.setVelocity(1700);
-            shooter_left.setVelocity(1700);
-            belt_feed.setPower(-1);
-            encoderStrafeV4(0.3, 19, 2);
-            belt_feed.setPower(-1);
-            sleep(700);
-            encoderStrafeV4(0.3, 16, 4.0);
-            sleep(1000);
-            belt_feed.setPower(0);
-            shooter_left.setPower(0);
-            shooter_right.setPower(0);
-        }
-    }
-    public void AutoRingShoot2(){
-        if(gamepad1.dpad_left) {
-            shooter_right.setVelocity(1700);
-            shooter_left.setVelocity(1700);
-            encoderStrafeV4(0.5, -45, 4);
-           // PIDrotate(1, 2);
-            belt_feed.setPower(1);
-            sleep(700);
-            encoderStrafeV4(0.3, -13, 4.0);
-            sleep(2000);
-            belt_feed.setPower(0);
-            shooter_left.setPower(0);
-            shooter_right.setPower(0);
-        }
-    }
 
     public void Kill() {
         if (gamepad1.b | gamepad2.b) {
-            belt_feed.setPower(0);
+            //belt_feed.setPower(0);
             lift_Motor.setPower(0);
             shooter_left.setPower(0);
             shooter_right.setPower(0);
@@ -321,6 +270,6 @@ public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
             rear_right.setPower(v4*2);
         }
     }
-}
+    }
 
 
