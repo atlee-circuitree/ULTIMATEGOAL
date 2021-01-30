@@ -2,24 +2,23 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.navXPIDController;
 
 /**
  * Simon's general test opmode
+ * encoderStrafeV4 POSITIVE distance = strafe to the LEFT, NEGATIVE distance = strafe to the RIGHT
  */
 
 
 
-@Autonomous(name = "Final Autonomous Blue", group = "Linear Opmode")
+@Autonomous(name = "FINAL AUTO BLUE", group = "Linear Opmode")
 public class FinalAutonomousBlue extends BaseAutoOpMode {
 
     private int ringCount = 0;
 
     @Override
-    public void runOpMode () throws InterruptedException {
+    public void runOpMode() throws InterruptedException {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -37,6 +36,7 @@ public class FinalAutonomousBlue extends BaseAutoOpMode {
         arm_servo.setPosition(0.55);
         encoderDrive(1, 65, 3.0);
         PIDrotate(-1, 2);
+        checkForTimeout();
         DriveTrain(Drive.STOP);
 
         shooter_right.setVelocity(1700);
@@ -44,16 +44,18 @@ public class FinalAutonomousBlue extends BaseAutoOpMode {
         sleep(700);
         belt_feed.setPower(1);
         sleep(500);
-        encoderStrafeV4(0.3, -16, 4.0);
+        encoderStrafeV4(0.4, -16, 4.0);
         sleep(1000);
         belt_feed.setPower(0);
         shooter_left.setPower(0);
         shooter_right.setPower(0);
 
 
-        encoderStrafeV4(0.9, 36, 3);
+        encoderStrafeV4(0.7, 36, 3);
+        //belt_feed.setPower(-1);
         PIDrotate(180, 3.0);
-        encoderDrive(0.5,2,1.0);
+        checkForTimeout();
+        encoderDrive(0.5,4,1.0);
         DriveTrain(Drive.STOP);
         //Lower wobble
         arm_servo.setPosition(0.62);
@@ -89,90 +91,98 @@ public class FinalAutonomousBlue extends BaseAutoOpMode {
                 ringCount = 0;
             }
         }
+        //belt_feed.setPower(0);
 
         if (ringCount == 0) {
             //Drive Backwards to Position A
-            encoderDrive(0.7, -8, 1.0);
+            encoderDrive(0.7, -14, 1.0);
 
             //Place Wobble Goal on Position A
             arm_servo.setPosition(0.65);
             sleep(200);
-            encoderStrafeV4(.7, -5, 2);
             claw_servo.setPosition(.7);
             sleep(200);
             arm_servo.setPosition(0.6);
             sleep(200);
 
-            //strafe back to position
-            encoderStrafeV4(.7, 10, 2.0);
-            PIDrotate(180,1.0);
-            DriveTrain(Drive.STOP);
+            //Go to second wobble
+            encoderStrafeV4(0.6,6,1.5);
+            encoderDrive(1,66,3.0);
 
-            //Drive Forward to second Wobble Goal
-            encoderDrive(1, 62, 5.0);
-
-            //Pick Up Second Wobble Goal
+            //Pick up second wobble
             arm_servo.setPosition(0.65);
             sleep(500);
-            claw_servo.setPosition(.37);
+            claw_servo.setPosition(.4);
             sleep(200);
             arm_servo.setPosition(0.6);
-            sleep(500);
+            sleep(200);
 
-            //Drive backwards to Position A
-            encoderDrive(1, -70, 5.0);
-            encoderStrafeV4(.7, -5, 2.0);
+            //Go back to position A
+            encoderDrive(1,-60,3.0);
+            encoderStrafeV4(0.6,-6,2.0);
 
-            //Place second Wobble Goal in Position A
+            //Drop second wobble
             arm_servo.setPosition(0.65);
-            sleep(1000);
+            sleep(500);
             claw_servo.setPosition(.7);
             sleep(200);
-            arm_servo.setPosition(0.47);
+            arm_servo.setPosition(0.45);
             sleep(200);
 
-            //Drive to Parking White Line and Rotate to face the goal.
-            encoderStrafeV4(1,24,3.0);
-            DriveTrain(Drive.STOP);
+            encoderStrafeV4(0.6,32,2.0);
+            //encoderDrive(1,-8,1.0);
+
 
         } else if (ringCount == 1) {
 
+            //Feeds 1 ring
+            shooter_left.setVelocity(intake);
+            shooter_right.setVelocity(intake);
+            belt_feed.setPower(-1);
+            sleep(200);
+            encoderDrive(1,12,1.0);
+            sleep(200);
+            shooter_left.setVelocity(0);
+            shooter_right.setVelocity(0);
+            belt_feed.setPower(0);
             //Move to position B
-            encoderDrive(1, -42, 4.0);
-            encoderStrafeV4(.7, 18, 2);
+            encoderDrive(1, -48, 4.0);
+            encoderStrafeV4(.5, 16, 2.0);
 
             //Place Wobble Goal on Position B
             arm_servo.setPosition(0.65);
             sleep(200);
             claw_servo.setPosition(.7);
             sleep(200);
+            //arm_servo.setPosition(0.6);
+            //sleep(200);
 
-            //Drive Forward to second Wobble Goal
+            //Drive to second wobble
+            encoderDrive(1,78,4.0);
+            encoderStrafeV4(0.5,-12,1.0);
+            //Grab wobble 2
             arm_servo.setPosition(0.65);
-            sleep(300);
-            encoderDrive(1, 94, 5.0);
-            encoderStrafeV4(.7, -18, 2.0);
-
-            //Pick Up Second Wobble Goal
-            claw_servo.setPosition(.37);
+            sleep(500);
+            claw_servo.setPosition(0.4);
             sleep(200);
             arm_servo.setPosition(0.6);
             sleep(200);
 
-            //Drive backwards to Position B
-            encoderStrafeV4(.7, 18, 2.0);
-            encoderDrive(1, -82, 5.0);
+            //Go back to position B
+            encoderDrive(1,-66,3.0);
+            encoderStrafeV4(0.5, 6,1.5);
 
-            //Place second Wobble Goal in Position B
+            //Drop second wobble
             arm_servo.setPosition(0.65);
-            sleep(1000);
-            claw_servo.setPosition(.7);
+            sleep(500);
+            claw_servo.setPosition(0.7);
             sleep(200);
             arm_servo.setPosition(0.6);
             sleep(200);
 
-            //Drive to Parking White Line
-            encoderDrive(1, 36, 1.0);
+            //Go park on line
+            encoderDrive(1,12,1.5);
+
 
 
         } else if (ringCount == 4) {
@@ -188,47 +198,8 @@ public class FinalAutonomousBlue extends BaseAutoOpMode {
             arm_servo.setPosition(0.6);
             sleep(200);
 
-            //Strafe to pick up rings
-            encoderStrafeV4(0.5,4,1.0);
-            while(lift_bottom_Right.getState() & lift_bottom_Left.getState()){
-                lift_Motor.setPower(-0.7);
-            }
-            //Feeder on to hopefully pick up 4 rings
-            belt_feed.setPower(-1);
-            shooter_right.setVelocity(intake);
-            shooter_left.setVelocity(intake);
-            sleep(200);
+            encoderDrive(0.7,48,4.0);
 
-            //Drive Forward to second Wobble Goal
-            encoderDrive(1, 75, 5.0);
-            encoderStrafeV4(0.7,12,2.0);
-            encoderDrive(0.7,25,2.0);
-            encoderStrafeV4(0.7,-12,2.0);
-
-            //Pick Up Second Wobble Goal
-            arm_servo.setPosition(0.65);
-            sleep(700);
-            claw_servo.setPosition(.37);
-            sleep(200);
-            arm_servo.setPosition(0.6);
-            sleep(200);
-
-            //Drive backwards to Position C
-            encoderDrive(1, -100, 5.0);
-            encoderStrafeV4(.7, 6, 1.0);
-
-            //Place second Wobble Goal in Position C
-            arm_servo.setPosition(0.65);
-            sleep(500);
-            claw_servo.setPosition(.7);
-            sleep(200);
-            arm_servo.setPosition(0.6);
-            sleep(200);
-
-            //Drive to Parking White Line and Rotate to face the goal.
-            encoderDrive(1, 36, 2.0);
-            DriveTrain(Drive.STOP);
         }
-
     }
 }

@@ -419,9 +419,22 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
             } else{
                 telemetry.addData("Timeout occured","");
                 telemetry.update();
+                timeout = true;
             }
         }
 
+
+    }
+
+    public void checkForTimeout(){
+
+        if(timeout == true){
+            while(opModeIsActive()){
+                telemetry.addData("It timed out", "Did you turn the robot on/off?");
+                telemetry.update();
+                sleep(1000);
+            }
+        }
 
     }
 

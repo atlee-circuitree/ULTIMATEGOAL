@@ -36,6 +36,7 @@ public class SimonsTestAuto1Wobble extends BaseAutoOpMode {
         arm_servo.setPosition(0.55);
         encoderDrive(1, 65, 3.0);
         PIDrotate(-1, 2);
+        checkForTimeout();
         DriveTrain(Drive.STOP);
 
         shooter_right.setVelocity(1700);
@@ -43,7 +44,7 @@ public class SimonsTestAuto1Wobble extends BaseAutoOpMode {
         sleep(700);
         belt_feed.setPower(1);
         sleep(500);
-        encoderStrafeV4(0.3, -16, 4.0);
+        encoderStrafeV4(0.4, -16, 4.0);
         sleep(1000);
         belt_feed.setPower(0);
         shooter_left.setPower(0);
@@ -51,8 +52,10 @@ public class SimonsTestAuto1Wobble extends BaseAutoOpMode {
 
 
         encoderStrafeV4(0.7, 36, 3);
+        //belt_feed.setPower(-1);
         PIDrotate(180, 3.0);
-        encoderDrive(0.5,2,1.0);
+        checkForTimeout();
+        encoderDrive(0.5,4,1.0);
         DriveTrain(Drive.STOP);
         //Lower wobble
         arm_servo.setPosition(0.62);
@@ -88,35 +91,98 @@ public class SimonsTestAuto1Wobble extends BaseAutoOpMode {
                 ringCount = 0;
             }
         }
+        //belt_feed.setPower(0);
 
         if (ringCount == 0) {
             //Drive Backwards to Position A
-            encoderDrive(0.7, -12, 1.0);
+            encoderDrive(0.7, -14, 1.0);
 
             //Place Wobble Goal on Position A
             arm_servo.setPosition(0.65);
             sleep(200);
-            encoderStrafeV4(.4, -5, 2);
             claw_servo.setPosition(.7);
             sleep(200);
             arm_servo.setPosition(0.6);
             sleep(200);
 
-            encoderStrafeV4(0.7,32,3.0);
+            //Go to second wobble
+            encoderStrafeV4(0.6,6,1.5);
+            encoderDrive(1,66,3.0);
+
+            //Pick up second wobble
+            arm_servo.setPosition(0.65);
+            sleep(500);
+            claw_servo.setPosition(.4);
+            sleep(200);
+            arm_servo.setPosition(0.6);
+            sleep(200);
+
+            //Go back to position A
+            encoderDrive(1,-60,3.0);
+            encoderStrafeV4(0.6,-6,2.0);
+
+            //Drop second wobble
+            arm_servo.setPosition(0.65);
+            sleep(500);
+            claw_servo.setPosition(.7);
+            sleep(200);
+            arm_servo.setPosition(0.45);
+            sleep(200);
+
+            encoderStrafeV4(0.6,32,2.0);
+            //encoderDrive(1,-8,1.0);
+
 
         } else if (ringCount == 1) {
 
+            //Feeds 1 ring
+            shooter_left.setVelocity(intake);
+            shooter_right.setVelocity(intake);
+            belt_feed.setPower(-1);
+            sleep(200);
+            encoderDrive(1,12,1.0);
+            sleep(200);
+            shooter_left.setVelocity(0);
+            shooter_right.setVelocity(0);
+            belt_feed.setPower(0);
             //Move to position B
-            encoderDrive(1, -42, 4.0);
-            encoderStrafeV4(.7, 18, 2);
+            encoderDrive(1, -48, 4.0);
+            encoderStrafeV4(.5, 16, 2.0);
 
             //Place Wobble Goal on Position B
             arm_servo.setPosition(0.65);
             sleep(200);
             claw_servo.setPosition(.7);
             sleep(200);
+            //arm_servo.setPosition(0.6);
+            //sleep(200);
 
-            encoderDrive(0.7,24,2.0);
+            //Drive to second wobble
+            encoderDrive(1,78,4.0);
+            encoderStrafeV4(0.5,-12,1.0);
+            //Grab wobble 2
+            arm_servo.setPosition(0.65);
+            sleep(500);
+            claw_servo.setPosition(0.4);
+            sleep(200);
+            arm_servo.setPosition(0.6);
+            sleep(200);
+
+            //Go back to position B
+            encoderDrive(1,-66,3.0);
+            encoderStrafeV4(0.5, 6,1.5);
+
+            //Drop second wobble
+            arm_servo.setPosition(0.65);
+            sleep(500);
+            claw_servo.setPosition(0.7);
+            sleep(200);
+            arm_servo.setPosition(0.6);
+            sleep(200);
+
+            //Go park on line
+            encoderDrive(1,12,1.5);
+
 
 
         } else if (ringCount == 4) {
