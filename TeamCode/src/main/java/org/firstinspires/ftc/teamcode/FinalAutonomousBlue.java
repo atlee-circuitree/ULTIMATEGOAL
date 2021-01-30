@@ -106,30 +106,35 @@ public class FinalAutonomousBlue extends BaseAutoOpMode {
             sleep(200);
 
             //Go to second wobble
-            encoderStrafeV4(0.6,6,1.5);
+            encoderStrafeV4(0.4,12,1.5);
+            PIDrotate(180, .25);
             encoderDrive(1,66,3.0);
 
+
             //Pick up second wobble
-            arm_servo.setPosition(0.65);
+            arm_servo.setPosition(0.67);
             sleep(500);
+            encoderStrafeV4(0.4,-4,1.0);
             claw_servo.setPosition(.4);
             sleep(200);
             arm_servo.setPosition(0.6);
             sleep(200);
 
             //Go back to position A
-            encoderDrive(1,-60,3.0);
-            encoderStrafeV4(0.6,-6,2.0);
+            encoderDrive(1,-54,3.0);
+            encoderStrafeV4(0.6,-8,1.0);
 
             //Drop second wobble
-            arm_servo.setPosition(0.65);
+            arm_servo.setPosition(0.67);
             sleep(500);
             claw_servo.setPosition(.7);
             sleep(200);
             arm_servo.setPosition(0.45);
             sleep(200);
 
-            encoderStrafeV4(0.6,32,2.0);
+            encoderStrafeV4(1,24,1.5);
+            encoderDrive(1,-6,1.0);
+            PIDrotate(0, 2.0);
             //encoderDrive(1,-8,1.0);
 
 
@@ -148,7 +153,7 @@ public class FinalAutonomousBlue extends BaseAutoOpMode {
 
 
             //Move to position B
-            encoderDrive(1, -48, 4.0);
+            encoderDrive(1, -50, 4.0);
             encoderStrafeV4(.6, 14, 2.0);
 
             //Place Wobble Goal on Position B
@@ -160,8 +165,8 @@ public class FinalAutonomousBlue extends BaseAutoOpMode {
             //sleep(200);
 
             //Drive to second wobble
-            encoderDrive(1,88,4.0);
-            encoderStrafeV4(0.6,-10,1.0);
+            encoderDrive(1,90,4.0);
+            encoderStrafeV4(0.6,-8,1.0);
 
             //Grab wobble 2
             arm_servo.setPosition(0.65);
@@ -172,7 +177,7 @@ public class FinalAutonomousBlue extends BaseAutoOpMode {
             sleep(200);
 
             //Go back to position B
-            encoderDrive(1,-80,3.0);
+            encoderDrive(1,-82,3.0);
             encoderStrafeV4(0.6, 16,1.5);
 
             //Drop second wobble
@@ -202,9 +207,8 @@ public class FinalAutonomousBlue extends BaseAutoOpMode {
             arm_servo.setPosition(0.6);
             sleep(200);
 
-            encoderDrive(0.7,36,4.0);
-            encoderDrive(1, 6, 2.5);
-
+            encoderDrive(0.7,48,2.0);
+            encoderDrive(1, 6, 1.0);
         }
     }
 }
