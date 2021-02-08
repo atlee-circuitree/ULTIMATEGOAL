@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.oldteleops;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -48,7 +49,7 @@ import org.firstinspires.ftc.teamcode.BaseOpMode;
  */
 
 @TeleOp(name="TeleOp_V8", group="Linear Opmode")
-
+@Disabled
 public class TeleOpV8 extends BaseOpMode {
 
     // Declare OpMode members.

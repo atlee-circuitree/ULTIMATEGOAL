@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode.examplecodes;
 
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
-import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.AHRS;
-
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.AHRS;
 
 import java.text.DecimalFormat;
 
@@ -20,9 +20,9 @@ import java.text.DecimalFormat;
  * Sensor Status and Timestamp, and World-Frame Linear
  * Acceleration data.
  */
-@TeleOp(name = "Navx Example Code", group = "Sensor")
-@Disabled
-public class NavX_ExampleCode extends OpMode {
+@TeleOp(name = "Navx Example Code Modified", group = "Sensor")
+//@Disabled
+public class NavX_ExampleCode_modified extends OpMode {
 
     private String startDate;
     private ElapsedTime runtime = new ElapsedTime();
@@ -53,6 +53,10 @@ public class NavX_ExampleCode extends OpMode {
      */
     @Override
     public void loop() {
+
+        if(gamepad1.a){
+            navx_device.zeroYaw();
+        }
 
         boolean connected = navx_device.isConnected();
         telemetry.addData("1 navX-Device", connected ?

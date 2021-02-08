@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.navXPIDController;
 
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
@@ -31,6 +32,7 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
  * to reduce the frequency of the updates to the drive system.
  */
 @Autonomous(name = "NavX Straight Driving", group = "Linear Opmode")
+@Disabled
 public class NavXStraightDriving extends BaseAutoOpMode {
     DcMotor leftMotor;
     DcMotor rightMotor;

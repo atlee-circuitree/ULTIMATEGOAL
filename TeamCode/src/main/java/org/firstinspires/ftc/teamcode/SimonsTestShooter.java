@@ -2,13 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.kauailabs.navx.ftc.navXPIDController;
 
 /**
- * Simon's general test opmode
+ * The FINAL BLUE autonomous (Run this in matches)
+ * encoderStrafeV4 POSITIVE distance = strafe to the LEFT, NEGATIVE distance = strafe to the RIGHT
  */
 
 
@@ -35,34 +35,40 @@ public class SimonsTestShooter extends BaseAutoOpMode {
         claw_servo.setPosition(.37);
         lift_Motor.setPower(0);
         arm_servo.setPosition(0.55);
-        encoderDrive(1, 65, 3.0);
-        PIDrotate(-1, 2);
+        encoderDrive(0.7, 62, 3.0);
+        PIDrotate(0, 1.0);
         DriveTrain(Drive.STOP);
 
         shooter_right.setVelocity(1700);
         shooter_left.setVelocity(1700);
         sleep(700);
         belt_feed.setPower(1);
-        sleep(500);
-        encoderStrafeV4(0.3, -16, 4.0);
+        for(int i = 0; i < 2; i++) {
+            sleep(700);
+            belt_feed.setPower(0);
+            encoderStrafeV5(0.3, -8, 4.0);
+            PIDrotate(0,0.5);
+            belt_feed.setPower(1);
+        }
         sleep(1000);
         belt_feed.setPower(0);
         shooter_left.setPower(0);
         shooter_right.setPower(0);
 
-
-        encoderStrafeV4(0.9, 36, 3);
+        PIDrotate(0,0.5);
+        encoderStrafeV5(0.4, 26, 3);
         PIDrotate(180, 3.0);
-        encoderDrive(0.5,2,1.0);
-        arm_servo.setPosition(0.6);
+        encoderDriveNoRamp(0.4,3,1.0);
+        //Lower wobble
+        arm_servo.setPosition(0.62);
         sleep(200);
-        DriveTrain(Drive.STOP);
 
 
         //changed while to if
-        while(lift_bottom_Left.getState() || lift_bottom_Right.getState()){
+        while(lift_bottom_Left.getState() && lift_bottom_Right.getState()){
             lift_Motor.setPower(-0.8);
         }
+        lift_Motor.setPower(0);
         lift_Motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift_Motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -77,140 +83,22 @@ public class SimonsTestShooter extends BaseAutoOpMode {
             ringCount = 4;
         }
         else {
-            while(lift_bottom_Left.getState() || lift_bottom_Right.getState()) {
+            while(lift_bottom_Left.getState() && lift_bottom_Right.getState()) {
                 lift_Motor.setPower(-0.7);
             }
             lift_Motor.setPower(0);
             sleep(200);
-            if (distance_sensor.getDistance(DistanceUnit.MM) < 260) {
+            if (distance_sensor.getDistance(DistanceUnit.MM) < 265) {
                 ringCount = 1;
             } else {
                 ringCount = 0;
             }
         }
-
-        if (ringCount == 0) {
-            //Drive Backwards to Position A
-            encoderDrive(0.7, -8, 1.0);
-
-            //Place Wobble Goal on Position A
-            arm_servo.setPosition(0.65);
+        while(opModeIsActive()){
+            telemetry.addData("ringCount", ringCount);
+            telemetry.addData("Distance", distance_sensor.getDistance(DistanceUnit.MM));
+            telemetry.update();
             sleep(1000);
-            encoderStrafeV4(.7, -5, 2);
-            claw_servo.setPosition(.7);
-            sleep(200);
-            arm_servo.setPosition(0.6);
-            sleep(200);
-
-            //strafe back to position
-            encoderStrafeV4(.7, 10, 2.0);
-            PIDrotate(180,1.0);
-            DriveTrain(Drive.STOP);
-
-            //Drive Forward to second Wobble Goal
-            encoderDrive(1, 62, 5.0);
-
-            //Pick Up Second Wobble Goal
-            arm_servo.setPosition(0.65);
-            sleep(1000);
-            claw_servo.setPosition(.37);
-            sleep(200);
-            arm_servo.setPosition(0.6);
-            sleep(500);
-
-            //Drive backwards to Position A
-            encoderDrive(1, -70, 5.0);
-            encoderStrafeV4(.7, -5, 2.0);
-
-            //Place second Wobble Goal in Position A
-            arm_servo.setPosition(0.65);
-            sleep(1000);
-            claw_servo.setPosition(.7);
-            sleep(200);
-            arm_servo.setPosition(0.47);
-            sleep(200);
-
-            //Drive to Parking White Line and Rotate to face the goal.
-            encoderStrafeV4(1,24,3.0);
-            DriveTrain(Drive.STOP);
-
-        } else if (ringCount == 1) {
-
-            PIDrotate(-90,4.0);
-            encoderStrafe(0.7,-36,2.5);
-
-            //Place Wobble Goal on Position B
-            arm_servo.setPosition(0.65);
-            sleep(1000);
-            claw_servo.setPosition(.7);
-            sleep(200);
-
-            //Drive Forward to second Wobble Goal
-            PIDrotate(90,4.0);
-            encoderDrive(0.7,-4,1.0);
-            encoderStrafeV4(1,60,3.0);
-
-            claw_servo.setPosition(0.37);
-            sleep(200);
-            arm_servo.setPosition(0.6);
-            sleep(200);
-            encoderStrafeV4(1,-60,3.0);
-            claw_servo.setPosition(0.7);
-            sleep(2000);
-
-
-
-
-        } else if (ringCount == 4) {
-
-            //Drive Backwards to Position C
-            encoderDrive(1, -64, 2.5);
-
-            //Place Wobble Goal on Position C
-            arm_servo.setPosition(0.65);
-            sleep(1000);
-            claw_servo.setPosition(.7);
-            sleep(200);
-            arm_servo.setPosition(0.6);
-            sleep(200);
-
-            //Strafe to not hit the second wobble
-            encoderStrafeV4(0.5,20,2.0);
-
-            //Feeder on to hopefully pick up 4 rings
-            //belt_feed.setPower(-1);
-            //shooter_right.setVelocity(intake);
-            //shooter_left.setVelocity(intake);
-            //sleep(200);
-
-            //Drive Forward to second Wobble Goal
-            encoderDrive(1, 114, 5.0);
-            encoderStrafeV4(0.5,-20,2.0);
-
-            //Pick Up Second Wobble Goal
-            arm_servo.setPosition(0.65);
-            sleep(1000);
-            claw_servo.setPosition(.37);
-            sleep(200);
-            arm_servo.setPosition(0.6);
-            sleep(200);
-
-            //Drive backwards to Position C
-            encoderDrive(1, -100, 5.0);
-            //encoderStrafeV4(.7, -5, 2.0);
-
-            //Place second Wobble Goal in Position C
-            arm_servo.setPosition(0.65);
-            sleep(1000);
-            claw_servo.setPosition(.7);
-            sleep(200);
-            arm_servo.setPosition(0.6);
-            sleep(200);
-
-            //Drive to Parking White Line and Rotate to face the goal.
-            encoderDrive(1, 36, 2.0);
-            PIDrotate(180, 3.0);
-            DriveTrain(Drive.STOP);
         }
     }
 }

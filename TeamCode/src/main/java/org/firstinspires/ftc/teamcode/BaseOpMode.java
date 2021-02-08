@@ -100,9 +100,9 @@ public abstract class BaseOpMode extends LinearOpMode {
     //turn motor at 200 ticks per second
     public double motorVelocity = 200;
 
-    static final double     COUNTS_PER_MOTOR_REV    = 383.6 ;    // eg: GOBUILDA Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 2 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 3.93701 ;     // For figuring circumference
+    static final double     COUNTS_PER_MOTOR_REV    = 383.6;    // eg: GOBUILDA Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 1;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 3.93701;     // For figuring circumference
     public static final double     COUNTS_PER_INCH  = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * Math.PI);
     static final double     DRIVE           = 1;

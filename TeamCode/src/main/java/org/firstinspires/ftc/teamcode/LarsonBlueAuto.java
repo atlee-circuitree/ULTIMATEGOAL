@@ -1,23 +1,26 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
-* Simon's general test opmode
+* Good luck to whoever has to fix and rewrite this - Simon 2/6/2021
 */
 
 
 
 @Autonomous(name = "Larson'sBlueAuto", group = "Linear Opmode")
+@Disabled
 public class LarsonBlueAuto extends BaseAutoOpMode {
 
     private int ringCount = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        /*
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -78,7 +81,7 @@ public class LarsonBlueAuto extends BaseAutoOpMode {
             }
 
 
-         */
+
 
 
 
@@ -254,6 +257,8 @@ public class LarsonBlueAuto extends BaseAutoOpMode {
         PIDrotate(180, 3.0);
         DriveTrain(Drive.STOP);
             }
+
+         */
 
 
         }

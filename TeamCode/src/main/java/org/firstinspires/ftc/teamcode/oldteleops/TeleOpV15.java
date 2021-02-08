@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.oldteleops;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -40,7 +41,7 @@ import org.firstinspires.ftc.teamcode.BaseOpMode;
  */
 
 @TeleOp(name="TeleOpV15", group="Linear Opmode")
-
+@Disabled
 public class TeleOpV15 extends BaseOpMode {
 
     // declare motor speed variables

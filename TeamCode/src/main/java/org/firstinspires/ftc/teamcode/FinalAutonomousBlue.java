@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
- * Simon's general test opmode
+ * The FINAL BLUE autonomous (Run this in matches)
  * encoderStrafeV4 POSITIVE distance = strafe to the LEFT, NEGATIVE distance = strafe to the RIGHT
  */
 
@@ -36,7 +36,6 @@ public class FinalAutonomousBlue extends BaseAutoOpMode {
         arm_servo.setPosition(0.55);
         encoderDrive(1, 65, 3.0);
         PIDrotate(-1, 2);
-        //checkForTimeout();
         DriveTrain(Drive.STOP);
 
         shooter_right.setVelocity(1700);
@@ -44,7 +43,7 @@ public class FinalAutonomousBlue extends BaseAutoOpMode {
         sleep(700);
         belt_feed.setPower(1);
         sleep(500);
-        encoderStrafeV4(0.5, -16, 4.0); // changed from .4 to .5
+        encoderStrafeV4(0.5, -16, 4.0);
         sleep(1000);
         belt_feed.setPower(0);
         shooter_left.setPower(0);
@@ -54,7 +53,6 @@ public class FinalAutonomousBlue extends BaseAutoOpMode {
         encoderStrafeV4(0.7, 36, 3);
         //belt_feed.setPower(-1);
         PIDrotate(180, 3.0);
-        //checkForTimeout();
         encoderDrive(0.5,4,1.0);
         DriveTrain(Drive.STOP);
         //Lower wobble
@@ -107,7 +105,7 @@ public class FinalAutonomousBlue extends BaseAutoOpMode {
 
             //Go to second wobble
             encoderStrafeV4(0.4,12,1.5);
-            PIDrotate(180, .25);
+            PIDrotate(180, .5);
             encoderDrive(1,66,3.0);
 
 
@@ -134,7 +132,7 @@ public class FinalAutonomousBlue extends BaseAutoOpMode {
 
             encoderStrafeV4(1,24,1.5);
             encoderDrive(1,-6,1.0);
-            PIDrotate(0, 2.0);
+            PIDrotate(180, 2.0);
             //encoderDrive(1,-8,1.0);
 
 
@@ -170,7 +168,7 @@ public class FinalAutonomousBlue extends BaseAutoOpMode {
 
             //Grab wobble 2
             arm_servo.setPosition(0.65);
-            sleep(500);
+            sleep(700);
             claw_servo.setPosition(0.4);
             sleep(200);
             arm_servo.setPosition(0.6);
@@ -189,9 +187,8 @@ public class FinalAutonomousBlue extends BaseAutoOpMode {
             sleep(200);
 
             //Go park on line
-
             encoderStrafeV4(0.6, 36,1.5);
-
+            PIDrotate(180,1.0);
 
 
         } else if (ringCount == 4) {
@@ -209,6 +206,7 @@ public class FinalAutonomousBlue extends BaseAutoOpMode {
 
             encoderDrive(0.7,48,2.0);
             encoderDrive(1, 6, 1.0);
+            PIDrotate(180,1.0);
         }
     }
 }

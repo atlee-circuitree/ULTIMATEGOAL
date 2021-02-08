@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -29,6 +30,7 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
  * to reduce the frequency of the updates to the drive system.
  */
 @Autonomous(name = "NavX PID Rotate", group = "Linear Opmode")
+@Disabled
 public class NavXPIDRotate extends BaseAutoOpMode {
     DcMotor leftMotor;
     DcMotor rightMotor;

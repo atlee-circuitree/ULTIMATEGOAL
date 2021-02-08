@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.oldteleops;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.BaseOpMode;
@@ -40,7 +41,7 @@ import org.firstinspires.ftc.teamcode.BaseOpMode;
  */
 
 @TeleOp(name="TeleOp_V12", group="Linear Opmode")
-
+@Disabled
 public class TeleOpV12 extends BaseOpMode {
 
     // Declare OpMode members. Already declared in base op mode.

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
- * Simon's general test opmode
+ * Good luck to whoever has to fix and rewrite this - Simon 2/6/2021
  */
 
 
@@ -19,6 +19,7 @@ public class FinalAutonomousRed extends BaseAutoOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        /*
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -95,5 +96,7 @@ public class FinalAutonomousRed extends BaseAutoOpMode {
             arm_servo.setPosition(0.47);
             sleep(2500);
         }
+
+         */
     }
 }

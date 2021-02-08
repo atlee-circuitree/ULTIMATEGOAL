@@ -88,111 +88,6 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
     }
 
 
-
-    public void encoderStrafe( double speed, double distance, double timeout) {
-        int RevEncoderTarget;
-        if (opModeIsActive()) {
-            RevEncoderTarget = belt_feed.getCurrentPosition() + (int) (distance * OMNI_COUNTS_PER_INCH);
-
-            belt_feed.setTargetPosition(RevEncoderTarget);
-
-            belt_feed.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            runtime.reset();
-            front_left.setPower(-Math.abs(speed));
-            front_right.setPower(Math.abs(speed));
-            rear_left.setPower(Math.abs(speed));
-            rear_right.setPower(-Math.abs(speed));
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeout) && (belt_feed.isBusy()))
-            {
-
-                // Display it for the driver.
-                telemetry.addData("Path3", "Running to %7d", RevEncoderTarget);
-                telemetry.addData("Path4", "Running at %7d", belt_feed.getCurrentPosition());
-                telemetry.update();
-            }
-            DriveTrain(Drive.STOP);
-            belt_feed.setPower(0);
-
-            SetDriveMode(Mode.RUN_WITH_ENCODER);
-        }
-    }
-    public void encoderStrafeV2( double speed, double distance, double timeout) {
-        int RevEncoderTarget;
-        int FLTest;
-        if (opModeIsActive()) {
-            RevEncoderTarget = belt_feed.getCurrentPosition() + (int) (distance * OMNI_COUNTS_PER_INCH);
-            FLTest = front_left.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH * 100);
-
-            belt_feed.setTargetPosition(RevEncoderTarget);
-            front_left.setTargetPosition(FLTest);
-
-            front_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            belt_feed.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            runtime.reset();
-            front_left.setPower(-Math.abs(speed));
-            front_right.setPower(Math.abs(speed));
-            rear_left.setPower(Math.abs(speed));
-            rear_right.setPower(-Math.abs(speed));
-            belt_feed.setPower(-Math.abs(speed));
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeout) && (belt_feed.isBusy() && front_left.isBusy()))
-            {
-                // Display it for the driver.
-                telemetry.addData("Path3", "Running to %7d :%7d", RevEncoderTarget, FLTest);
-                telemetry.addData("Path4", "Running at %7d", belt_feed.getCurrentPosition(),
-                        front_left.getCurrentPosition());
-                telemetry.update();
-            }
-            DriveTrain(Drive.STOP);
-            belt_feed.setPower(0);
-
-            SetDriveMode(Mode.RUN_WITH_ENCODER);
-        }
-    }
-
-    public void encoderStrafeV3( double speed, double distance, double timeout) {
-        int RevEncoderTarget;
-        int FLTest;
-        if (opModeIsActive()) {
-            RevEncoderTarget = belt_feed.getCurrentPosition() + (int) (distance * OMNI_COUNTS_PER_INCH);
-
-          //  belt_feed.setTargetPosition(RevEncoderTarget);
-
-            runtime.reset();
-
-            if (belt_feed.getCurrentPosition() < RevEncoderTarget) {
-                front_left.setPower(-Math.abs(speed));
-                front_right.setPower(Math.abs(speed));
-                rear_left.setPower(Math.abs(speed));
-                rear_right.setPower(-Math.abs(speed));
-            }
-            else if (belt_feed.getCurrentPosition() > RevEncoderTarget) {
-                front_left.setPower(Math.abs(speed));
-                front_right.setPower(-Math.abs(speed));
-                rear_left.setPower(-Math.abs(speed));
-                rear_right.setPower(Math.abs(speed));
-            }
-            else {
-                DriveTrain(Drive.STOP);
-            }
-
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeout))
-            {
-                // Display it for the driver.
-                telemetry.addData("Path3", "Running to %7d", RevEncoderTarget);
-                telemetry.addData("Path4", "Running at %7d", belt_feed.getCurrentPosition());
-                telemetry.update();
-            }
-            DriveTrain(Drive.STOP);
-            belt_feed.setPower(0);
-
-          //  SetDriveMode(Mode.RUN_WITH_ENCODER);
-        }
-    }
     public void encoderStrafeV4( double speed, double distance, double timeout) {
         int RevEncoderTarget;
 
@@ -224,11 +119,55 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
             //  SetDriveMode(Mode.RUN_WITH_ENCODER);
         }
     }
-    public void encoderDrive( double speed, double distance, double timeoutS) {
+
+
+    public void encoderStrafeV5(double speed, double distance, double timeout) {
+
+        int RevEncoderTarget;
+
+        if (opModeIsActive()) {
+            RevEncoderTarget = belt_feed.getCurrentPosition() + (int) (distance * OMNI_COUNTS_PER_INCH);
+
+            runtime.reset();
+            if(distance > 0) {
+                while (opModeIsActive() && (runtime.seconds() < timeout) && (belt_feed.getCurrentPosition() < RevEncoderTarget)) {
+                    front_left.setPower(-Math.abs(speed));
+                    front_right.setPower(Math.abs(speed));
+                    rear_left.setPower(Math.abs(speed));
+                    rear_right.setPower(-Math.abs(speed));
+                    telemetry.addData("Path3", "Running to %7d", RevEncoderTarget);
+                    telemetry.addData("Path4", "Running at %7d", belt_feed.getCurrentPosition());
+                    telemetry.update();
+                }
+            }
+            else {
+                while (opModeIsActive() && (runtime.seconds() < timeout) && (belt_feed.getCurrentPosition() > RevEncoderTarget)) {
+                    front_left.setPower(Math.abs(speed));
+                    front_right.setPower(-Math.abs(speed));
+                    rear_left.setPower(-Math.abs(speed));
+                    rear_right.setPower(Math.abs(speed));
+                    telemetry.addData("Path3", "Running to %7d", RevEncoderTarget);
+                    telemetry.addData("Path4", "Running at %7d", belt_feed.getCurrentPosition());
+                    telemetry.update();
+                }
+            }
+            DriveTrain(Drive.STOP);
+
+        }
+    }
+
+
+
+
+
+
+    public void encoderDrive(double speed, double distance, double timeoutS) {
         int newFLTarget;
         int newRLTarget;
         int newRRTarget;
         int newFRTarget;
+        double rampSpeed;
+        rampSpeed = speed / 50;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
@@ -236,8 +175,84 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
             // Determine new target position, and pass to motor controller
             newFLTarget = front_left.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
             newFRTarget = front_right.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
-            newRRTarget = rear_right.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
-            newRLTarget = rear_left.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+            newRRTarget = rear_right.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
+            newRLTarget = rear_left.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
+
+            front_left.setTargetPosition(newFLTarget);
+            front_right.setTargetPosition(newFRTarget);
+            rear_left.setTargetPosition(newRLTarget);
+            rear_right.setTargetPosition(newRRTarget);
+
+            // Turn On RUN_TO_POSITION
+            front_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            front_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rear_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rear_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            front_left.setPower(Math.abs(rampSpeed));
+            front_right.setPower(Math.abs(rampSpeed));
+            rear_left.setPower(Math.abs(rampSpeed));
+            rear_right.setPower(Math.abs(rampSpeed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() && (runtime.seconds() < timeoutS) && (rear_left.isBusy() && front_left.isBusy() && front_right.isBusy() && rear_right.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d :%7d", newRLTarget, newFLTarget, newRRTarget, newFRTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d", front_left.getCurrentPosition(), front_right.getCurrentPosition(), rear_left.getCurrentPosition(), rear_right.getCurrentPosition());
+                telemetry.update();
+
+                front_left.setPower(Math.abs(rampSpeed));
+                front_right.setPower(Math.abs(rampSpeed));
+                rear_left.setPower(Math.abs(rampSpeed));
+                rear_right.setPower(Math.abs(rampSpeed));
+
+                if(distance > 0 && front_left.getCurrentPosition() > (newFLTarget/100)*50){
+                    rampSpeed = rampSpeed - 4 * (speed/50);
+                    telemetry.addData("rampSpeed", rampSpeed);
+                }
+                else if(distance < 0 && front_left.getCurrentPosition() < (newFLTarget/100)*50){
+                    rampSpeed = rampSpeed - 4 * (speed/50);
+                    telemetry.addData("rampSpeed", rampSpeed);
+                }
+                else if (rampSpeed < speed) {
+                    rampSpeed = rampSpeed + 2 * (speed / 50);
+                    telemetry.addData("rampSpeed",rampSpeed);
+                }
+            }
+            // Stop all motion;
+            DriveTrain(Drive.STOP);
+
+            // Turn off RUN_TO_POSITION
+            SetDriveMode(Mode.RUN_WITHOUT_ENCODERS);
+            //  sleep(250);   // optional pause after each move
+
+        }
+    }
+
+
+    public void encoderDriveNoRamp(double speed, double distance, double timeoutS) {
+        int newFLTarget;
+        int newRLTarget;
+        int newRRTarget;
+        int newFRTarget;
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newFLTarget = front_left.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
+            newFRTarget = front_right.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
+            newRRTarget = rear_right.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
+            newRLTarget = rear_left.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
 
             front_left.setTargetPosition(newFLTarget);
             front_right.setTargetPosition(newFRTarget);
@@ -263,98 +278,35 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (rear_left.isBusy() && front_left.isBusy() && front_right.isBusy() && rear_right.isBusy()))
-            {
+            while (opModeIsActive() && (runtime.seconds() <= timeoutS) && (rear_left.isBusy() && front_left.isBusy() && front_right.isBusy() && rear_right.isBusy())) {
+
                 // Display it for the driver.
                 telemetry.addData("Path1", "Running to %7d :%7d", newRLTarget, newFLTarget, newRRTarget, newFRTarget);
-                telemetry.addData("Path2", "Running at %7d :%7d", front_left.getCurrentPosition(),
-                        front_right.getCurrentPosition(),
-                        rear_left.getCurrentPosition(),
-                        rear_right.getCurrentPosition());
+                telemetry.addData("Path2", "Running at %7d :%7d", front_left.getCurrentPosition(), front_right.getCurrentPosition(), rear_left.getCurrentPosition(), rear_right.getCurrentPosition());
+                telemetry.addData("Runtime", runtime.seconds());
                 telemetry.update();
+
+                front_left.setPower(Math.abs(speed));
+                front_right.setPower(Math.abs(speed));
+                rear_left.setPower(Math.abs(speed));
+                rear_right.setPower(Math.abs(speed));
+
             }
             // Stop all motion;
             DriveTrain(Drive.STOP);
 
             // Turn off RUN_TO_POSITION
-            SetDriveMode(Mode.RUN_WITH_ENCODER);
+            SetDriveMode(Mode.RUN_WITHOUT_ENCODERS);
             //  sleep(250);   // optional pause after each move
 
         }
     }
-
-
-    //Not Working
-    public void encoderStrafeV5( double speed, double distance, double timeoutS) {
-        int newFLTarget;
-        int newRLTarget;
-        int newRRTarget;
-        int newFRTarget;
-
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            newFLTarget = front_left.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
-            newFRTarget = front_right.getCurrentPosition() + (int) (-distance * COUNTS_PER_INCH);
-            newRRTarget = rear_right.getCurrentPosition() + (int)(-distance * COUNTS_PER_INCH);
-            newRLTarget = rear_left.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
-
-            front_left.setTargetPosition(newFLTarget);
-            front_right.setTargetPosition(newFRTarget);
-            rear_left.setTargetPosition(newRLTarget);
-            rear_right.setTargetPosition(newRRTarget);
-
-            // Turn On RUN_TO_POSITION
-            front_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            front_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rear_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rear_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-            front_left.setPower(speed);
-            front_right.setPower(-speed);
-            rear_left.setPower(-speed);
-            rear_right.setPower(speed);
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (rear_left.isBusy() && front_left.isBusy() && front_right.isBusy() && rear_right.isBusy()))
-            {
-                // Display it for the driver.
-                telemetry.addData("Path1", "Running to %7d :%7d", newRLTarget, newFLTarget, newRRTarget, newFRTarget);
-                telemetry.addData("Path2", "Running at %7d :%7d", front_left.getCurrentPosition(),
-                        front_right.getCurrentPosition(),
-                        rear_left.getCurrentPosition(),
-                        rear_right.getCurrentPosition());
-                telemetry.update();
-            }
-            // Stop all motion;
-            DriveTrain(Drive.STOP);
-
-            // Turn off RUN_TO_POSITION
-            SetDriveMode(Mode.RUN_WITH_ENCODER);
-            //  sleep(250);   // optional pause after each move
-
-        }
-    }
-
-
 
     public void PIDrotate(double target, double cutoffTime) throws InterruptedException {
 
         final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
         final double TARGET_ANGLE_DEGREES = target;
-        final double TOLERANCE_DEGREES = 2.0;
+        final double TOLERANCE_DEGREES = 1.0;
         final double MIN_MOTOR_OUTPUT_VALUE = -1.0;
         final double MAX_MOTOR_OUTPUT_VALUE = 1.0;
         final double YAW_PID_P = 0.005;
@@ -363,7 +315,6 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
         //int DEVICE_TIMEOUT_MS =500;
         //int problemChild = 0;
         ElapsedTime runtime = new ElapsedTime();
-
         /* Configure the PID controller */
         yawPIDController.setSetpoint(TARGET_ANGLE_DEGREES);
         yawPIDController.setContinuous(true);
@@ -376,36 +327,33 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
 
         while (runtime.time() <= cutoffTime) {
             if(yawPIDController.waitForNewUpdate(yawPIDResult, 500)){
-                double output = yawPIDResult.getOutput()*2;
-                //if(target < 0){
-                //    output = output * -1;
-                //}
-                if (output < 0) {
-                    /* Rotate Left */
-                    if(target < 0){
-                        output = output * -1;
+
+                double output = yawPIDResult.getOutput()*1.7;
+
+                if(Math.abs(output) < 0.1){
+                    if(output > 0){
+                        output = 0.1;
                     }
-                    telemetry.addData("PID Left", yawPIDResult.getOutput());
-                    front_left.setPower(-output);
-                    front_right.setPower(output);
-                    rear_left.setPower(-output);
-                    rear_right.setPower(output);
-                    if(target < 0){
-                        output = output * -1;
+                    else{
+                        output = -0.1;
                     }
-                } else if (output > 0) {
-                    /* Rotate Right */
-                    if(target < 0){
-                        output = output * -1;
+                }
+                else if(Math.abs(output) > 1){
+                    if(output > 0){
+                        output = 1;
                     }
-                    telemetry.addData("PID Right", yawPIDResult.getOutput());
+                    else{
+                        output = -1;
+                    }
+                }
+
+                if(!yawPIDController.isOnTarget()){
+                    telemetry.addData("PID output", output);
                     front_left.setPower(output);
                     front_right.setPower(-output);
                     rear_left.setPower(output);
                     rear_right.setPower(-output);
-                    if(target < 0){
-                        output = output * -1;
-                    }
+
                 } else {
                     telemetry.addData("PID On Point", yawPIDResult.getOutput());
                     front_left.setPower(0);
@@ -415,7 +363,6 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
                 }
                 telemetry.addData("NavX Yaw: ", navx_centered.getYaw());
                 telemetry.update();
-                //problemChild++;
             } else{
                 telemetry.addData("Timeout occured","");
                 telemetry.update();
@@ -437,10 +384,6 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
         }
 
     }
-
-
-
-
 
 
     public void rotate(int degrees, double speed){

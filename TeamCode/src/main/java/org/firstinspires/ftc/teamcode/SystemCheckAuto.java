@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import java.util.Set;
 
 
 @Autonomous(name = "System Check Auto", group = "Linear Opmode")
+@Disabled
 public class SystemCheckAuto extends BaseAutoOpMode {
 
     @Override

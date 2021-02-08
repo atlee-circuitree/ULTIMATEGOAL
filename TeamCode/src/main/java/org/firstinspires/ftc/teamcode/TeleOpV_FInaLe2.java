@@ -54,6 +54,7 @@ public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
 
     boolean clawPos = true;
     double LiftM;
+    boolean slowmode = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -178,7 +179,7 @@ public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
         LiftM = Math.max(-motorMax, Math.min(LiftM,motorMax));
 
         if(Y2 < 0){
-            if(lift_bottom_Left.getState() | lift_bottom_Right.getState()){
+            if(lift_bottom_Left.getState() && lift_bottom_Right.getState()){
                 lift_Motor.setPower(LiftM);
             }
         }
@@ -247,14 +248,15 @@ public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
     }
     public void AutoRingShoot2(){
         if(gamepad1.dpad_left) {
+            navx_centered.zeroYaw();
+            encoderDrive(1,55,3.0);
             shooter_right.setVelocity(1700);
             shooter_left.setVelocity(1700);
-            encoderStrafeV4(0.5, -45, 4);
+            encoderStrafeV4(0.6, -45, 4);
            // PIDrotate(1, 2);
             belt_feed.setPower(1);
             sleep(700);
             encoderStrafeV4(0.3, -13, 4.0);
-            sleep(2000);
             belt_feed.setPower(0);
             shooter_left.setPower(0);
             shooter_right.setPower(0);
@@ -301,18 +303,16 @@ public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
         final double v3 = r * Math.sin(robotAngle) + rightX;
         final double v4 = r * Math.cos(robotAngle) - rightX;
 
+        if(gamepad1.left_stick_button || gamepad1.right_stick_button){
+            slowmode = !slowmode;
+            sleep(200);
+        }
 
-        if (gamepad1.right_stick_button) {
+        if (slowmode) {
             front_left.setPower(v1/2);
             front_right.setPower(v2/2);
             rear_left.setPower(v3/2);
             rear_right.setPower(v4/2);
-        }
-        else if (gamepad1.left_stick_button) {
-            front_left.setPower(v1 / 2);
-            front_right.setPower(v2 / 2);
-            rear_left.setPower(v3 / 2);
-            rear_right.setPower(v4 / 2);
         }
         else {
             front_left.setPower(v1*2);
