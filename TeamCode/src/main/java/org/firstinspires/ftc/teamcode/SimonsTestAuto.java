@@ -41,7 +41,7 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         claw_servo.setPosition(.37);
         lift_Motor.setPower(0);
         arm_servo.setPosition(0.55);
-        encoderDrive(1, 62, 3.0); //changed from .6 to 1
+        encoderDrive(.6, 62, 3.0); //changed from .6 to 1
         PIDrotate(0, .5);
         DriveTrain(Drive.STOP);
         //Shoot Left Peg
@@ -53,14 +53,14 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         belt_feed.setPower(0);
 
         //Shoot Middle Peg
-        encoderStrafeV5(0.5, -6, 1.0); //changed from .35 to .5
+        encoderStrafeV5(0.35, -6, 1.0); //changed from .35 to .5
         PIDrotate(0, 1);
         belt_feed.setPower(1);
         sleep(750);
         belt_feed.setPower(0);
 
        //Shoot Right Peg
-        encoderStrafeV5(0.5, -5, 1.0);
+        encoderStrafeV5(0.35, -5, 1.0);
         PIDrotate(0, 1);
         belt_feed.setPower(1);
         sleep(1500);
@@ -71,7 +71,7 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         DriveTrain(Drive.STOP);
 
         //Move towards Ring Stack
-        encoderStrafeV5(0.5, 20, 3);
+        encoderStrafeV5(0.35, 20, 3);
         DriveTrain(Drive.STOP);
         PIDrotate(180, 1.5);
         DriveTrain(Drive.STOP);
