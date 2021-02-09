@@ -65,7 +65,7 @@ public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
-
+        navx_centered.zeroYaw();
         arm_servo.setPosition(0.55);
 
         // run until the end of the match (driver presses STOP)
@@ -248,15 +248,31 @@ public class TeleOpV_FInaLe2 extends BaseAutoOpMode {
     }
     public void AutoRingShoot2(){
         if(gamepad1.dpad_left) {
-            navx_centered.zeroYaw();
-            encoderDrive(1,55,3.0);
+            //rotate(0,.5);
+            //encoderDrive(.6,62,3.0);
+            encoderStrafeV4(0.3, -40, 4);
+            rotate(0, .5);
+
+            //Shoot Left Peg
             shooter_right.setVelocity(1700);
             shooter_left.setVelocity(1700);
-            encoderStrafeV4(0.6, -45, 4);
-           // PIDrotate(1, 2);
+            sleep(700);
             belt_feed.setPower(1);
             sleep(700);
-            encoderStrafeV4(0.3, -13, 4.0);
+            belt_feed.setPower(0);
+
+            //Shoot Middle Peg
+            encoderStrafeV5(0.3, -6, 1.0);
+            DriveTrain(Drive.STOP);
+            belt_feed.setPower(1);
+            sleep(1000);
+            belt_feed.setPower(0);
+
+            //Shoot Right Peg
+            encoderStrafeV5(0.3, -6, 1.0);
+            DriveTrain(Drive.STOP);
+            belt_feed.setPower(1);
+            sleep(1200);
             belt_feed.setPower(0);
             shooter_left.setPower(0);
             shooter_right.setPower(0);

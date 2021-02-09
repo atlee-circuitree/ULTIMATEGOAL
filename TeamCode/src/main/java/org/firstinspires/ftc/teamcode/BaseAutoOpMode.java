@@ -159,8 +159,6 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
 
 
 
-
-
     public void encoderDrive(double speed, double distance, double timeoutS) {
         int newFLTarget;
         int newRLTarget;
@@ -349,10 +347,10 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
 
                 if(!yawPIDController.isOnTarget()){
                     telemetry.addData("PID output", output);
-                    front_left.setPower(output);
-                    front_right.setPower(-output);
-                    rear_left.setPower(output);
-                    rear_right.setPower(-output);
+                    front_left.setPower(output*.9);
+                    front_right.setPower(-output*.9);
+                    rear_left.setPower(output*.9);
+                    rear_right.setPower(-output*.9);
 
                 } else {
                     telemetry.addData("PID On Point", yawPIDResult.getOutput());
@@ -364,7 +362,7 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
                 telemetry.addData("NavX Yaw: ", navx_centered.getYaw());
                 telemetry.update();
             } else{
-                telemetry.addData("Timeout occured","");
+                telemetry.addData("Timeout occurred","");
                 telemetry.update();
                 timeout = true;
             }
