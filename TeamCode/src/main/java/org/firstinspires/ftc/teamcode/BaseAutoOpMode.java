@@ -300,6 +300,99 @@ public abstract class BaseAutoOpMode extends BaseOpMode {
         }
     }
 
+    public void encoderPIDDrive(double speed, double distance, double targetAngle, double timeout) throws InterruptedException {
+
+        final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
+        final double TARGET_ANGLE_DEGREES = targetAngle;
+        final double TOLERANCE_DEGREES = 1.0;
+        final double MIN_MOTOR_OUTPUT_VALUE = -1.0;
+        final double MAX_MOTOR_OUTPUT_VALUE = 1.0;
+        final double YAW_PID_P = 0.005;
+        final double YAW_PID_I = 0.0;
+        final double YAW_PID_D = 0.0;
+        ElapsedTime runtime = new ElapsedTime();
+
+        /* Configure the PID controller */
+        yawPIDController.setSetpoint(TARGET_ANGLE_DEGREES);
+        yawPIDController.setContinuous(true);
+        yawPIDController.setOutputRange(MIN_MOTOR_OUTPUT_VALUE, MAX_MOTOR_OUTPUT_VALUE);
+        yawPIDController.setTolerance(navXPIDController.ToleranceType.ABSOLUTE, TOLERANCE_DEGREES);
+        yawPIDController.setPID(YAW_PID_P, YAW_PID_I, YAW_PID_D);
+        yawPIDController.enable(true);
+
+        navXPIDController.PIDResult yawPIDResult = new navXPIDController.PIDResult();
+
+        int newFLTarget;
+        int newRLTarget;
+        int newRRTarget;
+        int newFRTarget;
+        double rampSpeed = speed / 20;
+
+        newFLTarget = front_left.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
+        newFRTarget = front_right.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
+        newRRTarget = rear_right.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
+        newRLTarget = rear_left.getCurrentPosition() + (int) (distance * COUNTS_PER_INCH);
+
+        front_left.setTargetPosition(newFLTarget);
+        front_right.setTargetPosition(newFRTarget);
+        rear_left.setTargetPosition(newRLTarget);
+        rear_right.setTargetPosition(newRRTarget);
+
+        // Turn On RUN_TO_POSITION
+        front_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        front_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rear_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rear_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        while ((runtime.time() < timeout) && (rear_left.isBusy() && front_left.isBusy() && front_right.isBusy() && rear_right.isBusy()) && opModeIsActive()){
+            if (yawPIDController.waitForNewUpdate(yawPIDResult, 500)) {
+
+                if(distance > 0 && front_left.getCurrentPosition() > (newFLTarget/100)*50){
+                    rampSpeed = rampSpeed - 4 * (speed/20);
+                    telemetry.addData("rampSpeed", rampSpeed);
+                }
+                else if(distance < 0 && front_left.getCurrentPosition() < (newFLTarget/100)*50){
+                    rampSpeed = rampSpeed - 4 * (speed/20);
+                    telemetry.addData("rampSpeed", rampSpeed);
+                }
+                else if (rampSpeed < speed) {
+                    rampSpeed = rampSpeed + 2 * (speed/20);
+                    telemetry.addData("rampSpeed",rampSpeed);
+                }
+
+                if (yawPIDResult.isOnTarget()) {
+                    front_left.setPower(rampSpeed);
+                    front_right.setPower(rampSpeed);
+                    rear_left.setPower(rampSpeed);
+                    rear_right.setPower(rampSpeed);
+                } else {
+                    double output = yawPIDResult.getOutput()*2;
+                    if (output < 0) {
+                        /* Rotate Left */
+                        front_left.setPower(rampSpeed - output);
+                        front_right.setPower(rampSpeed + output);
+                        rear_left.setPower(rampSpeed - output);
+                        rear_right.setPower(rampSpeed + output);
+                    } else {
+                        /* Rotate Right */
+                        front_left.setPower(rampSpeed + output);
+                        front_right.setPower(rampSpeed - output);
+                        rear_left.setPower(rampSpeed + output);
+                        rear_right.setPower(rampSpeed - output);
+                    }
+                }
+            } else {
+                /* A timeout occurred */
+                telemetry.addData("navXRotateToAnglePIDOp", "Yaw PID waitForNewUpdate() TIMEOUT.");
+            }
+        }
+    }
+
+
+
+
+
     public void PIDrotate(double target, double cutoffTime) throws InterruptedException {
 
         final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
