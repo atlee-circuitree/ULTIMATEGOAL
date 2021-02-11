@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 /**
  * Simon's general test opmode
  * encoderStrafeV4 POSITIVE distance = strafe to the LEFT, NEGATIVE distance = strafe to the RIGHT
- */
+ * */
 
 
 
@@ -72,7 +72,7 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         DriveTrain(Drive.STOP);
 
         //Move towards Ring Stack
-        encoderStrafeV5(0.4, 21, 3);
+        encoderStrafeV5(0.4, 22, 3);
         PIDrotate(180, 2);
 
 
@@ -117,8 +117,8 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         if (ringCount == 0) {
             //Drive Backwards to Position A
             PIDrotate(180, .5);
-            encoderDrive(0.75, -11, 2.0);
-            encoderStrafeV5(0.5, -5, 1.0);
+            encoderDrive(0.75, -13, 2.0);
+            encoderStrafeV5(0.5, -3, 1.0);
 
             //Place Wobble Goal on Position A
             arm_servo.setPosition(0.65);
@@ -129,24 +129,25 @@ public class SimonsTestAuto extends BaseAutoOpMode {
             //sleep(200);
 
             //Go to second wobble
-            encoderStrafeV5(0.5, 10, 1.5);
+            encoderStrafeV5(0.5, 12, 1.5);
             PIDrotate(180, 1);
-            encoderDrive(0.6, 65, 3.0);
+            encoderDrive(0.6, 70, 4.0);
             DriveTrain(Drive.STOP);
 
 
             //Pick up second wobble
            // arm_servo.setPosition(0.67);
            // sleep(500);
-            encoderStrafeV5(0.5, -12, 1.0);
+            encoderStrafeV5(0.5, -6, 1.0);
             DriveTrain(Drive.STOP);
             claw_servo.setPosition(.4);
             sleep(200);
             arm_servo.setPosition(0.6);
             sleep(200);
+            PIDrotate(180,0.75);
 
             //Go back to position A
-            encoderDrive(0.6, -52, 3.0);
+            encoderDrive(0.6, -48, 3.0);
             DriveTrain(Drive.STOP);
             encoderStrafeV5(0.75, -6, 1.0);
 
@@ -160,7 +161,7 @@ public class SimonsTestAuto extends BaseAutoOpMode {
 
             encoderStrafeV5(.75, 4, 1.5);
             encoderDrive(1,-6,1);
-            PIDrotate(180, 1);
+            PIDrotate(180, 1.0);
             DriveTrain(Drive.STOP);
 
 
@@ -168,6 +169,7 @@ public class SimonsTestAuto extends BaseAutoOpMode {
         } else if (ringCount == 1) {
 
             //Feeds 1 ring
+            /*
             shooter_left.setVelocity(intake);
             shooter_right.setVelocity(intake);
             belt_feed.setPower(-1);
@@ -178,10 +180,13 @@ public class SimonsTestAuto extends BaseAutoOpMode {
             shooter_right.setVelocity(0);
             belt_feed.setPower(0);
 
+             */
+
 
             //Move to position B
             PIDrotate(180, .5);
-            encoderDrive(.7, -44, 4.0);
+            //encoderDrive(.7, -44, 4.0);
+            encoderDrive(0.7,-32,3.0);
             DriveTrain(Drive.STOP);
             encoderStrafeV5(.6, 8, 2.0);
             DriveTrain(Drive.STOP);
@@ -196,7 +201,7 @@ public class SimonsTestAuto extends BaseAutoOpMode {
 
 
             //Drive to second wobble
-            PIDrotate(180,1);
+            PIDrotate(180,0.5);
             encoderDrive(.8,81,4.0);
             PIDrotate(180, .5);
             arm_servo.setPosition(0.65);
@@ -212,9 +217,9 @@ public class SimonsTestAuto extends BaseAutoOpMode {
             sleep(200);
 
             //Go back to position B
-            encoderDrive(.9,-72,3.0);
+            encoderDrive(.9,-66,3.0);
             //PIDrotate(180, .5);
-            encoderStrafeV5(.7, 5,1 );
+            encoderStrafeV5(.7, 5,1.0);
 
             //Drop second wobble
             //arm_servo.setPosition(0.65);
@@ -246,7 +251,7 @@ public class SimonsTestAuto extends BaseAutoOpMode {
 
         } else if (ringCount == 4) {
             {
-                while(lift_bottom_Left.getState() || lift_bottom_Right.getState()){
+                while(lift_bottom_Left.getState() && lift_bottom_Right.getState()){
                     lift_Motor.setPower(-0.8);
                 }
 
@@ -254,7 +259,7 @@ public class SimonsTestAuto extends BaseAutoOpMode {
                 shooter_left.setVelocity(intake);
                 shooter_right.setVelocity(intake);
                 belt_feed.setPower(-1);
-                sleep(250);
+                sleep(350);
                 encoderDrive(1,16,1.0);
                 sleep(250);
                 shooter_left.setVelocity(0);
@@ -268,26 +273,31 @@ public class SimonsTestAuto extends BaseAutoOpMode {
 
                 //Drive Backwards to Position C
                 PIDrotate(180, 1);
-                encoderDrive(0.7,-92,2.0);
+                encoderDrive(0.7,-82,2.0);
+                encoderStrafeV5(0.5,-4,1.0);
 
-                //Place Wobble Goal on Position A
+                //Place Wobble Goal on Position C
                 arm_servo.setPosition(0.65);
                 sleep(200);
                 claw_servo.setPosition(.7);
                 sleep(200);
                 arm_servo.setPosition(0.55);
                 sleep(200);
+                encoderStrafeV5(0.5,4,1.0);
+                PIDrotate(180,0.5);
 
                 //Move to Shoot
-                encoderDrive(0.7,52,2.0);
-                PIDrotate(0, 2);
-
-                //Shoot Rings to top goal
+                encoderDrive(0.7,42,2.0);
                 shooter_right.setVelocity(1700);
                 shooter_left.setVelocity(1700);
-                sleep(3000);
+                sleep(200);
+                PIDrotate(0, 2.0);
+                DriveTrain(Drive.STOP);
+
+                //Shoot Rings to top goal
+                sleep(200);
                 belt_feed.setPower(1);
-                sleep(2000);
+                sleep(3000);
 
                 //Move to Line
                 encoderDrive(.7,12, 2);
