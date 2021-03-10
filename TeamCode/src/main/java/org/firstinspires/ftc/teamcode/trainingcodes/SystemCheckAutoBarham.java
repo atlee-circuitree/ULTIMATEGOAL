@@ -18,6 +18,27 @@ public class SystemCheckAutoBarham extends BaseAutoOpModeBarham {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+        Drive(DRIVE.FORWARD);
+        sleep(1000);
+
+        Drive(DRIVE.RIGHT);
+        sleep(1000);
+
+        Drive(DRIVE.FORWARD);
+        sleep(1000);
+
+        Drive(DRIVE.RIGHT);
+        sleep(1000);
+
+        Drive(DRIVE.FORWARD);
+        sleep(1000);
+
+        Drive(DRIVE.RIGHT);
+        sleep(1000);
+
+        Drive(DRIVE.FORWARD);
+        sleep(1000);
+        
 
        
 
