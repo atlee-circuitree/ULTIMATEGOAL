@@ -48,8 +48,8 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
-@Disabled
+@TeleOp(name="Matthew_Teleop_Mecanum", group="Iterative Opmode")
+//@Disabled
 public class BasicOpMode extends LinearOpMode
 {
     // Declare OpMode members.
@@ -67,8 +67,8 @@ public class BasicOpMode extends LinearOpMode
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         leftDrive1  = hardwareMap.get(DcMotor.class, "left_drive1");
-        rightDrive1 = hardwareMap.get(DcMotor.class, "right_drive2");
-        leftDrive2  = hardwareMap.get(DcMotor.class, "left_drive1");
+        rightDrive1 = hardwareMap.get(DcMotor.class, "right_drive1");
+        leftDrive2  = hardwareMap.get(DcMotor.class, "left_drive2");
         rightDrive2 = hardwareMap.get(DcMotor.class, "right_drive2");
 
         // Most robots need the motor on one side to be reversed to drive forward
@@ -81,34 +81,38 @@ public class BasicOpMode extends LinearOpMode
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
 
+        waitForStart();
+
         // Setup a variable for each drive wheel to save power level for telemetry
-        double leftPower;
-        double rightPower;
+        while(opModeIsActive()) {
+            double leftPower;
+            double rightPower;
 
-        // Choose to drive using either Tank Mode, or POV Mode
-        // Comment out the method that's not used.  The default below is POV.
+            // Choose to drive using either Tank Mode, or POV Mode
+            // Comment out the method that's not used.  The default below is POV.
 
-        // POV Mode uses left stick to go forward, and right stick to turn.
-        // - This uses basic math to combine motions and is easier to drive straight.
-        double drive = -gamepad1.left_stick_y;
-        double turn  =  gamepad1.right_stick_x;
-        leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-        rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+            // POV Mode uses left stick to go forward, and right stick to turn.
+            // - This uses basic math to combine motions and is easier to drive straight.
+            double drive = -gamepad1.left_stick_y;
+            double turn = gamepad1.right_stick_x;
+            leftPower = Range.clip(drive + turn, -1.0, 1.0);
+            rightPower = Range.clip(drive - turn, -1.0, 1.0);
 
-        // Tank Mode uses one stick to control each wheel.
-        // - This requires no math, but it is hard to drive forward slowly and keep straight.
-        // leftPower  = -gamepad1.left_stick_y ;
-        // rightPower = -gamepad1.right_stick_y ;
+            // Tank Mode uses one stick to control each wheel.
+            // - This requires no math, but it is hard to drive forward slowly and keep straight.
+            // leftPower  = -gamepad1.left_stick_y ;
+            // rightPower = -gamepad1.right_stick_y ;
 
-        // Send calculated power to wheels
-        leftDrive1.setPower(leftPower);
-        rightDrive1.setPower(rightPower);
-        leftDrive2.setPower(leftPower);
-        rightDrive2.setPower(rightPower);
+            // Send calculated power to wheels
+            leftDrive1.setPower(leftPower);
+            rightDrive1.setPower(rightPower);
+            leftDrive2.setPower(leftPower);
+            rightDrive2.setPower(rightPower);
 
-        // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            // Show the elapsed game time and wheel power.
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+        }
     }
 
 
